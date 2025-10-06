@@ -1,11 +1,12 @@
 
 import { useFormContext } from "react-hook-form";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage, useFormField } from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormMessage, useFormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import StepWrapper from "./step-wrapper";
 import { Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Label } from "../ui/label";
 
 interface Step1Props {
   nextStep: () => void;
@@ -16,22 +17,22 @@ function NameInput() {
   const { error } = useFormField();
   
   return (
-    <div className={cn("rounded-lg border bg-card text-card-foreground", error && "animate-shake border-destructive")}>
-        <FormField
-          control={control}
-          name="fullName"
-          render={({ field }) => (
-            <FormItem>
-              <div className="floating-label-input px-4 py-1">
-                <FormControl>
-                  <Input placeholder=" " {...field} className="h-10 border-0 bg-transparent p-0 text-lg" />
-                </FormControl>
-                <FormLabel>Name</FormLabel>
-              </div>
-              <FormMessage className="px-4 pb-2" />
-            </FormItem>
-          )}
-        />
+    <div className={cn("bg-card text-card-foreground", error && "animate-shake")}>
+        <div className={cn("floating-label-input relative border-b", error ? "border-destructive" : "border-input")}>
+            <FormField
+            control={control}
+            name="fullName"
+            render={({ field }) => (
+                <FormItem>
+                    <FormControl>
+                        <Input placeholder=" " {...field} className="h-12 border-0 bg-transparent p-0 text-lg" />
+                    </FormControl>
+                    <Label>Name</Label>
+                    <FormMessage className="px-0 pb-0" />
+                </FormItem>
+            )}
+            />
+        </div>
       </div>
   )
 }

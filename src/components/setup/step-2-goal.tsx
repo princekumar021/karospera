@@ -42,23 +42,29 @@ function GoalForm() {
   };
 
   return (
-    <div className={cn("rounded-lg border bg-card", (nameError || amountError || dateError) && "animate-shake border-destructive")}>
+    <div className={cn("rounded-lg border bg-card", (amountError || dateError) && "animate-shake border-destructive")}>
         {isCustom ? (
-           <FormField
-            control={control}
-            name="goals.0.name"
-            render={({ field }) => (
-              <FormItem>
-                <div className="floating-label-input px-4 py-2">
+           <div className={cn("bg-card text-card-foreground", nameError && "animate-shake")}>
+            <div className={cn("floating-label-input relative border-b", nameError ? "border-destructive" : "border-input")}>
+              <FormField
+              control={control}
+              name="goals.0.name"
+              render={({ field }) => (
+                <FormItem>
                   <FormControl>
-                    <Input placeholder=" " {...field} className="h-10 border-0 bg-transparent p-0 text-base" />
+                    <Input placeholder=" " {...field} className="h-12 border-0 bg-transparent p-0 text-lg" />
                   </FormControl>
                   <FormLabel>Goal</FormLabel>
-                </div>
-                <FormMessage className="px-4 pb-2" />
-              </FormItem>
-            )}
-          />
+                </FormItem>
+              )}
+              />
+            </div>
+            <FormField
+              control={control}
+              name="goals.0.name"
+              render={() => <FormMessage className="px-3 pt-1 pb-2"/>}
+            />
+          </div>
         ) : (
           <FormField
             control={control}
