@@ -84,6 +84,6 @@
   /* When focused or value entered — move label up and shrink */
   .floating-label-input .peer:focus ~ label,
   .floating-label-input .peer:not(:placeholder-shown) ~ label {
-    @apply top-2 left-3 scale-90 -translate-y-4 text-sm text-primary;
+    @apply top-2 left-3 scale-90 -translate-y-6 text-sm text-primary;
   }
 }
