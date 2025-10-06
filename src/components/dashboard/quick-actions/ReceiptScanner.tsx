@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
-import { CameraOff } from 'lucide-react';
+import { CameraOff, Loader2 } from 'lucide-react';
 
 interface ReceiptScannerProps {
     onScanSuccess: (scannedData: { amount?: number, note?: string }) => void;
@@ -14,7 +14,28 @@ interface ReceiptScannerProps {
 export function ReceiptScanner({ onScanSuccess, onCancel }: ReceiptScannerProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+    const [isScanning, setIsScanning] = useState(false);
     const { toast } = useToast();
+
+    // Simulate an automatic scan after a delay
+    useEffect(() => {
+        let scanTimeout: NodeJS.Timeout;
+        if (hasCameraPermission) {
+            setIsScanning(true);
+            scanTimeout = setTimeout(() => {
+                // In a real app, a barcode scanning library would be used here.
+                // For demonstration, we'll simulate a scan with dummy data.
+                const randomAmount = Math.floor(Math.random() * 100) + 1;
+                const randomNote = `Scanned Item #${Math.floor(Math.random() * 1000)}`;
+                onScanSuccess({ amount: randomAmount, note: randomNote });
+                setIsScanning(false);
+            }, 2500); // Simulate a 2.5-second scan
+        }
+        return () => {
+            clearTimeout(scanTimeout);
+        }
+    }, [hasCameraPermission, onScanSuccess]);
+
 
     useEffect(() => {
         const getCameraPermission = async () => {
@@ -55,14 +76,6 @@ export function ReceiptScanner({ onScanSuccess, onCancel }: ReceiptScannerProps)
         }
     }, [toast]);
 
-    const handleSimulateScan = () => {
-        // In a real app, a barcode scanning library would be used here.
-        // For demonstration, we'll simulate a scan with dummy data.
-        const randomAmount = Math.floor(Math.random() * 100) + 1;
-        const randomNote = `Scanned Item #${Math.floor(Math.random() * 1000)}`;
-        onScanSuccess({ amount: randomAmount, note: randomNote });
-    }
-
     return (
         <div className="flex flex-col h-full items-center justify-between">
             <h3 className="text-lg font-semibold mb-2">Scan Receipt</h3>
@@ -74,13 +87,16 @@ export function ReceiptScanner({ onScanSuccess, onCancel }: ReceiptScannerProps)
                         <p className="text-center">Camera access is required to scan receipts.</p>
                     </div>
                  )}
+                 {isScanning && hasCameraPermission && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white">
+                        <Loader2 className="h-10 w-10 animate-spin" />
+                        <p className="mt-2 text-sm">Scanning...</p>
+                    </div>
+                 )}
+                 <div className="absolute inset-0 border-4 border-dashed border-white/50 rounded-lg" />
             </div>
             
             <p className="text-sm text-muted-foreground my-4 text-center">Position the receipt barcode or QR code inside the frame.</p>
-
-            {hasCameraPermission && (
-                 <Button onClick={handleSimulateScan} className="w-full">Simulate Scan</Button>
-            )}
 
             <Button variant="ghost" onClick={onCancel} className="w-full mt-2">Cancel</Button>
         </div>
