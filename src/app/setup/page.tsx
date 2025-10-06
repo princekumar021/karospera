@@ -116,8 +116,8 @@ export default function SetupPage() {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex min-h-screen flex-col items-center bg-background p-4 md:p-8">
-        <div className="w-full max-w-md mt-auto">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 md:p-8">
+        <div className="w-full max-w-md">
           <div className="mb-4 flex flex-col items-center gap-4">
             <PocketPlanLogo className="h-10 w-10" />
             <Progress value={(currentStep / totalSteps) * 100} className="h-2 w-full" />
@@ -135,7 +135,6 @@ export default function SetupPage() {
             {microcopy[currentStep - 1]}
           </p>
         </div>
-        <div className="flex-grow"></div>
       </div>
     </FormProvider>
   );
