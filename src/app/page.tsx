@@ -19,8 +19,11 @@ export default function Home() {
               <AppLogo className="h-7 w-7" />
               <span className="text-lg font-semibold font-headline">karospera</span>
             </div>
-            <Button variant="ghost" className="rounded-full font-semibold">
-              Get Started
+            <Button asChild className="rounded-full font-semibold text-base py-3 px-6 group">
+              <Link href="/setup">
+                Get Started
+                <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+              </Link>
             </Button>
           </header>
 
@@ -43,7 +46,7 @@ export default function Home() {
               <div className="relative h-80 md:h-96 w-full flex items-center justify-center">
                 
                   <Image
-                    src="/brainmoney.png"
+                    src="/20251006_2159_Brain Made of Money_remix_01k6x5kebreqy91why99aqqknt.png"
                     alt="Brain made of money"
                     fill
                     priority
@@ -82,7 +85,7 @@ export default function Home() {
                 </div>
                  <div className="relative h-72 w-full order-1 md:order-2">
                     <Image
-                        src="/second-image.png"
+                        src="/20251006_2200_Healthcare Financial Burden_remix_01k6x5pyc9fj9aa8th4etmapw7.png"
                         alt="Healthcare financial burden"
                         fill
                         className="object-cover rounded-2xl"
