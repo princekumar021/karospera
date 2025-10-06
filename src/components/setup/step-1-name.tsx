@@ -19,19 +19,26 @@ function NameInput() {
   const { error } = useFormField();
   
   return (
-    <div className={cn("w-full", error && "animate-shake")}>
+    <div className={cn("rounded-xl bg-card text-card-foreground border", error && "animate-shake border-destructive")}>
+      <div className={cn("floating-label-input")}>
         <FormField
           control={control}
           name="fullName"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Name" {...field} className="w-full h-14 text-center text-lg rounded-xl border-border bg-background" />
+                <Input placeholder=" " {...field} className="h-12 border-0 bg-transparent text-lg px-3 peer" />
               </FormControl>
-              <FormMessage />
+              <Label>Name</Label>
             </FormItem>
           )}
         />
+      </div>
+       <FormField
+        control={control}
+        name="fullName"
+        render={() => <FormMessage className={cn("px-3 pb-2", !error && "hidden")}/>}
+      />
     </div>
   )
 }
