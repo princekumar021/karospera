@@ -24,37 +24,43 @@ export function IncomeExpenseChart() {
       }
     };
     const totalMonthlyRecurringExpenses = userData.recurringExpenses.reduce((sum, exp) => sum + getMonthlyRecurringAmount(exp), 0);
+    const hasTransactions = userData.transactions && userData.transactions.length > 0;
 
     // Generate data for the last 6 months
     const data = Array.from({ length: 6 }).map((_, i) => {
       const date = subMonths(new Date(), 5 - i);
       const month = getMonth(date);
       const year = getYear(date);
-      
-      const oneOffExpenses = userData.transactions
-        ?.filter(t => {
-          const tDate = new Date(t.date);
-          return t.type === 'expense' && getMonth(tDate) === month && getYear(tDate) === year;
-        })
-        .reduce((sum, t) => sum + Math.abs(t.amount), 0) || 0;
 
-      const oneOffIncome = userData.transactions
-        ?.filter(t => {
-            const tDate = new Date(t.date);
-            return t.type === 'income' && getMonth(tDate) === month && getYear(tDate) === year;
-        })
-        .reduce((sum, t) => sum + Math.abs(t.amount), 0) || 0;
+      const monthlyTransactions = userData.transactions?.filter(t => {
+        const tDate = new Date(t.date);
+        return getMonth(tDate) === month && getYear(tDate) === year;
+      }) || [];
+      
+      const oneOffExpenses = monthlyTransactions
+        .filter(t => t.type === 'expense')
+        .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+
+      const oneOffIncome = monthlyTransactions
+        .filter(t => t.type === 'income')
+        .reduce((sum, t) => sum + Math.abs(t.amount), 0);
         
       const totalIncome = (userData.monthlyIncome || 0) + oneOffIncome;
       const totalExpenses = totalMonthlyRecurringExpenses + oneOffExpenses;
+
+      // Only include month if there was some activity
+      if (hasTransactions && monthlyTransactions.length === 0 && totalMonthlyRecurringExpenses === 0 && !userData.monthlyIncome) {
+        return null;
+      }
 
       return {
         name: format(date, 'MMM'),
         income: totalIncome,
         expenses: totalExpenses,
       };
-    });
-    return data;
+    }).filter(Boolean); // remove null entries
+    
+    return data as {name: string, income: number, expenses: number}[];
 
   }, [userData]);
 
@@ -80,23 +86,29 @@ export function IncomeExpenseChart() {
         <CardDescription>Last 6 months overview</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="h-60">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData}>
-              <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} axisLine={false} tickLine={false} />
-              <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickFormatter={(value) => formatCurrency(value as number)} axisLine={false} tickLine={false} />
-              <Tooltip 
-                contentStyle={{ backgroundColor: 'hsl(var(--background))', border: '1px solid hsl(var(--border))', borderRadius: 'var(--radius)' }}
-                formatter={(value:number, name: string) => [formatCurrency(value), name.charAt(0).toUpperCase() + name.slice(1)]}
-                labelStyle={{ color: 'hsl(var(--foreground))' }}
-                cursor={{fill: 'hsl(var(--muted))', opacity: 0.5}}
-                 />
-              <Legend wrapperStyle={{ color: 'hsl(var(--foreground))' }}/>
-              <Bar dataKey="income" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="expenses" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        {chartData.length > 0 ? (
+          <div className="h-60">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData}>
+                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} axisLine={false} tickLine={false} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickFormatter={(value) => formatCurrency(value as number)} axisLine={false} tickLine={false} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: 'hsl(var(--background))', border: '1px solid hsl(var(--border))', borderRadius: 'var(--radius)' }}
+                  formatter={(value:number, name: string) => [formatCurrency(value), name.charAt(0).toUpperCase() + name.slice(1)]}
+                  labelStyle={{ color: 'hsl(var(--foreground))' }}
+                  cursor={{fill: 'hsl(var(--muted))', opacity: 0.5}}
+                  />
+                <Legend wrapperStyle={{ color: 'hsl(var(--foreground))' }}/>
+                <Bar dataKey="income" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="expenses" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <div className="flex h-60 items-center justify-center">
+            <p className="text-center text-muted-foreground">No income or expense data to display for the last 6 months.</p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
