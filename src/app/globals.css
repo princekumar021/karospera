@@ -74,16 +74,14 @@
     @apply relative;
   }
 
-  /* Default label position — centered vertically */
-  .floating-label-input label {
+  .floating-label-input > .peer ~ label {
     @apply absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground 
            transition-all duration-300 ease-in-out pointer-events-none 
            origin-top-left;
   }
 
-  /* When focused or value entered — move label up and shrink */
-  .floating-label-input .peer:focus ~ label,
-  .floating-label-input .peer:not(:placeholder-shown) ~ label {
+  .floating-label-input > .peer:focus ~ label,
+  .floating-label-input > .peer:not(:placeholder-shown) ~ label {
     @apply top-2 left-4 scale-90 -translate-y-6 text-primary;
   }
 }
