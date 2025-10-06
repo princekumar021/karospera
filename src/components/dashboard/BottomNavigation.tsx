@@ -1,18 +1,10 @@
 "use client";
 
 import Link from 'next/link';
-import { Home, DollarSign, BarChart, FileText, Settings } from 'lucide-react';
+import { Home, DollarSign, BarChart, FileText, Settings, User } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { FilledHome } from '../icons';
-
-const navItems = [
-  { href: '/dashboard', icon: <Home />, activeIcon: <FilledHome />, label: 'Dashboard' },
-  { href: '/budget', icon: <BarChart />, activeIcon: <BarChart />, label: 'Budget' },
-  { href: '/reports', icon: <FileText />, activeIcon: <FileText />, label: 'Reports' },
-  { href: '/profile', icon: <Home />, activeIcon: <FilledHome />, label: 'Profile' },
-  { href: '/settings', icon: <Settings />, activeIcon: <Settings />, label: 'Settings' },
-];
 
 function BottomNavItem({
   href,
@@ -59,9 +51,9 @@ export function BottomNavigation() {
   // Define new nav items based on the image
   const newNavItems = [
     { href: '/dashboard', icon: <Home className="h-6 w-6" />, activeIcon: <FilledHome />, label: 'Dashboard' },
-    { href: '/expenses', icon: <DollarSign className="h-6 w-6" />, activeIcon: <DollarSign className="h-6 w-6" />, label: 'Expenses' },
     { href: '/budget', icon: <BarChart className="h-6 w-6" />, activeIcon: <BarChart className="h-6 w-6" />, label: 'Budget' },
     { href: '/reports', icon: <FileText className="h-6 w-6" />, activeIcon: <FileText className="h-6 w-6" />, label: 'Reports' },
+    { href: '/profile', icon: <User className="h-6 w-6" />, activeIcon: <User className="h-6 w-6" />, label: 'Profile' },
     { href: '/settings', icon: <Settings className="h-6 w-6" />, activeIcon: <Settings className="h-6 w-6" />, label: 'Settings' },
   ];
 
