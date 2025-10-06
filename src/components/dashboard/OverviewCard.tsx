@@ -24,7 +24,7 @@ export function OverviewCard() {
   };
   
   const { availableBalance, goalProgress, goalName } = useMemo(() => {
-    if (!userData) {
+    if (!userData || loading) {
       return { availableBalance: 0, goalProgress: 0, goalName: 'your goal' };
     }
 
@@ -44,7 +44,7 @@ export function OverviewCard() {
       goalProgress,
       goalName: userData.goal,
     };
-  }, [userData]);
+  }, [userData, loading]);
 
 
   return (
