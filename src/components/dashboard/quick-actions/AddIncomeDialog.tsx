@@ -28,7 +28,7 @@ const incomeFormSchema = z.object({
 type IncomeForm = z.infer<typeof incomeFormSchema>;
 
 
-export function AddIncomeDialog() {
+export function AddIncomeDialog({ trigger }: { trigger: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const { userData, addTransaction, formatCurrency } = useUserData();
   const { toast } = useToast();
@@ -66,14 +66,7 @@ export function AddIncomeDialog() {
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
-      <SheetTrigger asChild>
-        <div className="flex flex-col items-center space-y-1 cursor-pointer">
-            <Button variant="outline" size="icon" className="h-14 w-14 rounded-full">
-                <Wallet />
-            </Button>
-            <span className="text-xs">Add Income</span>
-        </div>
-      </SheetTrigger>
+      <SheetTrigger asChild>{trigger}</SheetTrigger>
       <SheetContent side="bottom" className="rounded-t-2xl px-4 pb-6" hideClose>
         <SheetHeader>
           <SheetTitle className="sr-only">Add Income</SheetTitle>

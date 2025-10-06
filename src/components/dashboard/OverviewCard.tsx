@@ -5,10 +5,8 @@ import { Progress } from '@/components/ui/progress';
 import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
 import { useMemo } from 'react';
-import { RecurringExpense, Goal, Transaction } from '@/lib/setup-schema';
+import { RecurringExpense, Goal } from '@/lib/setup-schema';
 import { Button } from '../ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { PiggyBank } from 'lucide-react';
 
 export function OverviewCard() {
   const { userData, loading, formatCurrency } = useUserData();
@@ -16,18 +14,15 @@ export function OverviewCard() {
   const getMonthlyAmount = (expense: RecurringExpense): number => {
     const amount = Number(expense.amount) || 0;
     switch (expense.frequency) {
-      case 'Yearly':
-        return amount / 12;
-      case 'Quarterly':
-        return amount / 3;
+      case 'Yearly': return amount / 12;
+      case 'Quarterly': return amount / 3;
       case 'Monthly':
-      default:
-        return amount;
+      default: return amount;
     }
   };
   
   const { availableBalance, goalProgress, goalName } = useMemo(() => {
-    if (!userData || loading) {
+    if (!userData) {
       return { availableBalance: 0, goalProgress: 0, goalName: 'your goal' };
     }
 
@@ -67,50 +62,58 @@ export function OverviewCard() {
       goalProgress,
       goalName: primaryGoal?.name || 'your goal',
     };
-  }, [userData, loading]);
+  }, [userData]);
+
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <Card className="bg-secondary/50">
+          <CardHeader>
+            <Skeleton className="h-4 w-1/2" />
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-8 w-3/4 mb-1" />
+            <Skeleton className="h-4 w-1/2" />
+          </CardContent>
+        </Card>
+        <Card className="bg-secondary/50">
+          <CardContent className="pt-6">
+            <Skeleton className="h-2 w-full mb-2" />
+            <Skeleton className="h-4 w-3/4" />
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <Card className="bg-card">
+    <div className="space-y-4">
+      <Card className="bg-secondary/50 border-none shadow-none">
         <CardHeader>
           <CardTitle className="text-sm font-medium text-muted-foreground">
             Available Balance
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {loading ? (
             <>
-              <Skeleton className="h-8 w-3/4 mb-1" />
-              <Skeleton className="h-4 w-1/2" />
-            </>
-          ) : (
-            <>
-              <p className="text-2xl font-bold">{formatCurrency(availableBalance)}</p>
+              <p className="text-3xl font-bold">{formatCurrency(availableBalance)}</p>
               <p className="text-xs text-muted-foreground">Per month after bills</p>
             </>
-          )}
         </CardContent>
       </Card>
-      <Card className="bg-card">
+      <Card className="bg-secondary/50 border-none shadow-none">
         <CardHeader>
           <CardTitle className="text-sm font-medium text-muted-foreground">
             Goal Progress
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {loading ? (
-             <>
-              <Skeleton className="h-2 w-full mb-2" />
-              <Skeleton className="h-4 w-3/4" />
-            </>
-          ) : (
             <>
-              <Progress value={goalProgress} className="h-2" />
+              <Progress value={goalProgress} className="h-2 bg-background" />
               <p className="mt-2 text-xs text-muted-foreground truncate">
                 Saving for {goalName}
               </p>
             </>
-          )}
         </CardContent>
       </Card>
     </div>
