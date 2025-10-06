@@ -48,12 +48,14 @@ function GoalForm() {
             control={control}
             name="goals.0.name"
             render={({ field }) => (
-              <FormItem className="p-3">
-                <FormLabel>Custom Goal</FormLabel>
-                <FormControl>
-                  <Input placeholder="Type your own goal" {...field} className="bg-transparent"/>
-                </FormControl>
-                <FormMessage />
+              <FormItem>
+                <div className="floating-label-input px-4 py-2">
+                  <FormControl>
+                    <Input placeholder=" " {...field} className="h-10 border-0 bg-transparent p-0 text-base" />
+                  </FormControl>
+                  <FormLabel>Goal</FormLabel>
+                </div>
+                <FormMessage className="px-4 pb-2" />
               </FormItem>
             )}
           />
@@ -81,7 +83,7 @@ function GoalForm() {
                     </SelectContent>
                   </Select>
                 </div>
-                <FormMessage className="px-3" />
+                 <FormMessage className="px-3" />
               </FormItem>
             )}
           />
