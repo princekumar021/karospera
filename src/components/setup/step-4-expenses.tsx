@@ -1,8 +1,8 @@
 
 "use client";
 
-import { useFormContext, useFieldArray } from "react-hook-form";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage, useFormField } from "@/components/ui/form";
+import { useFormContext, useFieldArray, useFormState } from "react-hook-form";
+import { FormControl, FormField, FormItem, FormMessage, useFormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import StepWrapper from "./step-wrapper";
@@ -24,35 +24,38 @@ const frequencyOptions = ["Monthly", "Quarterly", "Yearly"];
 
 
 function ExpenseItem({ index, remove }: { index: number, remove: (index: number) => void }) {
-  const { control } = useFormContext();
+  const { control, getValues } = useFormContext();
   const { userData } = useUserData();
   
   const currency = userData?.currency || "USD";
   const currencySymbols: { [key: string]: string } = { "INR": "₹", "USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥" };
   const symbol = currencySymbols[currency] || '$';
 
-  const { error: nameError } = useFormField({ name: `recurringExpenses.${index}.name`});
-  const { error: amountError } = useFormField({ name: `recurringExpenses.${index}.amount`});
-  const { error: frequencyError } = useFormField({ name: `recurringExpenses.${index}.frequency`});
+  const { errors } = useFormState({ control });
+  const fieldErrors = errors.recurringExpenses?.[index];
+
+  const handleBlur = () => {
+    const nameValue = getValues(`recurringExpenses.${index}.name`);
+    const amountValue = getValues(`recurringExpenses.${index}.amount`);
+    if (!nameValue && !amountValue) {
+      remove(index);
+    }
+  };
 
   return (
-    <div className={cn("relative rounded-lg border bg-card text-card-foreground", (nameError || amountError || frequencyError) && "animate-shake border-destructive")}>
-       <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        className="absolute top-1 right-1 h-7 w-7 text-muted-foreground hover:text-destructive z-10"
-        onClick={() => remove(index)}
-      >
-        <Trash2 className="h-4 w-4" />
-      </Button>
-
+    <div 
+      onBlur={handleBlur} 
+      className={cn(
+        "relative rounded-lg border bg-card text-card-foreground", 
+        (fieldErrors?.name || fieldErrors?.amount) && "animate-shake border-destructive"
+      )}
+    >
       <div className="space-y-0">
         <FormField
           control={control}
           name={`recurringExpenses.${index}.name`}
           render={({ field }) => (
-            <FormItem className="flex items-center p-3">
+            <FormItem className="flex items-center p-3 h-11">
               <Label className="flex-1">Name</Label>
                 <FormControl>
                   <Input placeholder="e.g., Rent, Netflix..." {...field} className="border-0 text-right h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
@@ -65,7 +68,7 @@ function ExpenseItem({ index, remove }: { index: number, remove: (index: number)
             control={control}
             name={`recurringExpenses.${index}.amount`}
             render={({ field }) => (
-            <FormItem className="flex items-center p-3">
+            <FormItem className="flex items-center p-3 h-11">
                 <Label className="flex-1">Amount</Label>
                 <FormControl>
                     <div className="relative flex items-center">
@@ -81,7 +84,7 @@ function ExpenseItem({ index, remove }: { index: number, remove: (index: number)
             control={control}
             name={`recurringExpenses.${index}.frequency`}
             render={({ field }) => (
-            <FormItem className="flex items-center p-3">
+            <FormItem className="flex items-center p-3 h-11">
                 <Label className="flex-1">Frequency</Label>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
@@ -102,7 +105,7 @@ function ExpenseItem({ index, remove }: { index: number, remove: (index: number)
 }
 
 export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
-  const { control, formState: { errors } } = useFormContext();
+  const { control } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "recurringExpenses",
@@ -111,7 +114,7 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
   const scrollViewportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (fields.length > 2) { // or some other condition to avoid scrolling on initial render
+    if (fields.length > 2) { 
       const viewport = scrollViewportRef.current;
       if (viewport) {
         viewport.scrollTo({ top: viewport.scrollHeight, behavior: 'smooth' });
