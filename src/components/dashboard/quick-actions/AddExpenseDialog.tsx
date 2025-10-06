@@ -20,7 +20,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Textarea } from '@/components/ui/textarea';
 
 const expenseFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -41,6 +40,7 @@ export function AddExpenseDialog() {
     defaultValues: {
       name: "New Expense", // Name is less prominent, so we can default it.
       amount: '' as any,
+      category: 'Shopping',
       note: "",
     }
   });
@@ -65,7 +65,7 @@ export function AddExpenseDialog() {
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
     if (!isOpen) {
-      form.reset({ name: "New Expense", amount: '' as any, note: "" });
+      form.reset({ name: "New Expense", category: "Shopping", amount: '' as any, note: "" });
     }
   }
 
@@ -102,7 +102,7 @@ export function AddExpenseDialog() {
               <Button type="submit" size="lg">Add</Button>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 rounded-lg border bg-background">
                 <FormField
                   control={form.control}
                   name="category"
@@ -111,7 +111,7 @@ export function AddExpenseDialog() {
                       <FormLabel className="sr-only">Category</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <SelectTrigger className="h-14 text-base">
+                          <SelectTrigger className="h-14 text-base border-0 border-b rounded-none">
                              <div className="flex justify-between items-center w-full">
                                 <span>Category</span>
                                 <div className="flex items-center gap-2 text-muted-foreground">
@@ -142,7 +142,7 @@ export function AddExpenseDialog() {
                     <FormItem>
                        <FormLabel className="sr-only">Note</FormLabel>
                        <FormControl>
-                          <div className="flex items-center h-14 px-3 py-2 text-base rounded-md border border-input">
+                          <div className="flex items-center h-14 px-3 py-2 text-base border-b rounded-none">
                              <span className="flex-1">Note</span>
                              <Input placeholder="Optional" className="border-0 text-right w-1/2 p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0" {...field} />
                           </div>
@@ -152,7 +152,7 @@ export function AddExpenseDialog() {
                   )}
                 />
 
-                <Button variant="outline" className="w-full h-14 text-base justify-between">
+                <Button variant="ghost" className="w-full h-14 text-base justify-between rounded-none rounded-b-lg">
                     <span>Scan Receipt</span>
                     <ScanLine className="h-6 w-6 text-muted-foreground" />
                 </Button>
