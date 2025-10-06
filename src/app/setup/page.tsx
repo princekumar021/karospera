@@ -17,9 +17,9 @@ import Step6Preview from "@/components/setup/step-6-preview";
 
 const totalSteps = 6;
 
-const stepFields: (keyof SetupFormData)[][] = [
+const stepFields: (keyof SetupFormData | `goals.${number}.${"name" | "targetAmount" | "targetDate"}`)[] = [
   ["fullName"], // Step 1
-  ["goal", "goalTargetAmount", "goalTargetDate"], // Step 2
+  ["goals.0.name", "goals.0.targetAmount", "goals.0.targetDate"], // Step 2
   ["currency", "monthlyIncome", "payCycle"], // Step 3
   ["recurringExpenses"], // Step 4
   ["budgetMethod", "notifications", "biometrics", "bankSyncOptIn"], // Step 5
@@ -34,7 +34,7 @@ export default function SetupPage() {
     resolver: zodResolver(setupSchema),
     defaultValues: {
       fullName: "",
-      goal: "",
+      goals: [{ id: "initial", name: "", currentAmount: 0, targetAmount: 0 }],
       currency: "INR",
       recurringExpenses: [],
       budgetMethod: "balanced",
@@ -69,7 +69,12 @@ export default function SetupPage() {
   const onSubmit = (data: SetupFormData) => {
     console.log("Setup complete:", data);
     try {
-      localStorage.setItem('pocketplan-userdata', JSON.stringify(data));
+       // Filter out empty initial goal if it hasn't been filled
+      const finalData = {
+        ...data,
+        goals: data.goals.filter(g => g.name && g.targetAmount > 0)
+      }
+      localStorage.setItem('pocketplan-userdata', JSON.stringify(finalData));
       router.push('/dashboard');
     } catch (error) {
       console.error("Could not save user data to localStorage", error);
@@ -130,3 +135,4 @@ export default function SetupPage() {
     </FormProvider>
   );
 }
+```

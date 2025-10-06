@@ -3,7 +3,7 @@
 import { useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import StepWrapper from "./step-wrapper";
-import { type SetupFormData, type RecurringExpense } from "@/lib/setup-schema";
+import { type SetupFormData, type RecurringExpense, type Goal } from "@/lib/setup-schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Banknote, CalendarClock, Edit } from "lucide-react";
@@ -17,7 +17,8 @@ export default function Step6Preview({ goToStep }: Step6Props) {
   const { getValues } = useFormContext<SetupFormData>();
   const router = useRouter();
   const values = getValues();
-  const { fullName, monthlyIncome, goal, goalTargetAmount, goalTargetDate, recurringExpenses, currency } = values;
+  const { fullName, monthlyIncome, goals, recurringExpenses, currency } = values;
+  const primaryGoal = goals && goals.length > 0 ? goals[0] : null;
 
   const getMonthlyAmount = (expense: RecurringExpense): number => {
     const amount = Number(expense.amount) || 0;
@@ -36,13 +37,13 @@ export default function Step6Preview({ goToStep }: Step6Props) {
   const remainingThisMonth = (monthlyIncome || 0) - totalMonthlyRecurring;
   
   const getMonthsToGoal = () => {
-    if (!goalTargetDate || !goalTargetAmount || goalTargetAmount <= 0) return null;
+    if (!primaryGoal || !primaryGoal.targetDate || !primaryGoal.targetAmount || primaryGoal.targetAmount <= 0) return null;
     const now = new Date();
     // Ensure we don't have months in the past.
-    if (goalTargetDate < now) return 1;
-    let months = (goalTargetDate.getFullYear() - now.getFullYear()) * 12;
+    if (primaryGoal.targetDate < now) return 1;
+    let months = (primaryGoal.targetDate.getFullYear() - now.getFullYear()) * 12;
     months -= now.getMonth();
-    months += goalTargetDate.getMonth();
+    months += primaryGoal.targetDate.getMonth();
     return months <= 0 ? 1 : months;
   };
 
@@ -50,11 +51,11 @@ export default function Step6Preview({ goToStep }: Step6Props) {
   // Suggest saving 10% of remaining income towards the goal if no date is set.
   const suggestedMonthlySavings = remainingThisMonth > 0 ? remainingThisMonth * 0.1 : 0;
   
-  const monthlySavingsNeeded = monthsToGoal && goalTargetAmount ? goalTargetAmount / monthsToGoal : suggestedMonthlySavings;
+  const monthlySavingsNeeded = monthsToGoal && primaryGoal?.targetAmount ? primaryGoal.targetAmount / monthsToGoal : suggestedMonthlySavings;
   
   const savingsForGoal = Math.min(monthlySavingsNeeded, remainingThisMonth > 0 ? remainingThisMonth : 0);
 
-  const goalProgress = (goalTargetAmount && goalTargetAmount > 0) ? (savingsForGoal / goalTargetAmount) * 100 : 0;
+  const goalProgress = (primaryGoal?.targetAmount && primaryGoal.targetAmount > 0) ? (savingsForGoal / primaryGoal.targetAmount) * 100 : 0;
   
   const nextBill = [...recurringExpenses]
     .filter(e => e.dueDay)
@@ -94,12 +95,12 @@ export default function Step6Preview({ goToStep }: Step6Props) {
 
         <Card className="bg-card">
           <CardHeader>
-             <CardTitle className="text-base font-semibold truncate">{goal || 'Your Goal'}</CardTitle>
+             <CardTitle className="text-base font-semibold truncate">{primaryGoal?.name || 'Your Goal'}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between text-sm mb-1">
               <span className="truncate">{formatCurrencyLocal(savingsForGoal > 0 ? savingsForGoal : 0)}</span>
-              <span className="text-muted-foreground truncate">{formatCurrencyLocal(goalTargetAmount || 0)}</span>
+              <span className="text-muted-foreground truncate">{formatCurrencyLocal(primaryGoal?.targetAmount || 0)}</span>
             </div>
             <Progress value={goalProgress} />
           </CardContent>
@@ -132,3 +133,4 @@ export default function Step6Preview({ goToStep }: Step6Props) {
     </StepWrapper>
   );
 }
+```

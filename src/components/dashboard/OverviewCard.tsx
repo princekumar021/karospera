@@ -6,7 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
 import { useMemo } from 'react';
-import { RecurringExpense } from '@/lib/setup-schema';
+import { RecurringExpense, Goal } from '@/lib/setup-schema';
 
 export function OverviewCard() {
   const { userData, loading, formatCurrency } = useUserData();
@@ -31,7 +31,6 @@ export function OverviewCard() {
 
     const income = userData.monthlyIncome || 0;
     
-    // Calculate one-off transactions for the current month
     const now = new Date();
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
@@ -55,17 +54,16 @@ export function OverviewCard() {
     const availableBalance = (income + oneOffIncome) - (totalMonthlyRecurring + oneOffSpending);
 
     let goalProgress = 0;
-    if (userData.goalTargetAmount && userData.goalTargetAmount > 0) {
-      // Dummy progress, in a real app this would be based on actual savings
-      // For now, let's assume 10% of the target is saved.
-      const currentSaved = userData.goalTargetAmount * 0.10;
-      goalProgress = (currentSaved / userData.goalTargetAmount) * 100;
+    let primaryGoal: Goal | null = userData.goals && userData.goals.length > 0 ? userData.goals[0] : null;
+
+    if (primaryGoal && primaryGoal.targetAmount > 0) {
+      goalProgress = (primaryGoal.currentAmount / primaryGoal.targetAmount) * 100;
     }
     
     return {
       availableBalance,
       goalProgress,
-      goalName: userData.goal,
+      goalName: primaryGoal?.name || 'your goal',
     };
   }, [userData, loading]);
 
@@ -117,3 +115,4 @@ export function OverviewCard() {
     </div>
   );
 }
+```

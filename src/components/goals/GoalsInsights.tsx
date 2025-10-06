@@ -10,13 +10,12 @@ export function GoalsInsights() {
   const { userData, loading, formatCurrency } = useUserData();
 
   const { totalSaved, totalTarget, totalProgress, estimatedCompletion } = useMemo(() => {
-    if (!userData) {
-        return { totalSaved: 0, totalTarget: 0, totalProgress: 0, estimatedCompletion: '...' };
+    if (!userData || !userData.goals || userData.goals.length === 0) {
+        return { totalSaved: 0, totalTarget: 0, totalProgress: 0, estimatedCompletion: 'N/A' };
     }
 
-    // Using dummy data for now
-    const totalSaved = 40000;
-    const totalTarget = 150000;
+    const totalSaved = userData.goals.reduce((acc, goal) => acc + goal.currentAmount, 0);
+    const totalTarget = userData.goals.reduce((acc, goal) => acc + goal.targetAmount, 0);
     const totalProgress = totalTarget > 0 ? (totalSaved / totalTarget) * 100 : 0;
 
     const monthlyIncome = userData.monthlyIncome || 0;
@@ -28,13 +27,16 @@ export function GoalsInsights() {
         return acc + monthlyAmount;
     }, 0);
     const availableForSaving = monthlyIncome - totalExpenses;
-    const monthlySavingRate = availableForSaving > 0 ? availableForSaving * 0.2 : 0; // Assuming 20% of available is saved
+    
+    // Assuming user saves 10% of their available balance towards goals.
+    const monthlySavingRate = availableForSaving > 0 ? availableForSaving * 0.1 : 500; // fallback saving rate
     
     if (monthlySavingRate <= 0 || totalTarget <= totalSaved) {
-         return { totalSaved, totalTarget, totalProgress, estimatedCompletion: '...' };
+         return { totalSaved, totalTarget, totalProgress, estimatedCompletion: 'Soon!' };
     }
 
-    const monthsRemaining = (totalTarget - totalSaved) / monthlySavingRate;
+    const remainingToSave = totalTarget - totalSaved;
+    const monthsRemaining = remainingToSave / monthlySavingRate;
     const years = Math.floor(monthsRemaining / 12);
     const months = Math.ceil(monthsRemaining % 12);
 
@@ -42,7 +44,7 @@ export function GoalsInsights() {
     if (years > 0) completionString += `${years} year${years > 1 ? 's' : ''} `;
     if (months > 0) completionString += `${months} month${months > 1 ? 's' : ''}`;
     
-    return { totalSaved, totalTarget, totalProgress, estimatedCompletion: completionString.trim() };
+    return { totalSaved, totalTarget, totalProgress, estimatedCompletion: completionString.trim() || 'Soon!' };
 
   }, [userData]);
   
@@ -79,3 +81,4 @@ export function GoalsInsights() {
     </Card>
   );
 }
+```

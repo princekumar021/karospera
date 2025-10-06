@@ -16,14 +16,21 @@ export const transactionSchema = z.object({
   date: z.date(),
 });
 
+export const goalSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, "Goal name is required."),
+  targetAmount: z.coerce.number().min(1, "Target amount is required."),
+  currentAmount: z.coerce.number().default(0),
+  targetDate: z.date().optional(),
+  category: z.string().optional(),
+});
+
 export const setupSchema = z.object({
   // Step 1
   fullName: z.string().min(2, "Please enter a name with at least 2 characters."),
   
   // Step 2
-  goal: z.string().min(1, "Please select or enter a goal."),
-  goalTargetAmount: z.coerce.number().optional(),
-  goalTargetDate: z.date().optional(),
+  goals: z.array(goalSchema).default([]),
   
   // Step 3
   currency: z.string().default("INR"),
@@ -51,3 +58,5 @@ export const setupSchema = z.object({
 export type SetupFormData = z.infer<typeof setupSchema>;
 export type RecurringExpense = z.infer<typeof recurringExpenseSchema>;
 export type Transaction = z.infer<typeof transactionSchema>;
+export type Goal = z.infer<typeof goalSchema>;
+```

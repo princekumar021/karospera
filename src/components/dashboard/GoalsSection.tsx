@@ -6,19 +6,13 @@ import { Progress } from '@/components/ui/progress';
 import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
 import Link from 'next/link';
+import { Goal } from '@/lib/setup-schema';
 
 export function GoalsSection() {
   const { userData, loading, formatCurrency } = useUserData();
 
-  const primaryGoal = userData ? {
-    name: userData.goal,
-    // Dummy progress: assume 10% of target saved for primary goal.
-    current: (userData.goalTargetAmount || 0) * 0.1,
-    target: userData.goalTargetAmount || 0,
-  } : null;
-  
-  const goals = primaryGoal ? [primaryGoal] : [];
-
+  const goals: Goal[] = userData?.goals || [];
+  const primaryGoal = goals.length > 0 ? goals[0] : null;
 
   return (
     <Card className="bg-card">
@@ -43,21 +37,24 @@ export function GoalsSection() {
         <ul className="space-y-4">
           {goals.slice(0, 2).map((goal, index) => {
             if (!goal.name) return null;
-            const progress = goal.target > 0 ? (goal.current / goal.target) * 100 : 0;
+            const progress = goal.targetAmount > 0 ? (goal.currentAmount / goal.targetAmount) * 100 : 0;
             return (
             <li key={index}>
               <div className="mb-1 flex justify-between">
                 <p className="font-semibold truncate">{goal.name}</p>
                 <p className="text-sm text-muted-foreground">
-                  {formatCurrency(goal.target)}
+                  {formatCurrency(goal.targetAmount)}
                 </p>
               </div>
               <Progress value={progress} className="h-2" />
               <p className="text-xs text-muted-foreground mt-1">
-                {formatCurrency(goal.current)} saved
+                {formatCurrency(goal.currentAmount)} saved
               </p>
             </li>
           )})}
+          {goals.length === 0 && (
+            <p className="text-muted-foreground text-center py-4">No goals set yet. Go to the Goals page to add one!</p>
+          )}
         </ul>
         )}
         <Button variant="link" className="mt-4 w-full" asChild>

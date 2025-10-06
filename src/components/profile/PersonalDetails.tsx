@@ -9,11 +9,12 @@ import { Button } from '../ui/button';
 
 export function PersonalDetails() {
   const { userData, loading, formatCurrency } = useUserData();
+  const primaryGoal = userData?.goals && userData.goals.length > 0 ? userData.goals[0] : null;
 
   const details = userData ? [
     { label: "Monthly Income", value: formatCurrency(userData.monthlyIncome || 0) },
     { label: "Currency", value: userData.currency || "INR" },
-    { label: "Primary Goal", value: userData.goal || "Not set" },
+    { label: "Primary Goal", value: primaryGoal?.name || "Not set" },
     { label: "Budgeting Method", value: (userData.budgetMethod || "balanced").replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }
   ] : [];
 
@@ -58,3 +59,4 @@ export function PersonalDetails() {
     </Card>
   );
 }
+```

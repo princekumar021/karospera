@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
-import { type SetupFormData, type Transaction } from '@/lib/setup-schema';
+import { type SetupFormData, type Transaction, type Goal } from '@/lib/setup-schema';
 
 interface UserDataContextType {
   userData: SetupFormData | null;
@@ -10,6 +10,9 @@ interface UserDataContextType {
   updateUserData: (data: Partial<SetupFormData>) => void;
   resetUserData: () => void;
   addTransaction: (transaction: Omit<Transaction, 'id' | 'date'>) => void;
+  addGoal: (goal: Omit<Goal, 'id' | 'currentAmount'>) => void;
+  updateGoal: (goal: Goal) => void;
+  deleteGoal: (goalId: string) => void;
 }
 
 const UserDataContext = createContext<UserDataContextType | undefined>(undefined);
@@ -23,8 +26,10 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
     try {
       const parsed = JSON.parse(storedData);
        // Dates are stored as strings, so we need to convert them back
-      if (parsed.goalTargetDate) {
-        parsed.goalTargetDate = new Date(parsed.goalTargetDate);
+      if (parsed.goals) {
+        parsed.goals.forEach((g: any) => {
+          if (g.targetDate) g.targetDate = new Date(g.targetDate);
+        });
       }
       if (parsed.transactions) {
         parsed.transactions.forEach((t: any) => {
@@ -79,10 +84,46 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
   const resetUserData = useCallback(() => {
     localStorage.removeItem('pocketplan-userdata');
     setUserData(null);
-    // Optionally redirect to setup page
     if(typeof window !== 'undefined') {
       window.location.href = '/setup';
     }
+  }, []);
+
+  const addGoal = useCallback((goal: Omit<Goal, 'id' | 'currentAmount'>) => {
+    setUserData(prevData => {
+      if (!prevData) return null;
+      const newGoal: Goal = {
+        ...goal,
+        id: new Date().toISOString(),
+        currentAmount: 0,
+      };
+      const updatedData = {
+        ...prevData,
+        goals: [...(prevData.goals || []), newGoal],
+      };
+      localStorage.setItem('pocketplan-userdata', JSON.stringify(updatedData));
+      return updatedData;
+    });
+  }, []);
+
+  const updateGoal = useCallback((goal: Goal) => {
+    setUserData(prevData => {
+        if (!prevData) return null;
+        const updatedGoals = prevData.goals.map(g => g.id === goal.id ? goal : g);
+        const updatedData = { ...prevData, goals: updatedGoals };
+        localStorage.setItem('pocketplan-userdata', JSON.stringify(updatedData));
+        return updatedData;
+    });
+  }, []);
+
+  const deleteGoal = useCallback((goalId: string) => {
+    setUserData(prevData => {
+        if (!prevData) return null;
+        const updatedGoals = prevData.goals.filter(g => g.id !== goalId);
+        const updatedData = { ...prevData, goals: updatedGoals };
+        localStorage.setItem('pocketplan-userdata', JSON.stringify(updatedData));
+        return updatedData;
+    });
   }, []);
 
   const formatCurrency = useCallback((amount: number) => {
@@ -97,7 +138,7 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
   }, [userData?.currency]);
 
   return (
-    <UserDataContext.Provider value={{ userData, loading, formatCurrency, updateUserData, resetUserData, addTransaction }}>
+    <UserDataContext.Provider value={{ userData, loading, formatCurrency, updateUserData, resetUserData, addTransaction, addGoal, updateGoal, deleteGoal }}>
       {children}
     </UserDataContext.Provider>
   );

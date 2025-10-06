@@ -7,6 +7,7 @@ import { useMemo, useState, useEffect } from 'react';
 import { getPersonalizedTips } from '@/ai/flows/personalized-financial-tips';
 import { Skeleton } from '../ui/skeleton';
 import { Lightbulb } from 'lucide-react';
+import Link from 'next/link';
 
 export function TipsBanner() {
   const { userData, loading, formatCurrency } = useUserData();
@@ -29,13 +30,20 @@ export function TipsBanner() {
     return `User has spent a total of ${formatCurrency(totalSpent)}. The highest spending is in the '${topCategory?.[0] || 'N/A'}' category.`;
 
   }, [userData, formatCurrency]);
+  
+  const goalsSummary = useMemo(() => {
+    if (!userData || !userData.goals || userData.goals.length === 0) {
+      return "General savings";
+    }
+    return userData.goals.map(g => `${g.name} (${formatCurrency(g.targetAmount)})`).join(', ');
+  }, [userData, formatCurrency]);
 
   useEffect(() => {
     if (!loading && userData) {
       setTipLoading(true);
       getPersonalizedTips({
         spendingHabits: spendingHabitsSummary,
-        financialGoals: userData.goal || 'General savings',
+        financialGoals: goalsSummary,
         monthlyIncome: userData.monthlyIncome || 0,
       }).then(response => {
         if (response.tips && response.tips.length > 0) {
@@ -49,7 +57,7 @@ export function TipsBanner() {
         setTipLoading(false);
       });
     }
-  }, [userData, loading, spendingHabitsSummary]);
+  }, [userData, loading, spendingHabitsSummary, goalsSummary]);
 
   return (
     <div className="rounded-lg bg-card border p-4 text-foreground flex items-start gap-4">
@@ -63,10 +71,11 @@ export function TipsBanner() {
         ) : (
             <p className="text-sm mt-1 text-muted-foreground">{tip}</p>
         )}
-        <Button variant="link" className="p-0 text-accent h-auto mt-2 text-sm">
-            Get more tips
+        <Button variant="link" asChild className="p-0 text-accent h-auto mt-2 text-sm">
+            <Link href="/reports">Get more insights</Link>
         </Button>
       </div>
     </div>
   );
 }
+```

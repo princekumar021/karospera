@@ -10,6 +10,7 @@ export function UserInfo() {
   const { userData, loading } = useUserData();
   const userName = userData?.fullName || 'User';
   const userInitial = userName.charAt(0).toUpperCase();
+  const primaryGoal = userData?.goals && userData.goals.length > 0 ? userData.goals[0] : null;
 
   return (
     <div className="flex flex-col items-center space-y-4">
@@ -24,10 +25,11 @@ export function UserInfo() {
       ) : (
         <div className="text-center">
           <h2 className="text-2xl font-bold truncate">{userName}</h2>
-          <p className="text-muted-foreground truncate">Saving for {userData?.goal || 'your future'}</p>
+          <p className="text-muted-foreground truncate">Saving for {primaryGoal?.name || 'your future'}</p>
         </div>
       )}
        <Button variant="outline" size="sm">Change Avatar</Button>
     </div>
   );
 }
+```

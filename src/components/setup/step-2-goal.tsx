@@ -20,16 +20,19 @@ interface Step2Props {
 const goalOptions = ["Emergency fund", "Buy a phone", "Vacation", "Pay off debt", "Save for college", "Custom..."];
 
 export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
-  const { control, setValue } = useFormContext();
+  const { control, setValue, getValues } = useFormContext();
   const [isCustom, setIsCustom] = useState(false);
+  const [goalName, setGoalName] = useState(getValues("goals.0.name") || "");
 
   const handleGoalChange = (value: string) => {
     if (value === "Custom...") {
       setIsCustom(true);
-      setValue("goal", "", { shouldValidate: true });
+      setGoalName("");
+      setValue("goals.0.name", "", { shouldValidate: true });
     } else {
       setIsCustom(false);
-      setValue("goal", value, { shouldValidate: true });
+      setGoalName(value);
+      setValue("goals.0.name", value, { shouldValidate: true });
     }
   };
 
@@ -50,7 +53,7 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
     >
       <FormField
         control={control}
-        name="goal"
+        name="goals.0.name"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Goal</FormLabel>
@@ -80,12 +83,12 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
       />
       <FormField
         control={control}
-        name="goalTargetAmount"
+        name="goals.0.targetAmount"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Target amount (optional)</FormLabel>
             <FormControl>
-              <Input type="number" placeholder="e.g., 50000" {...field} value={field.value ?? ''} />
+              <Input type="number" placeholder="e.g., 50000" {...field} onChange={e => field.onChange(parseFloat(e.target.value))}/>
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -93,7 +96,7 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
       />
       <FormField
         control={control}
-        name="goalTargetDate"
+        name="goals.0.targetDate"
         render={({ field }) => (
           <FormItem className="flex flex-col">
             <FormLabel>Target date (optional)</FormLabel>
@@ -133,3 +136,4 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
     </StepWrapper>
   );
 }
+```
