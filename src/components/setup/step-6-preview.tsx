@@ -12,7 +12,7 @@ interface Step6Props {
 }
 
 export default function Step6Preview({ goToStep }: Step6Props) {
-  const { getValues, handleSubmit } = useFormContext<SetupFormData>();
+  const { getValues } = useFormContext<SetupFormData>();
   const router = useRouter();
   const values = getValues();
   const { fullName, monthlyIncome, goal, goalTargetAmount, goalTargetDate, recurringExpenses, currency } = values;
@@ -56,11 +56,6 @@ export default function Step6Preview({ goToStep }: Step6Props) {
     .sort((a,b) => (a.dueDay || 32) - (b.dueDay || 32))
     .find(e => (e.dueDay || 0) >= new Date().getDate()) || recurringExpenses[0];
 
-  const onFinish = (data: SetupFormData) => {
-    console.log("Setup complete:", data);
-    router.push('/dashboard');
-  }
-
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency, minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount);
   }
@@ -71,7 +66,7 @@ export default function Step6Preview({ goToStep }: Step6Props) {
       description="Quick preview of your dashboard with sample data."
       footer={
         <div className="flex w-full flex-col gap-2">
-           <Button type="submit" onClick={handleSubmit(onFinish)} className="w-full font-semibold">
+           <Button type="submit" className="w-full font-semibold">
             Start using PocketPlan
           </Button>
           <Button onClick={() => goToStep(1)} variant="outline" className="w-full font-semibold">
