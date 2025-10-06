@@ -43,7 +43,7 @@ export default function Home() {
               <div className="relative h-80 md:h-96 w-full flex items-center justify-center">
                 
                   <Image
-                    src="/hero-image.png"
+                    src="/images/brainmoney.png"
                     alt="Brain made of money"
                     fill
                     priority
