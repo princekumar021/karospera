@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -40,16 +41,15 @@ export default function Home() {
                 </Button>
               </div>
               <div className="relative h-80 md:h-96 w-full flex items-center justify-center">
-                {heroImage && (
+                
                   <Image
-                    src={heroImage.imageUrl}
-                    alt={heroImage.description}
+                    src="/hero-image.png"
+                    alt="Brain made of money"
                     fill
                     priority
                     className="object-cover rounded-2xl"
-                    data-ai-hint={heroImage.imageHint}
                   />
-                )}
+                
               </div>
             </section>
 
@@ -82,11 +82,10 @@ export default function Home() {
                 </div>
                  <div className="relative h-72 w-full order-1 md:order-2">
                     <Image
-                        src="https://picsum.photos/seed/design/600/400"
-                        alt="A person designing on a tablet"
+                        src="/second-image.png"
+                        alt="Healthcare financial burden"
                         fill
                         className="object-cover rounded-2xl"
-                        data-ai-hint="design tablet"
                     />
                 </div>
             </section>
