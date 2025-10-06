@@ -35,7 +35,7 @@ export const setupSchema = z.object({
   
   // Step 3
   currency: z.string().default("INR"),
-  monthlyIncome: z.coerce.number().min(1, "Please enter your monthly income."),
+  monthlyIncome: z.coerce.number({invalid_type_error: "Please enter your monthly income."}).min(1, "Please enter your monthly income."),
   payCycle: z.enum(["Monthly", "Bi-weekly", "Weekly", "Custom"]),
   
   // Step 4
