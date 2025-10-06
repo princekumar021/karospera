@@ -41,9 +41,9 @@ export default function Step1Name({ nextStep }: Step1Props) {
         />
       </div>
 
-      <Alert className="bg-transparent border-0 text-card-foreground p-0">
+      <Alert className="bg-card border-border text-card-foreground">
         <Info className="h-4 w-4 !text-muted-foreground" />
-        <AlertTitle className="font-semibold text-muted-foreground">Private & Secure</AlertTitle>
+        <AlertTitle className="font-semibold text-foreground">Private & Secure</AlertTitle>
         <AlertDescription className="text-xs text-muted-foreground">
           Your financial data is stored securely on your device.
         </AlertDescription>
