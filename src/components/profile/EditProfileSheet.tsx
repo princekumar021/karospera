@@ -79,9 +79,9 @@ export function EditProfileSheet({ children, open, onOpenChange }: { children?: 
         <SheetHeader>
           <SheetTitle>Edit Profile</SheetTitle>
         </SheetHeader>
-        <ScrollArea className="flex-1 -mx-4 px-4">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-4">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 overflow-y-auto -mx-4 px-4">
+            <div className="space-y-6 mt-4">
               <div className="rounded-lg border bg-background">
                   <FormField
                       control={form.control}
@@ -167,16 +167,15 @@ export function EditProfileSheet({ children, open, onOpenChange }: { children?: 
                       )}
                   />
               </div>
-              
-              <SheetFooter className="mt-6 flex-col gap-2 sticky bottom-0 bg-background pt-4">
-                  <Button type="submit" size="lg">Save Changes</Button>
-                  <SheetClose asChild>
-                      <Button variant="ghost" className="w-full">Cancel</Button>
-                  </SheetClose>
-              </SheetFooter>
-            </form>
-          </Form>
-        </ScrollArea>
+            </div>
+            <SheetFooter className="mt-6 flex-col gap-2 sticky bottom-0 bg-background pt-4">
+                <Button type="submit" size="lg">Save Changes</Button>
+                <SheetClose asChild>
+                    <Button variant="ghost" className="w-full">Cancel</Button>
+                </SheetClose>
+            </SheetFooter>
+          </form>
+        </Form>
       </SheetContent>
     </Sheet>
   );
