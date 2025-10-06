@@ -13,7 +13,7 @@ export function DashboardHeader() {
   const userInitial = userName.charAt(0).toUpperCase();
 
   return (
-    <header className="flex items-center justify-between bg-card px-4 py-3 rounded-t-2xl">
+    <header className="flex items-center justify-between bg-card px-4 pt-3">
       <div className="flex items-center gap-3">
         <Link href="/profile" passHref>
           <Avatar className="h-10 w-10">
@@ -21,9 +21,9 @@ export function DashboardHeader() {
           </Avatar>
         </Link>
         {loading ? (
-          <Skeleton className="h-6 w-32" />
+          <Skeleton className="h-8 w-32" />
         ) : (
-          <h1 className="text-lg font-bold truncate">Hi, {userName.split(' ')[0]} 👋</h1>
+          <h1 className="text-xl font-bold truncate">Hi, {userName.split(' ')[0]} 👋</h1>
         )}
       </div>
       <Button variant="ghost" size="icon" asChild>
