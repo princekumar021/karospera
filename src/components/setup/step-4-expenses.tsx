@@ -24,9 +24,10 @@ const frequencyOptions = ["Monthly", "Quarterly", "Yearly"];
 
 
 function ExpenseItem({ index, remove }: { index: number, remove: (index: number) => void }) {
-  const { control, getValues } = useFormContext();
+  const { control } = useFormContext();
+  const { userData } = useUserData();
   
-  const currency = getValues("currency");
+  const currency = userData?.currency || "USD";
   const currencySymbols: { [key: string]: string } = { "INR": "₹", "USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥" };
   const symbol = currencySymbols[currency] || '$';
 
@@ -35,7 +36,7 @@ function ExpenseItem({ index, remove }: { index: number, remove: (index: number)
   const { error: frequencyError } = useFormField({ name: `recurringExpenses.${index}.frequency`});
 
   return (
-    <div className={cn("relative rounded-lg border p-4 bg-card", (nameError || amountError || frequencyError) && "animate-shake border-destructive")}>
+    <div className={cn("relative rounded-lg border bg-card text-card-foreground", (nameError || amountError || frequencyError) && "animate-shake border-destructive")}>
        <Button
         type="button"
         variant="ghost"
@@ -46,45 +47,47 @@ function ExpenseItem({ index, remove }: { index: number, remove: (index: number)
         <Trash2 className="h-4 w-4" />
       </Button>
 
-      <FormField
-        control={control}
-        name={`recurringExpenses.${index}.name`}
-        render={({ field }) => (
-          <FormItem>
-              <FormControl>
-                <Input placeholder="e.g., Rent, Netflix..." {...field} className="border-0 text-base font-semibold p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
-              </FormControl>
-            <FormMessage className="pt-1" />
-          </FormItem>
-        )}
-      />
-      <div className="flex items-center gap-4 mt-2">
+      <div className="p-4 space-y-2">
         <FormField
+          control={control}
+          name={`recurringExpenses.${index}.name`}
+          render={({ field }) => (
+            <FormItem>
+                <FormControl>
+                  <Input placeholder="e.g., Rent, Netflix..." {...field} className="border-0 text-base font-semibold p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
+                </FormControl>
+              <FormMessage className="pt-1" />
+            </FormItem>
+          )}
+        />
+        <Separator />
+         <FormField
             control={control}
             name={`recurringExpenses.${index}.amount`}
             render={({ field }) => (
-            <FormItem className="flex-1">
-                <Label className="text-xs text-muted-foreground">Amount</Label>
+            <FormItem className="flex items-center">
+                <Label className="flex-1">Amount</Label>
                 <FormControl>
-                    <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">{symbol}</span>
-                        <Input type="number" placeholder="0" {...field} value={field.value ?? ''} className="pl-7 bg-secondary border-secondary focus-visible:ring-primary"/>
+                    <div className="relative flex items-center">
+                        <span className="absolute left-3 text-muted-foreground">{symbol}</span>
+                        <Input type="number" placeholder="0" {...field} value={field.value ?? ''} className="pl-7 bg-transparent border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0"/>
                     </div>
                 </FormControl>
                 <FormMessage />
             </FormItem>
             )}
         />
+        <Separator />
         <FormField
             control={control}
             name={`recurringExpenses.${index}.frequency`}
             render={({ field }) => (
-            <FormItem className="flex-1">
-                <Label className="text-xs text-muted-foreground">Frequency</Label>
+            <FormItem className="flex items-center">
+                <Label className="flex-1">Frequency</Label>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                        <SelectTrigger className="bg-secondary border-secondary focus:ring-primary">
-                        <SelectValue placeholder="Frequency" />
+                        <SelectTrigger className="w-auto bg-transparent border-0 focus:ring-0 focus:ring-offset-0 justify-end gap-1">
+                          <SelectValue placeholder="Frequency" />
                         </SelectTrigger>
                     </FormControl>
                     <SelectContent>
