@@ -1,5 +1,5 @@
 
-import { ProfileHeader, UserInfo, PersonalDetails, QuickActions, Achievements } from '@/components/profile';
+import { ProfileHeader, UserInfo, PersonalDetails, QuickActions } from '@/components/profile';
 import { BottomNavigation } from '@/components/dashboard';
 
 export default function ProfilePage() {
@@ -10,7 +10,6 @@ export default function ProfilePage() {
         <UserInfo />
         <PersonalDetails />
         <QuickActions />
-        <Achievements />
       </main>
       <BottomNavigation />
     </div>
