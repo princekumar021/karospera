@@ -1,80 +1,103 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Target, PieChart, ShieldCheck, MoveRight } from "lucide-react";
+import { ArrowRight, CheckCircle, PieChart, ShieldCheck, Target } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { AppLogo } from "@/components/icons";
 
 export default function Home() {
-  const heroImage = PlaceHolderImages.find(img => img.id === 'hero-illustration-transparent');
+  const heroImage = PlaceHolderImages.find(img => img.id === 'hero-portrait');
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <header className="container mx-auto px-4 pt-6 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <AppLogo className="h-8 w-8" />
-          <span className="text-xl font-semibold font-headline">karospera</span>
-        </div>
-      </header>
-      
-      <main className="flex-grow">
-        <section className="container mx-auto px-4 py-16 md:py-32 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold font-headline tracking-tight leading-tight max-w-3xl mx-auto">
-            Clarity for your cashflow.
-          </h1>
-          <p className="mt-4 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            The simple, private way to manage your budgets, track goals, and understand your spending. No email required to start.
-          </p>
-          <div className="mt-8">
-            <Button asChild size="lg" className="font-semibold text-lg py-6 px-8 group">
-              <Link href="/setup">
-                Get Started for Free
-                <MoveRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
-              </Link>
+    <div className="flex flex-col min-h-screen bg-background text-foreground font-body">
+      <div className="flex-grow w-full max-w-4xl mx-auto p-4 md:p-8">
+        <div className="bg-card text-card-foreground rounded-3xl p-6 md:p-10 shadow-sm">
+          
+          <header className="flex items-center justify-between mb-12">
+            <div className="flex items-center gap-2">
+              <AppLogo className="h-7 w-7" />
+              <span className="text-lg font-semibold font-headline">karospera</span>
+            </div>
+            <Button variant="ghost" className="rounded-full font-semibold">
+              Get Started
             </Button>
-          </div>
-        </section>
-        
-        <section className="container mx-auto px-4">
-            <div className="relative w-full max-w-4xl mx-auto h-[300px] md:h-[500px]">
+          </header>
+
+          <main>
+            <section className="grid md:grid-cols-2 gap-10 items-center">
+              <div className="space-y-4">
+                <h1 className="font-headline text-5xl md:text-6xl font-bold tracking-tighter leading-tight">
+                  Clarity for your cashflow.
+                </h1>
+                <p className="text-muted-foreground text-lg">
+                  The simple, private way to manage your budgets, track goals, and understand your spending.
+                </p>
+                <Button asChild size="lg" className="rounded-full font-semibold text-base py-6 px-7 group mt-4">
+                  <Link href="/setup">
+                    Get Started for Free
+                    <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </Button>
+              </div>
+              <div className="relative h-80 md:h-96 w-full flex items-center justify-center">
                 {heroImage && (
-                <Image
+                  <Image
                     src={heroImage.imageUrl}
                     alt={heroImage.description}
                     fill
                     priority
-                    className="object-contain"
+                    className="object-cover rounded-2xl"
                     data-ai-hint={heroImage.imageHint}
-                />
+                  />
                 )}
-            </div>
-        </section>
+              </div>
+            </section>
 
-        <section className="container mx-auto px-4 py-16 md:py-32">
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div>
-              <PieChart className="h-10 w-10 mb-4 mx-auto text-primary" />
-              <h3 className="font-headline text-xl font-semibold">Smart Budgets</h3>
-              <p className="text-muted-foreground mt-2">Get automatic budget suggestions based on your income and goals.</p>
-            </div>
-            <div>
-              <Target className="h-10 w-10 mb-4 mx-auto text-primary" />
-              <h3 className="font-headline text-xl font-semibold">Goal Tracking</h3>
-              <p className="text-muted-foreground mt-2">Set, track, and achieve your financial goals, big or small.</p>
-            </div>
-            <div>
-              <ShieldCheck className="h-10 w-10 mb-4 mx-auto text-primary" />
-              <h3 className="font-headline text-xl font-semibold">Private by Default</h3>
-              <p className="text-muted-foreground mt-2">Your data stays on your device. No accounts, no clouds, no tracking.</p>
-            </div>
-          </div>
-        </section>
-      </main>
-      
-      <footer className="container mx-auto px-4 py-8 text-center text-muted-foreground">
-        <p className="text-sm">&copy; {new Date().getFullYear()} karospera. All rights reserved.</p>
-      </footer>
+            <section className="my-16 md:my-24">
+                <h2 className="text-center text-sm font-semibold uppercase text-muted-foreground tracking-wider mb-8">Key Features</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                    <div className="flex flex-col items-center gap-2">
+                        <PieChart className="h-7 w-7 text-primary/80"/>
+                        <p className="font-semibold text-sm">Smart Budgets</p>
+                    </div>
+                     <div className="flex flex-col items-center gap-2">
+                        <Target className="h-7 w-7 text-primary/80"/>
+                        <p className="font-semibold text-sm">Goal Tracking</p>
+                    </div>
+                     <div className="flex flex-col items-center gap-2">
+                        <ShieldCheck className="h-7 w-7 text-primary/80"/>
+                        <p className="font-semibold text-sm">Private by Default</p>
+                    </div>
+                     <div className="flex flex-col items-center gap-2">
+                        <CheckCircle className="h-7 w-7 text-primary/80"/>
+                        <p className="font-semibold text-sm">No Accounts Needed</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section className="grid md:grid-cols-2 gap-10 items-center my-16 md:my-24">
+                <div className="space-y-4 order-2 md:order-1">
+                    <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">Crafting Meaningful Financial Experiences</h2>
+                    <p className="text-muted-foreground">With a keen eye for aesthetics and a deep understanding of user behavior, we design tools that not only look great but also resonate with your financial journey. Our focus is on seamless usability, empowering you with clarity and control.</p>
+                </div>
+                 <div className="relative h-72 w-full order-1 md:order-2">
+                    <Image
+                        src="https://picsum.photos/seed/design/600/400"
+                        alt="A person designing on a tablet"
+                        fill
+                        className="object-cover rounded-2xl"
+                        data-ai-hint="design tablet"
+                    />
+                </div>
+            </section>
+          </main>
+          
+          <footer className="text-center text-muted-foreground/60 text-xs mt-12">
+            <p>&copy; {new Date().getFullYear()} karospera. All rights reserved.</p>
+          </footer>
+
+        </div>
+      </div>
     </div>
   );
 }

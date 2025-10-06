@@ -3,6 +3,16 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { UserDataProvider } from '@/hooks/use-user-data';
 import { ThemeApplicator } from '@/components/ThemeApplicator';
+import { Inter, Playfair_Display } from 'next/font/google'
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+})
+const playfairDisplay = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair-display',
+})
 
 export const metadata: Metadata = {
   title: 'karospera: Control your money',
@@ -15,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${playfairDisplay.variable}`}>
       <head>
       </head>
       <body className="font-body antialiased bg-background text-foreground">
