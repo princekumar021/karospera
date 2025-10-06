@@ -45,14 +45,14 @@ function GoalForm() {
   return (
     <div className={cn("rounded-lg border bg-card text-card-foreground", (nameError || amountError || dateError) && "animate-shake border-destructive")}>
         {isCustom ? (
-             <FormField
+              <FormField
                 control={control}
                 name="goals.0.name"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="floating-label-input">
+                    <div className="floating-label-input border-b">
                       <FormControl>
-                        <Input placeholder=" " {...field} className="h-12 border-0 bg-transparent text-lg px-3 peer border-b rounded-none" />
+                        <Input placeholder=" " {...field} className="h-12 border-0 bg-transparent text-lg px-3 peer rounded-none" />
                       </FormControl>
                       <Label>Goal</Label>
                     </div>
@@ -103,7 +103,7 @@ function GoalForm() {
                       type="number"
                       placeholder="Optional Amount"
                       {...field}
-                      className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
+                      className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent pr-2"
                       value={field.value ?? ""}
                       onChange={e => {
                         const value = e.target.value;

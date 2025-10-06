@@ -60,7 +60,7 @@ function IncomeForm() {
                 <FormLabel className="w-1/3">Monthly Income</FormLabel>
                 <FormControl>
                   <Input type="number" placeholder="e.g., 45000" {...field} value={field.value ?? ''}
-                    className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
+                    className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent pr-2"
                     onChange={e => {
                       const value = e.target.value;
                       field.onChange(value === '' ? undefined : parseFloat(value));
