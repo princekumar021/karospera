@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const recurringExpenseSchema = z.object({
   name: z.string().min(1, "Expense name is required."),
-  amount: z.coerce.number().min(0.01, "Amount must be greater than 0."),
+  amount: z.coerce.number().min(0.01, "Amount must be greater than 0.").optional(),
   frequency: z.enum(["Monthly", "Quarterly", "Yearly"]),
   dueDay: z.coerce.number().min(1).max(31).optional(),
 });

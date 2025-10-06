@@ -12,6 +12,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "../ui/separator";
 import { cn } from "@/lib/utils";
 import { useRef, useEffect } from "react";
+import { Label } from "../ui/label";
+import { useUserData } from "@/hooks/use-user-data";
 
 interface Step4Props {
   nextStep: () => void;
@@ -23,71 +25,73 @@ const frequencyOptions = ["Monthly", "Quarterly", "Yearly"];
 
 function ExpenseItem({ index, remove }: { index: number, remove: (index: number) => void }) {
   const { control } = useFormContext();
+  const { userData } = useUserData();
   const { error: nameError } = useFormField({ name: `recurringExpenses.${index}.name`});
   const { error: amountError } = useFormField({ name: `recurringExpenses.${index}.amount`});
   const { error: frequencyError } = useFormField({ name: `recurringExpenses.${index}.frequency`});
 
   return (
-    <div className={cn("rounded-lg border p-3 bg-card space-y-2", (nameError || amountError || frequencyError) && "animate-shake border-destructive")}>
+    <div className={cn("relative rounded-lg border p-4 bg-card", (nameError || amountError || frequencyError) && "animate-shake border-destructive")}>
+       <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        className="absolute top-2 right-2 h-7 w-7 text-muted-foreground hover:text-destructive"
+        onClick={() => remove(index)}
+      >
+        <Trash2 className="h-4 w-4" />
+      </Button>
+
       <FormField
         control={control}
         name={`recurringExpenses.${index}.name`}
         render={({ field }) => (
           <FormItem>
-            <div className="flex items-center">
-              <FormLabel className="w-1/3">Name</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., Rent" {...field} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
+                <Input placeholder="e.g., Rent, Netflix..." {...field} className="border-0 text-base font-semibold p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
               </FormControl>
-            </div>
-            <FormMessage />
+            <FormMessage className="pt-1" />
           </FormItem>
         )}
       />
-      <Separator />
-      <FormField
-        control={control}
-        name={`recurringExpenses.${index}.amount`}
-        render={({ field }) => (
-          <FormItem>
-            <div className="flex items-center">
-              <FormLabel className="w-1/3">Amount</FormLabel>
-              <FormControl>
-                <Input type="number" placeholder="e.g., 12000" {...field} value={field.value ?? ''} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
-              </FormControl>
-            </div>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <Separator />
-      <FormField
-        control={control}
-        name={`recurringExpenses.${index}.frequency`}
-        render={({ field }) => (
-          <FormItem>
-              <div className="flex items-center">
-                <FormLabel className="w-1/3">Frequency</FormLabel>
+      <div className="flex items-center gap-4 mt-2">
+        <FormField
+            control={control}
+            name={`recurringExpenses.${index}.amount`}
+            render={({ field }) => (
+            <FormItem className="flex-1">
+                <Label className="text-xs text-muted-foreground">Amount</Label>
+                <FormControl>
+                    <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">{userData?.currency === 'INR' ? '₹' : '$'}</span>
+                        <Input type="number" placeholder="0" {...field} value={field.value ?? ''} className="pl-7 bg-secondary border-secondary focus-visible:ring-primary"/>
+                    </div>
+                </FormControl>
+                <FormMessage />
+            </FormItem>
+            )}
+        />
+        <FormField
+            control={control}
+            name={`recurringExpenses.${index}.frequency`}
+            render={({ field }) => (
+            <FormItem className="flex-1">
+                <Label className="text-xs text-muted-foreground">Frequency</Label>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent">
-                      <SelectValue placeholder="Frequency" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {frequencyOptions.map(option => <SelectItem key={option} value={option}>{option}</SelectItem>)}
-                  </SelectContent>
+                    <FormControl>
+                        <SelectTrigger className="bg-secondary border-secondary focus:ring-primary">
+                        <SelectValue placeholder="Frequency" />
+                        </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                        {frequencyOptions.map(option => <SelectItem key={option} value={option}>{option}</SelectItem>)}
+                    </SelectContent>
                 </Select>
-              </div>
-              <FormMessage />
-          </FormItem>
-        )}
-      />
-      <div className="flex justify-end -mb-4 -mr-2">
-        <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => remove(index)}>
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      </div>
+                <FormMessage />
+            </FormItem>
+            )}
+        />
+       </div>
     </div>
   )
 }
@@ -137,7 +141,7 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
           type="button"
           variant="outline"
           className="w-full font-semibold"
-          onClick={() => append({ name: '', amount: 0, frequency: 'Monthly' })}
+          onClick={() => append({ name: '', amount: undefined, frequency: 'Monthly' })}
         >
           <PlusCircle className="mr-2 h-4 w-4" />
           Add Expense
