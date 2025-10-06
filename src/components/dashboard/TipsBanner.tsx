@@ -3,65 +3,70 @@
 import { Button } from '@/components/ui/button';
 import { useUserData } from '@/hooks/use-user-data';
 import { RecurringExpense } from '@/lib/setup-schema';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import { getPersonalizedTips } from '@/ai/flows/personalized-financial-tips';
+import { Skeleton } from '../ui/skeleton';
+import { Lightbulb } from 'lucide-react';
 
 export function TipsBanner() {
   const { userData, loading, formatCurrency } = useUserData();
+  const [tip, setTip] = useState<string>('');
+  const [tipLoading, setTipLoading] = useState(true);
 
-  const getMonthlyAmount = (expense: RecurringExpense): number => {
-    const amount = Number(expense.amount) || 0;
-    switch (expense.frequency) {
-      case 'Yearly':
-        return amount / 12;
-      case 'Quarterly':
-        return amount / 3;
-      case 'Monthly':
-      default:
-        return amount;
+  const spendingHabitsSummary = useMemo(() => {
+    if (!userData || !userData.transactions || userData.transactions.length === 0) {
+      return "No transactions recorded yet.";
     }
-  };
+    const expenseTransactions = userData.transactions.filter(t => t.type === 'expense');
+    const totalSpent = expenseTransactions.reduce((sum, t) => sum + Math.abs(t.amount), 0);
+    const categorySpending = expenseTransactions.reduce((acc, t) => {
+      acc[t.category] = (acc[t.category] || 0) + Math.abs(t.amount);
+      return acc;
+    }, {} as Record<string, number>);
 
-  const { tip, cta } = useMemo(() => {
-    if (loading || !userData) {
-      return { tip: "Analyzing your finances for smart tips...", cta: "View Budget" };
-    }
+    const topCategory = Object.entries(categorySpending).sort((a, b) => b[1] - a[1])[0];
 
-    const totalMonthlyRecurring = userData.recurringExpenses.reduce((sum, exp) => sum + getMonthlyAmount(exp), 0);
-    const availableBalance = (userData.monthlyIncome || 0) - totalMonthlyRecurring;
-    
-    if (availableBalance < 0) {
-      return { 
-        tip: `Your recurring expenses are higher than your income by ${formatCurrency(Math.abs(availableBalance))}.`,
-        cta: "Review Expenses"
-      };
-    }
-    
-    if (userData.goal && userData.goalTargetAmount) {
-       const suggestedSaving = Math.max(0, availableBalance * 0.2); // Suggest saving 20%
-       if (suggestedSaving > 0) {
-        return {
-          tip: `You have ${formatCurrency(availableBalance)} left this month. Try saving ${formatCurrency(suggestedSaving)} for your "${userData.goal}" goal.`,
-          cta: "Adjust Savings"
+    return `User has spent a total of ${formatCurrency(totalSpent)}. The highest spending is in the '${topCategory?.[0] || 'N/A'}' category.`;
+
+  }, [userData, formatCurrency]);
+
+  useEffect(() => {
+    if (!loading && userData) {
+      setTipLoading(true);
+      getPersonalizedTips({
+        spendingHabits: spendingHabitsSummary,
+        financialGoals: userData.goal || 'General savings',
+        monthlyIncome: userData.monthlyIncome || 0,
+      }).then(response => {
+        if (response.tips && response.tips.length > 0) {
+          setTip(response.tips[0]);
+        } else {
+          setTip("Keep tracking your expenses to get personalized tips!");
         }
-       }
+        setTipLoading(false);
+      }).catch(() => {
+        setTip("Could not load a tip right now. Please try again later.");
+        setTipLoading(false);
+      });
     }
-
-    return {
-      tip: "You’ve spent 60% of your budget this month. Plan early to stay under your limit!",
-      cta: "View Budget"
-    };
-
-  }, [userData, loading, formatCurrency]);
+  }, [userData, loading, spendingHabitsSummary]);
 
   return (
-    <div className="rounded-lg bg-gradient-to-r from-primary/80 to-primary/60 p-4 text-primary-foreground">
-      <h3 className="font-bold">💡 Smart Tip</h3>
-      <p className="text-sm">
-        {tip}
-      </p>
-      <Button variant="link" className="p-0 text-primary-foreground">
-        {cta}
-      </Button>
+    <div className="rounded-lg bg-card border p-4 text-foreground flex items-start gap-4">
+      <div className="bg-accent/20 text-accent p-2 rounded-full mt-1">
+        <Lightbulb className="h-5 w-5" />
+      </div>
+      <div className="flex-1">
+        <h3 className="font-bold text-base text-accent">Smart Tip</h3>
+        {tipLoading ? (
+            <Skeleton className="h-8 w-full mt-1" />
+        ) : (
+            <p className="text-sm mt-1 text-muted-foreground">{tip}</p>
+        )}
+        <Button variant="link" className="p-0 text-accent h-auto mt-2 text-sm">
+            Get more tips
+        </Button>
+      </div>
     </div>
   );
 }
