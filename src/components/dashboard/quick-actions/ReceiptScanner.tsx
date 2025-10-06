@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { CameraOff, Loader2 } from 'lucide-react';
-import { BarcodeScanner } from 'react-zxing';
+import BarcodeScanner from 'react-zxing';
 
 interface ReceiptScannerProps {
     onScanSuccess: (scannedData: { amount?: number, note?: string }) => void;
