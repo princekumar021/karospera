@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useFormContext, useFieldArray } from "react-hook-form";
@@ -106,10 +107,12 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
   };
   
   useEffect(() => {
-    if (fields.length > 2) { 
+    if (fields.length > 2) {
       const viewport = scrollViewportRef.current;
       if (viewport) {
-        viewport.scrollTo({ top: viewport.scrollHeight, behavior: 'smooth' });
+        setTimeout(() => {
+          viewport.scrollTo({ top: viewport.scrollHeight, behavior: 'smooth' });
+        }, 0);
       }
     }
   }, [fields.length]);
