@@ -91,7 +91,7 @@ export function AddExpenseDialog() {
             <span className="text-xs">Add Expense</span>
         </div>
       </SheetTrigger>
-      <SheetContent side="bottom" className="rounded-t-2xl px-4 pb-6">
+      <SheetContent side="bottom" className="rounded-t-2xl px-4 pb-6" hideClose>
         <SheetHeader>
           <SheetTitle className="sr-only">Add Expense</SheetTitle>
         </SheetHeader>
@@ -126,7 +126,7 @@ export function AddExpenseDialog() {
                              </div>
                           </div>
                     </CollapsibleTrigger>
-                    <CollapsibleContent>
+                    <CollapsibleContent className="data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up overflow-hidden">
                         <div className="p-2 space-y-1">
                            {categories.map(cat => (
                                <Button
