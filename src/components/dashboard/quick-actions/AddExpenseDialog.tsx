@@ -126,7 +126,7 @@ export function AddExpenseDialog() {
                              </div>
                           </div>
                     </CollapsibleTrigger>
-                    <CollapsibleContent className="data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up overflow-hidden">
+                    <CollapsibleContent className="overflow-hidden data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
                         <div className="p-2 space-y-1">
                            {categories.map(cat => (
                                <Button
