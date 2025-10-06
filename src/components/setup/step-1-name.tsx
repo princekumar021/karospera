@@ -27,17 +27,17 @@ function NameInput() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder=" " {...field} className="h-14 border-0 bg-transparent text-lg text-center" />
+                <Input placeholder=" " {...field} className="h-12 border-0 bg-transparent text-lg px-3" />
               </FormControl>
               <Label>Name</Label>
             </FormItem>
           )}
         />
       </div>
-      <FormField
+       <FormField
         control={control}
         name="fullName"
-        render={() => <FormMessage className="px-3 pb-2"/>}
+        render={() => <FormMessage className={cn("px-3 pb-2", !error && "hidden")}/>}
       />
     </div>
   )
