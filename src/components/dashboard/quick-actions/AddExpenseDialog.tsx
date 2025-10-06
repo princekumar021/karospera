@@ -13,16 +13,15 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { PlusCircle, ChevronRight, ScanLine } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { PlusCircle, ChevronRight, ScanLine, Utensils, ShoppingCart, Car, Film, Receipt, PiggyBank, MoreHorizontal } from 'lucide-react';
 import { useUserData } from '@/hooks/use-user-data';
 import { useToast } from '@/hooks/use-toast';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 const expenseFormSchema = z.object({
-  name: z.string().min(1, "Name is required"),
   amount: z.coerce.number().min(0.01, "Amount must be positive"),
   category: z.string({ required_error: "Category is required" }),
   note: z.string().optional(),
@@ -30,20 +29,33 @@ const expenseFormSchema = z.object({
 
 type ExpenseForm = z.infer<typeof expenseFormSchema>;
 
+const categories = [
+    { value: 'Food', label: 'Food', icon: <Utensils className="h-5 w-5" /> },
+    { value: 'Shopping', label: 'Shopping', icon: <ShoppingCart className="h-5 w-5" /> },
+    { value: 'Transport', label: 'Transport', icon: <Car className="h-5 w-5" /> },
+    { value: 'Entertainment', label: 'Entertainment', icon: <Film className="h-5 w-5" /> },
+    { value: 'Bills', label: 'Bills', icon: <Receipt className="h-5 w-5" /> },
+    { value: 'Savings', label: 'Savings', icon: <PiggyBank className="h-5 w-5" /> },
+    { value: 'Other', label: 'Other', icon: <MoreHorizontal className="h-5 w-5" /> },
+];
+
+
 export function AddExpenseDialog() {
   const [open, setOpen] = useState(false);
+  const [categoryOpen, setCategoryOpen] = useState(false);
   const { userData, addTransaction, formatCurrency } = useUserData();
   const { toast } = useToast();
 
   const form = useForm<ExpenseForm>({
     resolver: zodResolver(expenseFormSchema),
     defaultValues: {
-      name: "New Expense", // Name is less prominent, so we can default it.
       amount: '' as any,
       category: 'Shopping',
       note: "",
     }
   });
+  
+  const selectedCategory = categories.find(c => c.value === form.watch('category')) || categories[1];
 
   const onSubmit = (data: ExpenseForm) => {
     addTransaction({
@@ -65,7 +77,7 @@ export function AddExpenseDialog() {
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
     if (!isOpen) {
-      form.reset({ name: "New Expense", category: "Shopping", amount: '' as any, note: "" });
+      form.reset({ category: "Shopping", amount: '' as any, note: "" });
     }
   }
 
@@ -103,44 +115,42 @@ export function AddExpenseDialog() {
             </div>
 
             <div className="space-y-2 rounded-lg border bg-background">
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="sr-only">Category</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="h-14 text-base border-0 border-b rounded-none">
-                             <div className="flex justify-between items-center w-full">
-                                <span>Category</span>
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                    <SelectValue placeholder="Shopping" />
-                                    <ChevronRight className="h-5 w-5" />
-                                </div>
+                <Collapsible open={categoryOpen} onOpenChange={setCategoryOpen}>
+                    <CollapsibleTrigger className="w-full">
+                         <div className="flex items-center h-14 px-3 py-2 text-base border-b rounded-none w-full">
+                             <span className="flex-1 text-left">Category</span>
+                             <div className="flex items-center gap-2 text-muted-foreground">
+                                {selectedCategory.icon}
+                                <span>{selectedCategory.label}</span>
+                                <ChevronRight className="h-5 w-5" />
                              </div>
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Food">Food</SelectItem>
-                          <SelectItem value="Shopping">Shopping</SelectItem>
-                          <SelectItem value="Transport">Transport</SelectItem>
-                          <SelectItem value="Entertainment">Entertainment</SelectItem>
-                          <SelectItem value="Bills">Bills</SelectItem>
-                          <SelectItem value="Savings">Savings</SelectItem>
-                          <SelectItem value="Other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                          </div>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                        <div className="p-2 space-y-1">
+                           {categories.map(cat => (
+                               <Button
+                                 key={cat.value}
+                                 variant="ghost"
+                                 className="w-full justify-start gap-2"
+                                 onClick={() => {
+                                     form.setValue('category', cat.value);
+                                     setCategoryOpen(false);
+                                 }}
+                               >
+                                 {cat.icon}
+                                 {cat.label}
+                               </Button>
+                           ))}
+                        </div>
+                    </CollapsibleContent>
+                </Collapsible>
+
                  <FormField
                   control={form.control}
                   name="note"
                   render={({ field }) => (
                     <FormItem>
-                       <FormLabel className="sr-only">Note</FormLabel>
                        <FormControl>
                           <div className="flex items-center h-14 px-3 py-2 text-base border-b rounded-none">
                              <span className="flex-1">Note</span>
