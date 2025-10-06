@@ -20,15 +20,6 @@ export function BudgetSummary() {
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
 
-    // Calculate total spending from one-off expense transactions for the current month
-    const oneOffSpending = userData.transactions
-      ?.filter(t => {
-        const tDate = new Date(t.date);
-        return t.type === 'expense' && tDate.getMonth() === currentMonth && tDate.getFullYear() === currentYear;
-      })
-      .reduce((sum, t) => sum + Math.abs(t.amount), 0) || 0;
-
-    // In this simplified model, we'll consider monthly recurring expenses as "spent"
     const getMonthlyAmount = (expense: RecurringExpense): number => {
         const amount = Number(expense.amount) || 0;
         switch (expense.frequency) {
@@ -37,7 +28,17 @@ export function BudgetSummary() {
         default: return amount;
         }
     };
+    
+    // In this simplified model, we'll consider monthly recurring expenses as "spent"
     const recurringSpending = userData.recurringExpenses.reduce((sum, exp) => sum + getMonthlyAmount(exp), 0);
+
+    // Calculate total spending from one-off expense transactions for the current month
+    const oneOffSpending = userData.transactions
+      ?.filter(t => {
+        const tDate = new Date(t.date);
+        return t.type === 'expense' && tDate.getMonth() === currentMonth && tDate.getFullYear() === currentYear;
+      })
+      .reduce((sum, t) => sum + Math.abs(t.amount), 0) || 0;
 
     const spent = oneOffSpending + recurringSpending;
     const remaining = income - spent;
@@ -66,18 +67,18 @@ export function BudgetSummary() {
   return (
     <Card className="bg-card">
       <CardContent className="pt-6">
-        <div className="grid grid-cols-3 gap-2 text-center mb-4">
-          <div>
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-center mb-4">
+          <div className="flex-1 min-w-[100px]">
             <p className="text-sm text-green-500 truncate">Income</p>
-            <p className="font-bold text-lg md:text-xl truncate">{formatCurrency(income)}</p>
+            <p className="font-bold text-lg truncate">{formatCurrency(income)}</p>
           </div>
-          <div>
+          <div className="flex-1 min-w-[100px]">
             <p className="text-sm text-red-500 truncate">Spent</p>
-            <p className="font-bold text-lg md:text-xl truncate">{formatCurrency(spent)}</p>
+            <p className="font-bold text-lg truncate">{formatCurrency(spent)}</p>
           </div>
-          <div>
+          <div className="flex-1 min-w-[100px]">
             <p className="text-sm text-blue-500 truncate">Remaining</p>
-            <p className="font-bold text-lg md:text-xl truncate">{formatCurrency(remaining)}</p>
+            <p className="font-bold text-lg truncate">{formatCurrency(remaining)}</p>
           </div>
         </div>
         <Progress value={progress} className="h-2" />
