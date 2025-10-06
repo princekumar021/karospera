@@ -62,7 +62,12 @@ export default function Step3Income({ nextStep, prevStep }: Step3Props) {
           <FormItem>
             <FormLabel>Monthly take-home income</FormLabel>
             <FormControl>
-              <Input type="number" placeholder="e.g., 45000" {...field} value={field.value ?? ''}/>
+              <Input type="number" placeholder="e.g., 45000" {...field} value={field.value ?? ''}
+                onChange={e => {
+                  const value = e.target.value;
+                  field.onChange(value === '' ? undefined : parseFloat(value));
+                }}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>

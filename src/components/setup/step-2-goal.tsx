@@ -21,7 +21,7 @@ const goalOptions = ["Emergency fund", "Buy a phone", "Vacation", "Pay off debt"
 
 export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
   const { control, setValue, getValues } = useFormContext();
-  const [isCustom, setIsCustom] = useState(false);
+  const [isCustom, setIsCustom] = useState(getValues("goals.0.name") && !goalOptions.includes(getValues("goals.0.name")));
   const [goalName, setGoalName] = useState(getValues("goals.0.name") || "");
 
   const handleGoalChange = (value: string) => {
@@ -88,7 +88,16 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
           <FormItem>
             <FormLabel>Target amount (optional)</FormLabel>
             <FormControl>
-              <Input type="number" placeholder="e.g., 50000" {...field} onChange={e => field.onChange(parseFloat(e.target.value))}/>
+              <Input
+                type="number"
+                placeholder="e.g., 50000"
+                {...field}
+                value={field.value ?? ""}
+                onChange={e => {
+                  const value = e.target.value;
+                  field.onChange(value === '' ? undefined : parseFloat(value));
+                }}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -111,7 +120,7 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
                     )}
                   >
                     {field.value ? (
-                      format(field.value, "PPP")
+                      format(new Date(field.value), "PPP")
                     ) : (
                       <span>Pick a date</span>
                     )}
@@ -122,7 +131,7 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
-                  selected={field.value}
+                  selected={field.value ? new Date(field.value) : undefined}
                   onSelect={field.onChange}
                   disabled={(date) => date < new Date()}
                   initialFocus
