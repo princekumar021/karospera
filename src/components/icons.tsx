@@ -1,6 +1,6 @@
 import type { SVGProps } from "react";
 
-export function PocketPlanLogo(props: SVGProps<SVGSVGElement>) {
+export function AppLogo(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       width="32"

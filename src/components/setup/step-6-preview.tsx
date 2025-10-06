@@ -73,7 +73,7 @@ export default function Step6Preview({ goToStep }: Step6Props) {
       footer={
         <div className="flex w-full flex-col gap-2">
            <Button type="submit" className="w-full font-semibold" size="lg">
-            Start using PocketPlan
+            Start using karospera
           </Button>
           <Button onClick={() => goToStep(1)} variant="ghost" className="w-full font-semibold">
             <Edit className="mr-2 h-4 w-4" />

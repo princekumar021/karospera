@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { setupSchema, type SetupFormData } from "@/lib/setup-schema";
 import { useRouter } from 'next/navigation';
 
-import { PocketPlanLogo } from "@/components/icons";
+import { AppLogo } from "@/components/icons";
 import { Stepper } from "@/components/setup/stepper";
 import Step1Name from "@/components/setup/step-1-name";
 import Step2Goal from "@/components/setup/step-2-goal";
@@ -119,7 +119,7 @@ export default function SetupPage() {
       <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 md:p-8">
         <div className="w-full max-w-md">
           <div className="mb-4 flex flex-col items-center gap-4">
-            <PocketPlanLogo className="h-10 w-10" />
+            <AppLogo className="h-10 w-10" />
             <Progress value={(currentStep / totalSteps) * 100} className="h-2 w-full" />
           </div>
 

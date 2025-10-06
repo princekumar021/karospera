@@ -5,7 +5,7 @@ import { UserDataProvider } from '@/hooks/use-user-data';
 import { ThemeApplicator } from '@/components/ThemeApplicator';
 
 export const metadata: Metadata = {
-  title: 'PocketPlan: Control your money',
+  title: 'karospera: Control your money',
   description: 'One dashboard for budgets, goals and everyday spending. Simple, fast, private.',
 };
 
