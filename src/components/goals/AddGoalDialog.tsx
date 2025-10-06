@@ -7,30 +7,33 @@ import { Goal, goalSchema } from "@/lib/setup-schema";
 import { useUserData } from '@/hooks/use-user-data';
 import { useToast } from '@/hooks/use-toast';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogTrigger,
-  DialogClose,
-} from '@/components/ui/dialog';
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+  SheetTrigger,
+  SheetClose,
+} from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { Plus, CalendarIcon } from 'lucide-react';
+import { Calendar, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
+import { Label } from '../ui/label';
 
 const formSchema = goalSchema.omit({ id: true, currentAmount: true });
 type GoalFormValues = Zod.infer<typeof formSchema>;
 
 export function AddGoalDialog({ trigger, goalToEdit, open, onOpenChange }: { trigger?: React.ReactNode, goalToEdit?: Goal, open?: boolean, onOpenChange?: (open: boolean) => void }) {
-  const { addGoal, updateGoal } = useUserData();
+  const { userData, addGoal, updateGoal, formatCurrency } = useUserData();
   const { toast } = useToast();
+  const [datePopoverOpen, setDatePopoverOpen] = useState(false);
+  const [categoryOpen, setCategoryOpen] = useState(false);
 
   const form = useForm<GoalFormValues>({
     resolver: zodResolver(formSchema),
@@ -45,6 +48,9 @@ export function AddGoalDialog({ trigger, goalToEdit, open, onOpenChange }: { tri
       category: 'savings',
     }
   });
+  
+  const selectedCategory = form.watch('category') || 'savings';
+  const selectedDate = form.watch('targetDate');
 
   useEffect(() => {
     if (open && goalToEdit) {
@@ -82,79 +88,119 @@ export function AddGoalDialog({ trigger, goalToEdit, open, onOpenChange }: { tri
     }
   }
 
+  const categoryOptions = [
+    { value: "savings", label: "Savings" },
+    { value: "investment", label: "Investment" },
+    { value: "lifestyle", label: "Lifestyle" },
+  ];
+  
+  const selectedCategoryLabel = categoryOptions.find(c => c.value === selectedCategory)?.label || 'Savings';
+
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="sm:max-w-[425px]">
+    <Sheet open={open} onOpenChange={handleOpenChange}>
+      {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
+      <SheetContent side="bottom" className="rounded-t-2xl px-4 pb-6" hideClose>
+        <SheetHeader>
+          <SheetTitle className="sr-only">{goalToEdit ? 'Edit Goal' : 'Add New Goal'}</SheetTitle>
+        </SheetHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <DialogHeader>
-              <DialogTitle>{goalToEdit ? 'Edit Goal' : 'Add New Goal'}</DialogTitle>
-            </DialogHeader>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+             <div className="flex items-center gap-2">
+              <span className="text-4xl font-semibold text-muted-foreground">{userData?.currency === 'INR' ? '₹' : '$'}</span>
+              <FormField
+                  control={form.control}
+                  name="targetAmount"
+                  render={({ field }) => (
+                      <FormItem className="flex-1">
+                      <FormControl>
+                          <Input type="number" placeholder="0" className="h-auto border-0 text-4xl font-semibold p-0 focus-visible:ring-0 focus-visible:ring-offset-0" {...field} />
+                      </FormControl>
+                      <FormMessage className="mt-1" />
+                      </FormItem>
+                  )}
+                  />
+              <Button type="submit" size="lg">{goalToEdit ? 'Save' : 'Add'}</Button>
+            </div>
 
-            <FormField control={form.control} name="name" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl><Input placeholder="e.g. New Laptop" {...field} /></FormControl>
-                <FormMessage />
-              </FormItem>
-            )} />
-
-            <FormField control={form.control} name="targetAmount" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Target Amount</FormLabel>
-                <FormControl><Input type="number" placeholder="e.g. 80000" {...field} /></FormControl>
-                <FormMessage />
-              </FormItem>
-            )} />
-            
-            <FormField control={form.control} name="targetDate" render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Target Date (optional)</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
+            <div className="space-y-2 rounded-lg border bg-background">
+                <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                    <FormItem>
                     <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
-                      >
-                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
+                        <div className="flex items-center h-14 px-3 py-2 text-base rounded-none border-b">
+                            <Label className="flex-1">Name</Label>
+                            <Input placeholder="e.g. New Laptop" className="border-0 text-right w-1/2 p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0" {...field} />
+                        </div>
                     </FormControl>
+                    <FormMessage className="mx-3" />
+                    </FormItem>
+                )}
+                />
+
+                <Collapsible open={categoryOpen} onOpenChange={setCategoryOpen}>
+                    <CollapsibleTrigger className="w-full border-b">
+                      <div className="flex items-center h-14 px-3 py-2 text-base w-full">
+                          <Label className="flex-1 text-left">Category</Label>
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                              <span>{selectedCategoryLabel}</span>
+                              <ChevronRight className="h-5 w-5" />
+                          </div>
+                      </div>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
+                        <div className="p-2 space-y-1">
+                          {categoryOptions.map(cat => (
+                              <Button
+                                  key={cat.value}
+                                  variant="ghost"
+                                  className="w-full justify-start gap-2"
+                                  onClick={() => {
+                                      form.setValue('category', cat.value);
+                                      setCategoryOpen(false);
+                                  }}
+                              >
+                                  {cat.label}
+                              </Button>
+                          ))}
+                        </div>
+                    </CollapsibleContent>
+                </Collapsible>
+                
+                <Popover open={datePopoverOpen} onOpenChange={setDatePopoverOpen}>
+                  <PopoverTrigger asChild>
+                     <div className="flex items-center h-14 px-3 py-2 text-base w-full cursor-pointer">
+                        <Label className="flex-1 text-left">Target Date</Label>
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                            <span>{selectedDate ? format(selectedDate, "PPP") : "Optional"}</span>
+                            <ChevronRight className="h-5 w-5" />
+                        </div>
+                    </div>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+                    <Calendar
+                      mode="single"
+                      selected={form.getValues('targetDate')}
+                      onSelect={(date) => {
+                          form.setValue('targetDate', date);
+                          setDatePopoverOpen(false);
+                      }}
+                      initialFocus
+                    />
                   </PopoverContent>
                 </Popover>
-                <FormMessage />
-              </FormItem>
-            )} />
+
+            </div>
             
-            <FormField control={form.control} name="category" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger><SelectValue placeholder="Select a category" /></SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="savings">Savings</SelectItem>
-                    <SelectItem value="investment">Investment</SelectItem>
-                    <SelectItem value="lifestyle">Lifestyle</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )} />
-            
-            <DialogFooter>
-              <DialogClose asChild><Button variant="secondary">Cancel</Button></DialogClose>
-              <Button type="submit">{goalToEdit ? 'Save Changes' : 'Save Goal'}</Button>
-            </DialogFooter>
+            <SheetFooter className="mt-6 flex-col gap-2">
+              <SheetClose asChild>
+                  <Button variant="ghost" className="w-full">Cancel</Button>
+              </SheetClose>
+            </SheetFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }
