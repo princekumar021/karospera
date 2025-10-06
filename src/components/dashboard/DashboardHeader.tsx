@@ -19,7 +19,7 @@ export function DashboardHeader() {
       {loading ? (
          <Skeleton className="h-6 w-32" />
       ) : (
-        <h1 className="text-lg font-bold">Hi, {userName} 👋</h1>
+        <h1 className="text-lg font-bold">Hi, {userName.split(' ')[0]} 👋</h1>
       )}
       <Button variant="ghost" size="icon">
         <Settings className="h-6 w-6" />

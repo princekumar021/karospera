@@ -22,7 +22,7 @@ export function UpcomingBills() {
     if (dueDate < now) {
       dueDate.setMonth(dueDate.getMonth() + 1);
     }
-    return format(dueDate, "MMM do");
+    return format(dueDate, "do MMM");
   }
 
   return (
@@ -54,8 +54,8 @@ export function UpcomingBills() {
           <ul className="space-y-4">
             {bills.slice(0, 2).map((bill, index) => (
               <li key={index} className="flex items-center space-x-4">
-                <div className="rounded-full bg-secondary p-2">
-                  <Bell className="h-6 w-6 text-primary" />
+                <div className="rounded-full bg-secondary p-3">
+                  <Bell className="h-5 w-5 text-primary" />
                 </div>
                 <div className="flex-1">
                   <p className="font-semibold truncate">{bill.name}</p>
@@ -64,7 +64,6 @@ export function UpcomingBills() {
                   </p>
                 </div>
                 <p className="font-bold">{formatCurrency(bill.amount)}</p>
-                <Bell className="h-5 w-5 text-muted-foreground" />
               </li>
             ))}
           </ul>

@@ -34,7 +34,9 @@ export function OverviewCard() {
     let goalProgress = 0;
     if (userData.goalTargetAmount && userData.goalTargetAmount > 0) {
       // Dummy progress, in a real app this would be based on actual savings
-      goalProgress = 25; 
+      // For now, let's assume 10% of the target is saved.
+      const currentSaved = userData.goalTargetAmount * 0.10;
+      goalProgress = (currentSaved / userData.goalTargetAmount) * 100;
     }
     
     return {
