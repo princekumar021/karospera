@@ -7,12 +7,23 @@ import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
 import { useMemo } from 'react';
 import { subMonths, format, getMonth, getYear } from 'date-fns';
+import { RecurringExpense } from '@/lib/setup-schema';
 
 export function IncomeExpenseChart() {
   const { userData, loading, formatCurrency } = useUserData();
 
   const chartData = useMemo(() => {
-    if (!userData || !userData.transactions) return [];
+    if (!userData) return [];
+
+    const getMonthlyRecurringAmount = (expense: RecurringExpense): number => {
+      const amount = Number(expense.amount) || 0;
+      switch (expense.frequency) {
+        case 'Yearly': return amount / 12;
+        case 'Quarterly': return amount / 3;
+        default: return amount;
+      }
+    };
+    const totalMonthlyRecurringExpenses = userData.recurringExpenses.reduce((sum, exp) => sum + getMonthlyRecurringAmount(exp), 0);
 
     // Generate data for the last 6 months
     const data = Array.from({ length: 6 }).map((_, i) => {
@@ -20,26 +31,27 @@ export function IncomeExpenseChart() {
       const month = getMonth(date);
       const year = getYear(date);
       
-      const monthlyExpenses = userData.transactions
-        .filter(t => {
+      const oneOffExpenses = userData.transactions
+        ?.filter(t => {
           const tDate = new Date(t.date);
           return t.type === 'expense' && getMonth(tDate) === month && getYear(tDate) === year;
         })
-        .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+        .reduce((sum, t) => sum + Math.abs(t.amount), 0) || 0;
 
       const oneOffIncome = userData.transactions
-        .filter(t => {
+        ?.filter(t => {
             const tDate = new Date(t.date);
             return t.type === 'income' && getMonth(tDate) === month && getYear(tDate) === year;
         })
-        .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+        .reduce((sum, t) => sum + Math.abs(t.amount), 0) || 0;
         
       const totalIncome = (userData.monthlyIncome || 0) + oneOffIncome;
+      const totalExpenses = totalMonthlyRecurringExpenses + oneOffExpenses;
 
       return {
         name: format(date, 'MMM'),
         income: totalIncome,
-        expenses: monthlyExpenses,
+        expenses: totalExpenses,
       };
     });
     return data;
