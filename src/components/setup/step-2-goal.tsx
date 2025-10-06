@@ -46,16 +46,18 @@ function GoalForm() {
     <div className={cn("rounded-lg border bg-card text-card-foreground", (nameError || amountError || dateError) && "animate-shake border-destructive")}>
         {isCustom ? (
            <div className={cn("bg-card text-card-foreground", nameError && "animate-shake")}>
-             <div className={cn("floating-label-input p-3 border-b relative", nameError ? "border-destructive" : "border-input")}>
+             <div className={cn("p-3 border-b relative", nameError ? "border-destructive" : "border-input")}>
               <FormField
                 control={control}
                 name="goals.0.name"
                 render={({ field }) => (
                     <FormItem>
+                      <div className="floating-label-input">
                         <FormControl>
                             <Input placeholder=" " {...field} className="h-10 border-0 bg-transparent p-0 text-base peer" />
                         </FormControl>
                         <Label>Goal</Label>
+                      </div>
                     </FormItem>
                 )}
               />
