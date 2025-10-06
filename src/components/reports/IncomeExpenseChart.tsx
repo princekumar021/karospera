@@ -12,24 +12,31 @@ export function IncomeExpenseChart() {
   const { userData, loading, formatCurrency } = useUserData();
 
   const chartData = useMemo(() => {
-    if (!userData) return [];
+    if (!userData || !userData.transactions) return [];
 
-    // Generate data for the last 3 months
-    const data = Array.from({ length: 3 }).map((_, i) => {
-      const date = subMonths(new Date(), 2 - i);
+    // Generate data for the last 6 months
+    const data = Array.from({ length: 6 }).map((_, i) => {
+      const date = subMonths(new Date(), 5 - i);
       const month = getMonth(date);
       const year = getYear(date);
       
       const expenses = userData.transactions
-        ?.filter(t => {
+        .filter(t => {
           const tDate = new Date(t.date);
           return t.type === 'expense' && getMonth(tDate) === month && getYear(tDate) === year;
         })
-        .reduce((sum, t) => sum + Math.abs(t.amount), 0) || 0;
+        .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+
+      const income = userData.transactions
+        .filter(t => {
+            const tDate = new Date(t.date);
+            return t.type === 'income' && getMonth(tDate) === month && getYear(tDate) === year;
+        })
+        .reduce((sum, t) => sum + Math.abs(t.amount), userData.monthlyIncome || 0);
 
       return {
         name: format(date, 'MMM'),
-        income: userData.monthlyIncome,
+        income: income,
         expenses: expenses,
       };
     });
@@ -56,7 +63,7 @@ export function IncomeExpenseChart() {
     <Card className="bg-card">
       <CardHeader>
         <CardTitle>Monthly Income vs Expenses</CardTitle>
-        <CardDescription>Last 3 months overview</CardDescription>
+        <CardDescription>Last 6 months overview</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="h-60">
