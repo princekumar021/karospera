@@ -22,7 +22,10 @@ export function SpendingChart() {
     const spendingByCategory = userData.transactions
       .filter(t => {
         const transactionDate = new Date(t.date);
-        return t.type === 'expense' && transactionDate.getMonth() === currentMonth && transactionDate.getFullYear() === currentYear;
+        return t.type === 'expense' &&
+               t.category !== 'Savings' &&
+               transactionDate.getMonth() === currentMonth &&
+               transactionDate.getFullYear() === currentYear;
       })
       .reduce((acc, transaction) => {
         const category = transaction.category || 'Other';
