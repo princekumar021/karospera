@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
+import Link from 'next/link';
 
 export function GoalsSection() {
   const { userData, loading, formatCurrency } = useUserData();
@@ -16,16 +17,7 @@ export function GoalsSection() {
     target: userData.goalTargetAmount || 0,
   } : null;
   
-  // Placeholder for other goals
-  const otherGoals = [
-    {
-      name: 'Emergency Fund',
-      current: 25000,
-      target: 50000,
-    },
-  ];
-
-  const goals = primaryGoal ? [primaryGoal, ...otherGoals.filter(g => g.name !== primaryGoal.name)] : otherGoals;
+  const goals = primaryGoal ? [primaryGoal] : [];
 
 
   return (
@@ -68,8 +60,8 @@ export function GoalsSection() {
           )})}
         </ul>
         )}
-        <Button variant="link" className="mt-4 w-full">
-          Add New Goal
+        <Button variant="link" className="mt-4 w-full" asChild>
+          <Link href="/goals">Manage Goals</Link>
         </Button>
       </CardContent>
     </Card>
