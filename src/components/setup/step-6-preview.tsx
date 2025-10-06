@@ -16,7 +16,7 @@ export default function Step6Preview({ goToStep }: Step6Props) {
   const { fullName, monthlyIncome, goal, goalTargetAmount, goalTargetDate, recurringExpenses, currency } = values;
 
   const getMonthlyAmount = (expense: RecurringExpense): number => {
-    const amount = expense.amount || 0;
+    const amount = Number(expense.amount) || 0;
     switch (expense.frequency) {
       case 'Yearly':
         return amount / 12;
@@ -32,22 +32,30 @@ export default function Step6Preview({ goToStep }: Step6Props) {
   const remainingThisMonth = (monthlyIncome || 0) - totalMonthlyRecurring;
   
   const getMonthsToGoal = () => {
-    if (!goalTargetDate) return null;
+    if (!goalTargetDate || !goalTargetAmount || goalTargetAmount <= 0) return null;
     const now = new Date();
+    // Ensure we don't have months in the past.
+    if (goalTargetDate < now) return 1;
     const months = (goalTargetDate.getFullYear() - now.getFullYear()) * 12 + (goalTargetDate.getMonth() - now.getMonth());
     return months <= 0 ? 1 : months;
   };
 
   const monthsToGoal = getMonthsToGoal();
-  const monthlySavingsNeeded = monthsToGoal && goalTargetAmount ? goalTargetAmount / monthsToGoal : 0;
-  const savingsForGoal = remainingThisMonth > monthlySavingsNeeded ? monthlySavingsNeeded : (remainingThisMonth > 0 ? remainingThisMonth : 0);
-  const goalProgress = goalTargetAmount ? (savingsForGoal / goalTargetAmount) * 100 : 0;
+  // Suggest saving 10% of remaining income towards the goal if no date is set.
+  const suggestedMonthlySavings = remainingThisMonth > 0 ? remainingThisMonth * 0.1 : 0;
+  
+  const monthlySavingsNeeded = monthsToGoal && goalTargetAmount ? goalTargetAmount / monthsToGoal : suggestedMonthlySavings;
+  
+  const savingsForGoal = Math.min(monthlySavingsNeeded, remainingThisMonth > 0 ? remainingThisMonth : 0);
 
-  const nextBill = recurringExpenses.length > 0 ? recurringExpenses[0] : null;
+  const goalProgress = (goalTargetAmount && goalTargetAmount > 0) ? (savingsForGoal / goalTargetAmount) * 100 : 0;
+  
+  const nextBill = [...recurringExpenses]
+    .sort((a,b) => (a.dueDay || 32) - (b.dueDay || 32))
+    .find(e => (e.dueDay || 0) >= new Date().getDate()) || recurringExpenses[0];
 
   const onFinish = (data: SetupFormData) => {
     console.log("Setup complete:", data);
-    alert("Setup complete! Check the console for your data.");
   }
 
   const formatCurrency = (amount: number) => {
@@ -87,8 +95,8 @@ export default function Step6Preview({ goToStep }: Step6Props) {
           </CardHeader>
           <CardContent>
             <div className="flex justify-between text-sm mb-1">
-              <span>{formatCurrency(savingsForGoal)}</span>
-              <span className="text-muted-foreground">{formatCurrency(goalTargetAmount || 0)}</span>
+              <span className="truncate">{formatCurrency(savingsForGoal > 0 ? savingsForGoal : 0)}</span>
+              <span className="text-muted-foreground truncate">{formatCurrency(goalTargetAmount || 0)}</span>
             </div>
             <Progress value={goalProgress} />
           </CardContent>
@@ -102,7 +110,7 @@ export default function Step6Preview({ goToStep }: Step6Props) {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{formatCurrency(totalMonthlyRecurring)}</div>
-               <p className="text-xs text-muted-foreground">from recurring expenses</p>
+               <p className="text-xs text-muted-foreground truncate">from recurring expenses</p>
             </CardContent>
           </Card>
           <Card className="bg-card">

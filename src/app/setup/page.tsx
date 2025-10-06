@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { setupSchema, type SetupFormData } from "@/lib/setup-schema";
+import { useRouter } from 'next/navigation';
 
 import { PocketPlanLogo } from "@/components/icons";
 import { Stepper } from "@/components/setup/stepper";
@@ -27,6 +28,7 @@ const stepFields: (keyof SetupFormData)[][] = [
 
 export default function SetupPage() {
   const [currentStep, setCurrentStep] = useState(1);
+  const router = useRouter();
 
   const methods = useForm<SetupFormData>({
     resolver: zodResolver(setupSchema),
@@ -66,11 +68,8 @@ export default function SetupPage() {
   
   const onSubmit = (data: SetupFormData) => {
     console.log("Setup complete:", data);
-    alert("Setup complete! Check the console for your data. You would be redirected to the dashboard now.");
-    // In a real app, you would redirect here:
-    // import { useRouter } from 'next/navigation';
-    // const router = useRouter();
-    // router.push('/dashboard');
+    // In a real app, you would save this data
+    router.push('/dashboard');
   };
   
   const renderStep = () => {
