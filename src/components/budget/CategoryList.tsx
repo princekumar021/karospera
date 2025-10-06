@@ -6,6 +6,7 @@ import { Utensils, Car, Home, Film, PiggyBank, Briefcase } from 'lucide-react';
 import { useUserData } from '@/hooks/use-user-data';
 import { useMemo } from 'react';
 import { Skeleton } from '../ui/skeleton';
+import { getMonth, getYear } from 'date-fns';
 
 const iconMap: { [key: string]: React.ReactNode } = {
   food: <Utensils className="h-6 w-6 text-yellow-500" />,
@@ -31,14 +32,43 @@ export function CategoryList() {
 
     const budgetCategories = useMemo(() => {
         if (!userData) return [];
-        // Map recurring expenses to budget categories.
-        // In a real app, spent would be tracked separately. For now, let's use a dummy value.
-        return userData.recurringExpenses.map(exp => ({
-            name: exp.name,
-            spent: (Number(exp.amount) || 0) * 0.4, // Dummy spent value
-            limit: Number(exp.amount) || 0,
-            icon: getIcon(exp.name),
-        }));
+
+        const now = new Date();
+        const currentMonth = getMonth(now);
+        const currentYear = getYear(now);
+
+        // For now, budget categories are based on recurring expenses.
+        // The limit is the expense amount, and spent is calculated from transactions.
+        return userData.recurringExpenses.map(exp => {
+            const categorySpent = userData.transactions
+                ?.filter(t => {
+                    const tDate = new Date(t.date);
+                    // A simple check if transaction category loosely matches expense name.
+                    // This could be improved with more robust categorization.
+                    return t.type === 'expense' &&
+                           t.category.toLowerCase().includes(exp.name.toLowerCase()) &&
+                           getMonth(tDate) === currentMonth &&
+                           getYear(tDate) === currentYear;
+                })
+                .reduce((sum, t) => sum + Math.abs(t.amount), 0) || 0;
+            
+            // For recurring expenses, the expense itself should be counted as spent for the month
+            const getMonthlyAmount = (amount: number, frequency: 'Monthly' | 'Quarterly' | 'Yearly') => {
+                 switch (frequency) {
+                    case 'Yearly': return amount / 12;
+                    case 'Quarterly': return amount / 3;
+                    default: return amount;
+                 }
+            }
+            const recurringAmountSpent = getMonthlyAmount(Number(exp.amount) || 0, exp.frequency);
+
+            return {
+                name: exp.name,
+                spent: categorySpent + recurringAmountSpent,
+                limit: Number(exp.amount) || 0,
+                icon: getIcon(exp.name),
+            };
+        });
     }, [userData]);
 
   if (loading) {
