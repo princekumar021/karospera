@@ -67,8 +67,15 @@ const financialInsightsFlow = ai.defineFlow(
         insights: ["Start by adding some expenses or transactions to get personalized insights!"],
       };
     }
+    
+    // The AI flow expects dates as strings, but they are Date objects. Convert them.
+    const sanitizedInput = {
+      ...input,
+      transactions: input.transactions.map(t => ({...t, date: t.date.toISOString()})),
+      goals: input.goals.map(g => ({...g, targetDate: g.targetDate?.toISOString()}))
+    }
 
-    const {output} = await prompt(input);
+    const {output} = await prompt(sanitizedInput);
     return output!;
   }
 );
