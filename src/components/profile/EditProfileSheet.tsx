@@ -21,6 +21,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Label } from '../ui/label';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Separator } from '../ui/separator';
 
 const currencyOptions = ["INR", "USD", "EUR", "GBP", "JPY"];
 
@@ -45,7 +46,7 @@ export function EditProfileSheet({ children, open, onOpenChange }: { children?: 
   });
 
   useEffect(() => {
-    if (userData) {
+    if (userData && open) {
       form.reset({
         monthlyIncome: userData.monthlyIncome,
         currency: userData.currency,
@@ -78,42 +79,42 @@ export function EditProfileSheet({ children, open, onOpenChange }: { children?: 
         </SheetHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-4">
-            <div className="space-y-4 rounded-lg border bg-background p-4">
+            <div className="rounded-lg border bg-background">
                 <FormField
                     control={form.control}
                     name="fullName"
                     render={({ field }) => (
-                        <FormItem>
-                            <Label>Name</Label>
+                        <FormItem className="flex items-center p-3">
+                            <Label className="w-1/3">Name</Label>
                             <FormControl>
-                                <Input {...field} />
+                                <Input className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0" {...field} />
                             </FormControl>
-                            <FormMessage />
                         </FormItem>
                     )}
                 />
-                <FormField
+                <Separator />
+                 <FormField
                     control={form.control}
                     name="monthlyIncome"
                     render={({ field }) => (
-                        <FormItem>
-                            <Label>Monthly Income</Label>
+                        <FormItem className="flex items-center p-3">
+                            <Label className="w-1/3">Monthly Income</Label>
                             <FormControl>
-                                <Input type="number" {...field} />
+                                <Input type="number" className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0" {...field} />
                             </FormControl>
-                            <FormMessage />
                         </FormItem>
                     )}
                 />
+                <Separator />
                 <FormField
                     control={form.control}
                     name="currency"
                     render={({ field }) => (
-                        <FormItem>
-                          <Label>Currency</Label>
+                        <FormItem className="flex items-center p-3">
+                          <Label className="w-1/3">Currency</Label>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
-                              <SelectTrigger>
+                              <SelectTrigger className="border-0 justify-end focus-visible:ring-0 focus-visible:ring-offset-0">
                                 <SelectValue placeholder="Select currency" />
                               </SelectTrigger>
                             </FormControl>
@@ -125,10 +126,12 @@ export function EditProfileSheet({ children, open, onOpenChange }: { children?: 
                               ))}
                             </SelectContent>
                           </Select>
-                          <FormMessage />
                         </FormItem>
                     )}
                 />
+            </div>
+
+            <div className="rounded-lg border bg-background p-4">
                 <FormField
                     control={form.control}
                     name="budgetMethod"
@@ -139,17 +142,20 @@ export function EditProfileSheet({ children, open, onOpenChange }: { children?: 
                         <RadioGroup
                             onValueChange={field.onChange}
                             defaultValue={field.value}
-                            className="flex flex-col space-y-1"
+                            className="space-y-0"
                         >
-                            {budgetMethods.map(method => (
-                            <FormItem key={method.key} className="flex items-center space-x-3 space-y-0 rounded-md border p-3">
-                                <FormControl>
-                                <RadioGroupItem value={method.key} />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                {method.label}
-                                </FormLabel>
-                            </FormItem>
+                            {budgetMethods.map((method, index) => (
+                              <>
+                                <FormItem key={method.key} className="flex items-center space-x-3 py-3">
+                                    <FormControl>
+                                      <RadioGroupItem value={method.key} id={`r-${method.key}`} />
+                                    </FormControl>
+                                    <Label htmlFor={`r-${method.key}`} className="font-normal flex-1">
+                                      {method.label}
+                                    </Label>
+                                </FormItem>
+                                {index < budgetMethods.length - 1 && <Separator />}
+                              </>
                             ))}
                         </RadioGroup>
                         </FormControl>
