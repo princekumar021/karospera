@@ -20,16 +20,18 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
 
-export function AddGoalDialog() {
+export function AddGoalDialog({ trigger }: { trigger?: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date>();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon">
-            <Plus className="h-6 w-6" />
-        </Button>
+        {trigger || (
+          <Button variant="ghost" size="icon">
+              <Plus className="h-6 w-6" />
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

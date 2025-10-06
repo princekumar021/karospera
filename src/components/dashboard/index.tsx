@@ -7,3 +7,5 @@ export * from './SpendingChart';
 export * from './TipsBanner';
 export * from './TransactionsPreview';
 export * from './UpcomingBills';
+export * from './quick-actions/AddExpenseDialog';
+export * from './quick-actions/AddIncomeDialog';
