@@ -20,6 +20,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { ReceiptScanner } from './ReceiptScanner';
 
 const expenseFormSchema = z.object({
   amount: z.coerce.number().min(0.01, "Amount must be positive"),
@@ -43,6 +44,7 @@ const categories = [
 export function AddExpenseDialog() {
   const [open, setOpen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
+  const [scannerOpen, setScannerOpen] = useState(false);
   const { userData, addTransaction, formatCurrency } = useUserData();
   const { toast } = useToast();
 
@@ -59,7 +61,7 @@ export function AddExpenseDialog() {
 
   const onSubmit = (data: ExpenseForm) => {
     addTransaction({
-      name: data.category, // Use category as name for simplicity, as in new design
+      name: data.category,
       amount: -Math.abs(data.amount),
       type: 'expense',
       category: data.category,
@@ -78,7 +80,19 @@ export function AddExpenseDialog() {
     setOpen(isOpen);
     if (!isOpen) {
       form.reset({ category: "Shopping", amount: '' as any, note: "" });
+      setScannerOpen(false);
     }
+  }
+
+  const handleScanSuccess = (scannedData: { amount?: number, note?: string }) => {
+    if (scannedData.amount) {
+        form.setValue('amount', scannedData.amount);
+    }
+    if (scannedData.note) {
+        form.setValue('note', scannedData.note);
+    }
+    setScannerOpen(false);
+    toast({ title: "Scan Complete", description: "Expense details have been filled in." });
   }
 
   return (
@@ -95,86 +109,91 @@ export function AddExpenseDialog() {
         <SheetHeader>
           <SheetTitle className="sr-only">Add Expense</SheetTitle>
         </SheetHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="flex items-center gap-2">
-               <span className="text-4xl font-semibold text-muted-foreground">{userData?.currency === 'INR' ? '₹' : '$'}</span>
-               <FormField
-                  control={form.control}
-                  name="amount"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormControl>
-                         <Input type="number" placeholder="0" className="h-auto border-0 text-4xl font-semibold p-0 focus-visible:ring-0 focus-visible:ring-offset-0" {...field} />
-                      </FormControl>
-                      <FormMessage className="mt-1" />
-                    </FormItem>
-                  )}
-                />
-              <Button type="submit" size="lg">Add</Button>
-            </div>
+        
+        {scannerOpen ? (
+            <ReceiptScanner onScanSuccess={handleScanSuccess} onCancel={() => setScannerOpen(false)} />
+        ) : (
+            <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <div className="flex items-center gap-2">
+                <span className="text-4xl font-semibold text-muted-foreground">{userData?.currency === 'INR' ? '₹' : '$'}</span>
+                <FormField
+                    control={form.control}
+                    name="amount"
+                    render={({ field }) => (
+                        <FormItem className="flex-1">
+                        <FormControl>
+                            <Input type="number" placeholder="0" className="h-auto border-0 text-4xl font-semibold p-0 focus-visible:ring-0 focus-visible:ring-offset-0" {...field} />
+                        </FormControl>
+                        <FormMessage className="mt-1" />
+                        </FormItem>
+                    )}
+                    />
+                <Button type="submit" size="lg">Add</Button>
+                </div>
 
-            <div className="space-y-2 rounded-lg border bg-background">
-                <Collapsible open={categoryOpen} onOpenChange={setCategoryOpen}>
-                    <CollapsibleTrigger className="w-full">
-                         <div className="flex items-center h-14 px-3 py-2 text-base border-b rounded-none w-full">
-                             <span className="flex-1 text-left">Category</span>
-                             <div className="flex items-center gap-2 text-muted-foreground">
-                                {selectedCategory.icon}
-                                <span>{selectedCategory.label}</span>
-                                <ChevronRight className="h-5 w-5" />
-                             </div>
-                          </div>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent className="overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
-                        <div className="p-2 space-y-1">
-                           {categories.map(cat => (
-                               <Button
-                                 key={cat.value}
-                                 variant="ghost"
-                                 className="w-full justify-start gap-2"
-                                 onClick={() => {
-                                     form.setValue('category', cat.value);
-                                     setCategoryOpen(false);
-                                 }}
-                               >
-                                 {cat.icon}
-                                 {cat.label}
-                               </Button>
-                           ))}
-                        </div>
-                    </CollapsibleContent>
-                </Collapsible>
+                <div className="space-y-2 rounded-lg border bg-background">
+                    <Collapsible open={categoryOpen} onOpenChange={setCategoryOpen}>
+                        <CollapsibleTrigger className="w-full">
+                            <div className="flex items-center h-14 px-3 py-2 text-base border-b rounded-none w-full">
+                                <span className="flex-1 text-left">Category</span>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    {selectedCategory.icon}
+                                    <span>{selectedCategory.label}</span>
+                                    <ChevronRight className="h-5 w-5" />
+                                </div>
+                            </div>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
+                            <div className="p-2 space-y-1">
+                            {categories.map(cat => (
+                                <Button
+                                    key={cat.value}
+                                    variant="ghost"
+                                    className="w-full justify-start gap-2"
+                                    onClick={() => {
+                                        form.setValue('category', cat.value);
+                                        setCategoryOpen(false);
+                                    }}
+                                >
+                                    {cat.icon}
+                                    {cat.label}
+                                </Button>
+                            ))}
+                            </div>
+                        </CollapsibleContent>
+                    </Collapsible>
 
-                 <FormField
-                  control={form.control}
-                  name="note"
-                  render={({ field }) => (
-                    <FormItem>
-                       <FormControl>
-                          <div className="flex items-center h-14 px-3 py-2 text-base border-b rounded-none">
-                             <span className="flex-1">Note</span>
-                             <Input placeholder="Optional" className="border-0 text-right w-1/2 p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0" {...field} />
-                          </div>
-                       </FormControl>
-                       <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                    <FormField
+                    control={form.control}
+                    name="note"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormControl>
+                            <div className="flex items-center h-14 px-3 py-2 text-base border-b rounded-none">
+                                <span className="flex-1">Note</span>
+                                <Input placeholder="Optional" className="border-0 text-right w-1/2 p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0" {...field} />
+                            </div>
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
 
-                <Button variant="ghost" className="w-full h-14 text-base justify-between rounded-none rounded-b-lg">
-                    <span>Scan Receipt</span>
-                    <ScanLine className="h-6 w-6 text-muted-foreground" />
-                </Button>
-            </div>
+                    <Button variant="ghost" className="w-full h-14 text-base justify-between rounded-none rounded-b-lg" type="button" onClick={() => setScannerOpen(true)}>
+                        <span>Scan Receipt</span>
+                        <ScanLine className="h-6 w-6 text-muted-foreground" />
+                    </Button>
+                </div>
 
-            <SheetFooter className="mt-6">
-              <SheetClose asChild>
-                <Button variant="ghost" className="w-full">Cancel</Button>
-              </SheetClose>
-            </SheetFooter>
-          </form>
-        </Form>
+                <SheetFooter className="mt-6">
+                <SheetClose asChild>
+                    <Button variant="ghost" className="w-full">Cancel</Button>
+                </SheetClose>
+                </SheetFooter>
+            </form>
+            </Form>
+        )}
       </SheetContent>
     </Sheet>
   );
