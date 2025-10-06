@@ -29,9 +29,9 @@ export default function Step1Name({ nextStep }: Step1Props) {
           name="fullName"
           render={({ field }) => (
             <FormItem>
-              <div className="floating-label-input px-4 py-3">
+              <div className="floating-label-input px-4 py-1">
                 <FormControl>
-                  <Input placeholder=" " {...field} className="peer h-10 border-0 bg-transparent p-0 text-lg focus-visible:ring-0 focus-visible:ring-offset-0" />
+                  <Input placeholder=" " {...field} className="h-10 border-0 bg-transparent p-0 text-lg focus-visible:ring-0 focus-visible:ring-offset-0" />
                 </FormControl>
                 <FormLabel>Name</FormLabel>
               </div>
