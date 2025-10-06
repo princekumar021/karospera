@@ -145,8 +145,8 @@ export function EditProfileSheet({ children, open, onOpenChange }: { children?: 
                             className="space-y-0"
                         >
                             {budgetMethods.map((method, index) => (
-                              <>
-                                <FormItem key={method.key} className="flex items-center space-x-3 py-3">
+                              <React.Fragment key={method.key}>
+                                <FormItem className="flex items-center space-x-3 py-3">
                                     <FormControl>
                                       <RadioGroupItem value={method.key} id={`r-${method.key}`} />
                                     </FormControl>
@@ -155,7 +155,7 @@ export function EditProfileSheet({ children, open, onOpenChange }: { children?: 
                                     </Label>
                                 </FormItem>
                                 {index < budgetMethods.length - 1 && <Separator />}
-                              </>
+                              </React.Fragment>
                             ))}
                         </RadioGroup>
                         </FormControl>
