@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -5,7 +6,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } fro
 import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
 import { useMemo } from 'react';
-import { subMonths, format } from 'date-fns';
+import { subMonths, format, getMonth, getYear } from 'date-fns';
 
 export function IncomeExpenseChart() {
   const { userData, loading, formatCurrency } = useUserData();
@@ -13,26 +14,24 @@ export function IncomeExpenseChart() {
   const chartData = useMemo(() => {
     if (!userData) return [];
 
-    const totalExpenses = userData.recurringExpenses.reduce((acc, exp) => {
-        const amount = Number(exp.amount) || 0;
-        let monthlyAmount = amount;
-        if (exp.frequency === 'Yearly') monthlyAmount = amount / 12;
-        if (exp.frequency === 'Quarterly') monthlyAmount = amount / 3;
-        return acc + monthlyAmount;
-    }, 0);
-    
     // Generate data for the last 3 months
     const data = Array.from({ length: 3 }).map((_, i) => {
-        const date = subMonths(new Date(), 2 - i);
-        // Using dummy expense data for previous months
-        const randomFactor = 1 + (Math.random() - 0.5) * 0.4; // between 0.8 and 1.2
-        const expenses = i === 2 ? totalExpenses : totalExpenses * randomFactor;
-        
-        return {
-            name: format(date, 'MMM'),
-            income: userData.monthlyIncome,
-            expenses: expenses,
-        };
+      const date = subMonths(new Date(), 2 - i);
+      const month = getMonth(date);
+      const year = getYear(date);
+      
+      const expenses = userData.transactions
+        ?.filter(t => {
+          const tDate = new Date(t.date);
+          return t.type === 'expense' && getMonth(tDate) === month && getYear(tDate) === year;
+        })
+        .reduce((sum, t) => sum + Math.abs(t.amount), 0) || 0;
+
+      return {
+        name: format(date, 'MMM'),
+        income: userData.monthlyIncome,
+        expenses: expenses,
+      };
     });
     return data;
 
