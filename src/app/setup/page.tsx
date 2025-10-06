@@ -68,8 +68,13 @@ export default function SetupPage() {
   
   const onSubmit = (data: SetupFormData) => {
     console.log("Setup complete:", data);
-    // In a real app, you would save this data
-    router.push('/dashboard');
+    try {
+      localStorage.setItem('pocketplan-userdata', JSON.stringify(data));
+      router.push('/dashboard');
+    } catch (error) {
+      console.error("Could not save user data to localStorage", error);
+      // maybe show a toast to the user
+    }
   };
   
   const renderStep = () => {

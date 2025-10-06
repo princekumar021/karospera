@@ -1,3 +1,5 @@
+"use client";
+
 import { useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import StepWrapper from "./step-wrapper";
@@ -38,7 +40,9 @@ export default function Step6Preview({ goToStep }: Step6Props) {
     const now = new Date();
     // Ensure we don't have months in the past.
     if (goalTargetDate < now) return 1;
-    const months = (goalTargetDate.getFullYear() - now.getFullYear()) * 12 + (goalTargetDate.getMonth() - now.getMonth());
+    let months = (goalTargetDate.getFullYear() - now.getFullYear()) * 12;
+    months -= now.getMonth();
+    months += goalTargetDate.getMonth();
     return months <= 0 ? 1 : months;
   };
 
@@ -53,10 +57,11 @@ export default function Step6Preview({ goToStep }: Step6Props) {
   const goalProgress = (goalTargetAmount && goalTargetAmount > 0) ? (savingsForGoal / goalTargetAmount) * 100 : 0;
   
   const nextBill = [...recurringExpenses]
+    .filter(e => e.dueDay)
     .sort((a,b) => (a.dueDay || 32) - (b.dueDay || 32))
-    .find(e => (e.dueDay || 0) >= new Date().getDate()) || recurringExpenses[0];
+    .find(e => (e.dueDay || 0) >= new Date().getDate()) || recurringExpenses.find(e => e.dueDay);
 
-  const formatCurrency = (amount: number) => {
+  const formatCurrencyLocal = (amount: number) => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency, minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount);
   }
 
@@ -82,7 +87,7 @@ export default function Step6Preview({ goToStep }: Step6Props) {
             <CardTitle className="text-sm font-medium text-muted-foreground truncate">Hello, {fullName || 'User'}!</CardTitle>
           </CardHeader>
           <CardContent>
-             <p className="text-2xl font-bold">{formatCurrency(remainingThisMonth)}</p>
+             <p className="text-2xl font-bold truncate">{formatCurrencyLocal(remainingThisMonth)}</p>
              <p className="text-xs text-muted-foreground">Remaining this month</p>
           </CardContent>
         </Card>
@@ -93,8 +98,8 @@ export default function Step6Preview({ goToStep }: Step6Props) {
           </CardHeader>
           <CardContent>
             <div className="flex justify-between text-sm mb-1">
-              <span className="truncate">{formatCurrency(savingsForGoal > 0 ? savingsForGoal : 0)}</span>
-              <span className="text-muted-foreground truncate">{formatCurrency(goalTargetAmount || 0)}</span>
+              <span className="truncate">{formatCurrencyLocal(savingsForGoal > 0 ? savingsForGoal : 0)}</span>
+              <span className="text-muted-foreground truncate">{formatCurrencyLocal(goalTargetAmount || 0)}</span>
             </div>
             <Progress value={goalProgress} />
           </CardContent>
@@ -107,7 +112,7 @@ export default function Step6Preview({ goToStep }: Step6Props) {
               <Banknote className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(totalMonthlyRecurring)}</div>
+              <div className="text-2xl font-bold truncate">{formatCurrencyLocal(totalMonthlyRecurring)}</div>
                <p className="text-xs text-muted-foreground truncate">from recurring expenses</p>
             </CardContent>
           </Card>
@@ -117,7 +122,7 @@ export default function Step6Preview({ goToStep }: Step6Props) {
               <CalendarClock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-               <div className="text-2xl font-bold truncate">{nextBill ? `${formatCurrency(nextBill.amount)}` : 'N/A'}</div>
+               <div className="text-2xl font-bold truncate">{nextBill ? `${formatCurrencyLocal(nextBill.amount)}` : 'N/A'}</div>
               <p className="text-xs text-muted-foreground truncate">{nextBill ? nextBill.name : 'No bills added'}</p>
             </CardContent>
           </Card>
