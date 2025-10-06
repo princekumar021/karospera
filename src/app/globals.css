@@ -19,8 +19,8 @@
     --muted-foreground: 240 4% 46%;
     --accent: 217 100% 53%;
     --accent-foreground: 210 40% 98%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 100% 67%;
+    --destructive-foreground: 0 0% 98%;
     --border: 240 6% 90%;
     --input: 240 6% 90%;
     --ring: 217 100% 53%;
@@ -80,6 +80,6 @@
 
   .floating-label-input .peer:focus ~ label,
   .floating-label-input .peer:not(:placeholder-shown) ~ label {
-     @apply top-0 left-3 -translate-y-4 -translate-x-0 scale-75 text-primary;
+     @apply top-3 left-3 -translate-y-4 -translate-x-0 scale-75 text-primary;
   }
 }
