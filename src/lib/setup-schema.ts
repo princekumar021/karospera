@@ -14,6 +14,7 @@ export const transactionSchema = z.object({
   type: z.enum(['income', 'expense']),
   category: z.string(),
   date: z.date(),
+  note: z.string().optional(),
 });
 
 export const goalSchema = z.object({

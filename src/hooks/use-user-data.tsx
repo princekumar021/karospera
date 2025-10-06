@@ -12,7 +12,7 @@ interface UserDataContextType {
   formatCurrency: (amount: number) => string;
   updateUserData: (data: Partial<SetupFormData>) => void;
   resetUserData: () => void;
-  addTransaction: (transaction: Omit<Transaction, 'id' | 'date'>) => void;
+  addTransaction: (transaction: Omit<Transaction, 'id'>) => void;
   addGoal: (goal: Omit<Goal, 'id' | 'currentAmount'>) => void;
   updateGoal: (goal: Goal) => void;
   deleteGoal: (goalId: string) => void;
@@ -165,13 +165,12 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
     saveData(updatedData);
   }, [userData, saveData]);
 
-  const addTransaction = useCallback((transaction: Omit<Transaction, 'id' | 'date'>) => {
+  const addTransaction = useCallback((transaction: Omit<Transaction, 'id'>) => {
     setUserData(prevData => {
       if (!prevData) return null;
       const newTransaction: Transaction = {
         ...transaction,
         id: new Date().toISOString() + Math.random(),
-        date: new Date(),
       };
       const updatedData = {
         ...prevData,
