@@ -31,10 +31,10 @@ export default function Home() {
             <section className="grid md:grid-cols-2 gap-10 items-center">
               <div className="space-y-4">
                 <h1 className="font-headline text-5xl md:text-6xl font-bold tracking-tighter leading-tight">
-                  Clarity for your cashflow.
+                  A Clarity for your cashflow.
                 </h1>
                 <p className="text-muted-foreground text-lg">
-                  The simple, private way to manage your budgets, track goals, and understand your spending.
+                  simple and private way to manage your, money, budgets, track goals, and understand your spending.
                 </p>
                 <Button asChild size="lg" className="rounded-full font-semibold text-base py-6 px-7 group mt-4">
                   <Link href="/setup">
@@ -46,8 +46,8 @@ export default function Home() {
               <div className="relative h-80 md:h-96 w-full flex items-center justify-center">
                 
                   <Image
-                    src="/20251006_2159_Brain Made of Money_remix_01k6x5kebreqy91why99aqqknt.png"
-                    alt="Brain made of money"
+                    src="/images/brainmoney.png"
+                     alt="Brain made of money"
                     fill
                     priority
                     className="object-cover rounded-2xl"
@@ -80,12 +80,12 @@ export default function Home() {
             
             <section className="grid md:grid-cols-2 gap-10 items-center my-16 md:my-24">
                 <div className="space-y-4 order-2 md:order-1">
-                    <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">Crafting Meaningful Financial Experiences</h2>
+                    <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">Save Money & money will save you </h2>
                     <p className="text-muted-foreground">With a keen eye for aesthetics and a deep understanding of user behavior, we design tools that not only look great but also resonate with your financial journey. Our focus is on seamless usability, empowering you with clarity and control.</p>
                 </div>
                  <div className="relative h-72 w-full order-1 md:order-2">
                     <Image
-                        src="/20251006_2200_Healthcare Financial Burden_remix_01k6x5pyc9fj9aa8th4etmapw7.png"
+                        src="/images/health.png"
                         alt="Healthcare financial burden"
                         fill
                         className="object-cover rounded-2xl"
