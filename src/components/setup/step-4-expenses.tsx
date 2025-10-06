@@ -41,22 +41,22 @@ function ExpenseItem({ index, remove }: { index: number, remove: (index: number)
         type="button"
         variant="ghost"
         size="icon"
-        className="absolute top-2 right-2 h-7 w-7 text-muted-foreground hover:text-destructive"
+        className="absolute top-1 right-1 h-7 w-7 text-muted-foreground hover:text-destructive z-10"
         onClick={() => remove(index)}
       >
         <Trash2 className="h-4 w-4" />
       </Button>
 
-      <div className="p-4 space-y-2">
+      <div className="space-y-0">
         <FormField
           control={control}
           name={`recurringExpenses.${index}.name`}
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex items-center p-3">
+              <Label className="flex-1">Name</Label>
                 <FormControl>
-                  <Input placeholder="e.g., Rent, Netflix..." {...field} className="border-0 text-base font-semibold p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
+                  <Input placeholder="e.g., Rent, Netflix..." {...field} className="border-0 text-right h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
                 </FormControl>
-              <FormMessage className="pt-1" />
             </FormItem>
           )}
         />
@@ -65,15 +65,14 @@ function ExpenseItem({ index, remove }: { index: number, remove: (index: number)
             control={control}
             name={`recurringExpenses.${index}.amount`}
             render={({ field }) => (
-            <FormItem className="flex items-center">
+            <FormItem className="flex items-center p-3">
                 <Label className="flex-1">Amount</Label>
                 <FormControl>
                     <div className="relative flex items-center">
                         <span className="absolute left-3 text-muted-foreground">{symbol}</span>
-                        <Input type="number" placeholder="0" {...field} value={field.value ?? ''} className="pl-7 bg-transparent border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0"/>
+                        <Input type="number" placeholder="0" {...field} value={field.value ?? ''} className="pl-7 bg-transparent border-0 text-right h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0"/>
                     </div>
                 </FormControl>
-                <FormMessage />
             </FormItem>
             )}
         />
@@ -82,11 +81,11 @@ function ExpenseItem({ index, remove }: { index: number, remove: (index: number)
             control={control}
             name={`recurringExpenses.${index}.frequency`}
             render={({ field }) => (
-            <FormItem className="flex items-center">
+            <FormItem className="flex items-center p-3">
                 <Label className="flex-1">Frequency</Label>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                        <SelectTrigger className="w-auto bg-transparent border-0 focus:ring-0 focus:ring-offset-0 justify-end gap-1">
+                        <SelectTrigger className="w-auto bg-transparent border-0 focus:ring-0 focus:ring-offset-0 justify-end gap-1 h-auto p-0">
                           <SelectValue placeholder="Frequency" />
                         </SelectTrigger>
                     </FormControl>
@@ -94,7 +93,6 @@ function ExpenseItem({ index, remove }: { index: number, remove: (index: number)
                         {frequencyOptions.map(option => <SelectItem key={option} value={option}>{option}</SelectItem>)}
                     </SelectContent>
                 </Select>
-                <FormMessage />
             </FormItem>
             )}
         />
