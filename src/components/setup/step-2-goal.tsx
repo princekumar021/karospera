@@ -13,6 +13,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Separator } from "../ui/separator";
+import { Label } from "../ui/label";
 
 interface Step2Props {
   nextStep: () => void;
@@ -34,7 +35,7 @@ function GoalForm() {
   const handleGoalChange = (value: string) => {
     if (value === "Custom...") {
       setIsCustom(true);
-      setValue("goals.0.name", "", { shouldValidate: true });
+      setValue("goals.0.name", "", { shouldValidate: false });
     } else {
       setIsCustom(false);
       setValue("goals.0.name", value, { shouldValidate: true });
@@ -42,28 +43,28 @@ function GoalForm() {
   };
 
   return (
-    <div className={cn("rounded-lg border bg-card", (amountError || dateError) && "animate-shake border-destructive")}>
+    <div className={cn("bg-card text-card-foreground", (amountError || dateError) && "animate-shake")}>
         {isCustom ? (
            <div className={cn("bg-card text-card-foreground", nameError && "animate-shake")}>
-            <div className={cn("floating-label-input relative border-b", nameError ? "border-destructive" : "border-input")}>
+             <div className={cn("floating-label-input relative border-b", nameError ? "border-destructive" : "border-input")}>
               <FormField
-              control={control}
-              name="goals.0.name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder=" " {...field} className="h-12 border-0 bg-transparent p-0 text-lg" />
-                  </FormControl>
-                  <FormLabel>Goal</FormLabel>
-                </FormItem>
-              )}
+                control={control}
+                name="goals.0.name"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormControl>
+                            <Input placeholder=" " {...field} className="h-10 border-0 bg-transparent p-0 text-base" />
+                        </FormControl>
+                        <Label>Goal</Label>
+                    </FormItem>
+                )}
               />
-            </div>
-            <FormField
-              control={control}
-              name="goals.0.name"
-              render={() => <FormMessage className="px-3 pt-1 pb-2"/>}
-            />
+              </div>
+              <FormField
+                control={control}
+                name="goals.0.name"
+                render={() => <FormMessage className="px-0 pt-1 pb-2"/>}
+              />
           </div>
         ) : (
           <FormField
@@ -71,7 +72,7 @@ function GoalForm() {
             name="goals.0.name"
             render={({ field }) => (
               <FormItem>
-                <div className="flex items-center p-3">
+                <div className="flex items-center p-3 border-b">
                   <FormLabel className="w-1/3">Goal</FormLabel>
                   <Select onValueChange={handleGoalChange} defaultValue={field.value}>
                     <FormControl>
