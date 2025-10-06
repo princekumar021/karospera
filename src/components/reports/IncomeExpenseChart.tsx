@@ -54,13 +54,11 @@ export function IncomeExpenseChart() {
         totalIncome += monthlyIncome;
       }
       
-      if (totalIncome > 0 || totalExpenses > 0) {
-        monthsData.push({
-          name: format(date, 'MMM'),
-          income: totalIncome,
-          expenses: totalExpenses,
-        });
-      }
+      monthsData.push({
+        name: format(date, 'MMM'),
+        income: totalIncome,
+        expenses: totalExpenses,
+      });
     }
 
     return monthsData;
@@ -81,6 +79,8 @@ export function IncomeExpenseChart() {
         </Card>
     )
   }
+  
+  const hasData = chartData.some(d => d.income > 0 || d.expenses > 0);
 
   return (
     <Card className="bg-card">
@@ -89,7 +89,7 @@ export function IncomeExpenseChart() {
         <CardDescription>Last 6 months overview</CardDescription>
       </CardHeader>
       <CardContent>
-        {chartData.length > 0 ? (
+        {hasData ? (
           <div className="h-60">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} barGap={10}>
