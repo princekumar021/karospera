@@ -136,4 +136,3 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
     </StepWrapper>
   );
 }
-```

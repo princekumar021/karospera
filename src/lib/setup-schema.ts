@@ -59,4 +59,3 @@ export type SetupFormData = z.infer<typeof setupSchema>;
 export type RecurringExpense = z.infer<typeof recurringExpenseSchema>;
 export type Transaction = z.infer<typeof transactionSchema>;
 export type Goal = z.infer<typeof goalSchema>;
-```

@@ -133,4 +133,3 @@ export default function Step6Preview({ goToStep }: Step6Props) {
     </StepWrapper>
   );
 }
-```
