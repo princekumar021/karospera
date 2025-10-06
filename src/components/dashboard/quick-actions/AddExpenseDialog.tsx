@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import {
   Dialog,
   DialogContent,
@@ -27,7 +27,7 @@ type ExpenseForm = {
 
 export function AddExpenseDialog() {
   const [open, setOpen] = useState(false);
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<ExpenseForm>();
+  const { control, register, handleSubmit, reset, formState: { errors } } = useForm<ExpenseForm>();
   const { addTransaction, formatCurrency } = useUserData();
   const { toast } = useToast();
 
@@ -49,7 +49,7 @@ export function AddExpenseDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <div className="flex flex-col items-center space-y-1">
+        <div className="flex flex-col items-center space-y-1 cursor-pointer">
             <Button variant="outline" size="icon" className="h-14 w-14 rounded-full">
                 <PlusCircle />
             </Button>
@@ -85,14 +85,25 @@ export function AddExpenseDialog() {
                 Category
               </Label>
                <div className="col-span-3">
-                <select {...register("category", { required: "Category is required" })} className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                  <option value="">Select a category</option>
-                  <option value="Food">Food</option>
-                  <option value="Transport">Transport</option>
-                  <option value="Entertainment">Entertainment</option>
-                  <option value="Bills">Bills</option>
-                  <option value="Other">Other</option>
-                </select>
+                <Controller
+                    control={control}
+                    name="category"
+                    rules={{ required: "Category is required" }}
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Food">Food</SelectItem>
+                          <SelectItem value="Transport">Transport</SelectItem>
+                          <SelectItem value="Entertainment">Entertainment</SelectItem>
+                          <SelectItem value="Bills">Bills</SelectItem>
+                          <SelectItem value="Other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                />
                 {errors.category && <p className="text-xs text-red-500 mt-1">{errors.category.message}</p>}
               </div>
             </div>
