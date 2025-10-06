@@ -43,10 +43,10 @@ function GoalForm() {
   };
 
   return (
-    <div className={cn("rounded-lg border bg-card text-card-foreground", (amountError || dateError) && "animate-shake border-destructive")}>
+    <div className={cn("rounded-lg border bg-card text-card-foreground", (nameError || amountError || dateError) && "animate-shake border-destructive")}>
         {isCustom ? (
            <div className={cn("bg-card text-card-foreground", nameError && "animate-shake")}>
-             <div className={cn("floating-label-input p-3 border-b", nameError ? "border-destructive" : "border-input")}>
+             <div className={cn("floating-label-input p-3 border-b relative", nameError ? "border-destructive" : "border-input")}>
               <FormField
                 control={control}
                 name="goals.0.name"
