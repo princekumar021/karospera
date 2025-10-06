@@ -80,6 +80,9 @@ export function AddExpenseDialog() {
         </div>
       </SheetTrigger>
       <SheetContent side="bottom" className="rounded-t-2xl px-4 pb-6">
+        <SheetHeader>
+          <SheetTitle className="sr-only">Add Expense</SheetTitle>
+        </SheetHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="flex items-center gap-2">
