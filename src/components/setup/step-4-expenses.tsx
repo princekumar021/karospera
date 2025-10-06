@@ -92,8 +92,6 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
     name: "recurringExpenses",
   });
   
-  const scrollViewportRef = useRef<HTMLDivElement>(null);
-
   const handleAddExpense = () => {
     const lastIndex = fields.length - 1;
     if (lastIndex >= 0) {
@@ -108,12 +106,13 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
   
   useEffect(() => {
     if (fields.length > 2) {
-      const viewport = scrollViewportRef.current;
-      if (viewport) {
-        setTimeout(() => {
-          viewport.scrollTo({ top: viewport.scrollHeight, behavior: 'smooth' });
-        }, 0);
-      }
+      // Use a timeout to ensure the DOM is updated before scrolling
+      setTimeout(() => {
+        const viewport = document.getElementById('expense-scroll-area');
+        if (viewport) {
+          viewport.scrollTop = viewport.scrollHeight;
+        }
+      }, 0);
     }
   }, [fields.length]);
 
@@ -133,7 +132,7 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
       }
     >
       <p className="text-sm text-muted-foreground px-1">Start with top 3: rent, utilities, phone/subscriptions</p>
-      <ScrollArea className="h-[240px] -mx-4 px-4" viewportRef={scrollViewportRef}>
+      <ScrollArea className="h-[240px] -mx-4 px-4" id="expense-scroll-area">
         <div className="space-y-4 pr-1">
           {fields.map((item, index) => (
             <ExpenseItem key={item.id} index={index} />
