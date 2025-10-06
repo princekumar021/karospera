@@ -42,13 +42,13 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
       <ScrollArea className="h-[240px] -mx-4 px-4">
         <div className="space-y-4 pr-1">
         {fields.map((item, index) => (
-          <div key={item.id} className="rounded-lg border p-3 bg-card space-y-0">
+          <div key={item.id} className="rounded-lg border p-3 bg-card space-y-2">
             <FormField
               control={control}
               name={`recurringExpenses.${index}.name`}
               render={({ field }) => (
                 <FormItem>
-                  <div className="flex items-center py-1">
+                  <div className="flex items-center">
                     <FormLabel className="w-1/3">Name</FormLabel>
                     <FormControl>
                       <Input placeholder="e.g., Rent" {...field} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
@@ -64,7 +64,7 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
               name={`recurringExpenses.${index}.amount`}
               render={({ field }) => (
                 <FormItem>
-                  <div className="flex items-center py-1">
+                  <div className="flex items-center">
                     <FormLabel className="w-1/3">Amount</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="e.g., 12000" {...field} value={field.value ?? ''} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
@@ -80,7 +80,7 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
               name={`recurringExpenses.${index}.frequency`}
               render={({ field }) => (
                 <FormItem>
-                    <div className="flex items-center py-1">
+                    <div className="flex items-center">
                       <FormLabel className="w-1/3">Frequency</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
@@ -97,8 +97,7 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
                 </FormItem>
               )}
             />
-            <Separator />
-            <div className="flex justify-end -mb-2 -mr-2 pt-1">
+            <div className="flex justify-end -mb-4 -mr-2">
               <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => remove(index)}>
                 <Trash2 className="h-4 w-4" />
               </Button>
