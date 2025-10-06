@@ -2,7 +2,9 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { Separator } from '../ui/separator';
 
 export function AppInfo() {
   return (
@@ -10,23 +12,26 @@ export function AppInfo() {
       <CardHeader>
         <CardTitle>App Info</CardTitle>
       </CardHeader>
-      <CardContent>
-        <ul className="space-y-2 text-sm text-muted-foreground">
-            <li className="flex justify-between">
-                <span>Version</span>
-                <span>1.0.0</span>
-            </li>
-             <li className="flex justify-between">
-                <span>Developer</span>
-                <span>PocketPlan Team</span>
-            </li>
-            <li>
-                 <Link href="#" className="text-primary hover:underline">Privacy Policy</Link>
-            </li>
-             <li>
-                 <Link href="#" className="text-primary hover:underline">Terms of Use</Link>
-            </li>
-        </ul>
+      <CardContent className="p-0">
+        <div className="flex items-center justify-between p-4">
+            <span>Version</span>
+            <span className="text-muted-foreground">1.0.0</span>
+        </div>
+        <Separator/>
+        <div className="flex items-center justify-between p-4">
+            <span>Developer</span>
+            <span className="text-muted-foreground">PocketPlan Team</span>
+        </div>
+        <Separator/>
+        <Link href="#" className="flex items-center justify-between p-4 hover:bg-secondary/50">
+            <span>Privacy Policy</span>
+            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+        </Link>
+        <Separator/>
+        <Link href="#" className="flex items-center justify-between p-4 hover:bg-secondary/50">
+            <span>Terms of Use</span>
+            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+        </Link>
       </CardContent>
     </Card>
   );

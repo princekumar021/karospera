@@ -29,9 +29,9 @@ export function AppearanceSettings() {
   return (
     <Card className="bg-card">
       <CardHeader>
-        <CardTitle>Appearance & Theme</CardTitle>
+        <CardTitle>Appearance</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent>
         <div className="flex items-center justify-between rounded-lg border p-3">
           <div className="flex items-center gap-2">
             {isDarkMode ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
@@ -44,7 +44,6 @@ export function AppearanceSettings() {
             disabled={loading}
           />
         </div>
-        {/* Accent color picker can be added here */}
       </CardContent>
     </Card>
   );

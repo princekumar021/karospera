@@ -15,6 +15,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useUserData } from '@/hooks/use-user-data';
+import { ChevronRight } from 'lucide-react';
+import { Separator } from '../ui/separator';
 
 export function DataSettings() {
     const { resetUserData, userData } = useUserData();
@@ -37,12 +39,23 @@ export function DataSettings() {
       <CardHeader>
         <CardTitle>Data & Privacy</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <Button variant="outline" className="w-full" onClick={handleBackup}>Backup Data</Button>
-        <Button variant="outline" className="w-full" disabled>Restore Backup</Button>
+      <CardContent className="p-0">
+        <button onClick={handleBackup} className="flex w-full items-center justify-between p-4 text-left hover:bg-secondary/50">
+            <span>Backup Data</span>
+            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+        </button>
+        <Separator />
+        <button className="flex w-full items-center justify-between p-4 text-left hover:bg-secondary/50" disabled>
+            <span className="opacity-50">Restore Backup</span>
+            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+        </button>
+        <Separator />
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive" className="w-full">Reset All Data</Button>
+            <button className="flex w-full items-center justify-between p-4 text-left text-destructive hover:bg-secondary/50">
+                <span>Reset All Data</span>
+                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+            </button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -53,7 +66,7 @@ export function DataSettings() {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={resetUserData}>Continue</AlertDialogAction>
+              <AlertDialogAction onClick={resetUserData} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Continue</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

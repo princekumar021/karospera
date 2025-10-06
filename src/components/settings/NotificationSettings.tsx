@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
+import { Separator } from '../ui/separator';
 
 export function NotificationSettings() {
     const { userData, loading, updateUserData } = useUserData();
@@ -29,8 +30,8 @@ export function NotificationSettings() {
       <CardHeader>
         <CardTitle>Notifications</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2">
-        <div className="flex items-center justify-between rounded-lg border p-3">
+      <CardContent className="p-0">
+        <div className="flex items-center justify-between p-4">
           <Label htmlFor="budget-alerts" className="flex-1">Budget Limit Alerts</Label>
           <Switch
             id="budget-alerts"
@@ -38,7 +39,8 @@ export function NotificationSettings() {
             onCheckedChange={(checked) => updateUserData({ budgetAlerts: checked })}
           />
         </div>
-        <div className="flex items-center justify-between rounded-lg border p-3">
+        <Separator />
+        <div className="flex items-center justify-between p-4">
           <Label htmlFor="goal-reminders" className="flex-1">Goal Completion Reminders</Label>
           <Switch
             id="goal-reminders"
@@ -46,7 +48,8 @@ export function NotificationSettings() {
             onCheckedChange={(checked) => updateUserData({ goalReminders: checked })}
           />
         </div>
-        <div className="flex items-center justify-between rounded-lg border p-3">
+        <Separator />
+        <div className="flex items-center justify-between p-4">
           <Label htmlFor="monthly-summary" className="flex-1">Monthly Summary Updates</Label>
           <Switch
             id="monthly-summary"
