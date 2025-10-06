@@ -33,7 +33,7 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
       }
       if (parsed.transactions) {
         parsed.transactions.forEach((t: any) => {
-          t.date = new Date(t.date);
+          if(t.date) t.date = new Date(t.date);
         });
       }
       return parsed;
@@ -69,7 +69,7 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
       if (!prevData) return null;
       const newTransaction: Transaction = {
         ...transaction,
-        id: new Date().toISOString(),
+        id: new Date().toISOString() + Math.random(),
         date: new Date(),
       };
       const updatedData = {

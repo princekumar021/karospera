@@ -5,10 +5,14 @@ import { Progress } from '@/components/ui/progress';
 import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
 import { useMemo } from 'react';
-import { RecurringExpense, Goal } from '@/lib/setup-schema';
+import { RecurringExpense, Goal, Transaction } from '@/lib/setup-schema';
+import { Button } from '../ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { PiggyBank } from 'lucide-react';
 
 export function OverviewCard() {
-  const { userData, loading, formatCurrency } = useUserData();
+  const { userData, loading, formatCurrency, updateGoal, addTransaction } = useUserData();
+  const { toast } = useToast();
   
   const getMonthlyAmount = (expense: RecurringExpense): number => {
     const amount = Number(expense.amount) || 0;
@@ -23,9 +27,9 @@ export function OverviewCard() {
     }
   };
   
-  const { availableBalance, goalProgress, goalName } = useMemo(() => {
+  const { availableBalance, goalProgress, goalName, primaryGoal } = useMemo(() => {
     if (!userData || loading) {
-      return { availableBalance: 0, goalProgress: 0, goalName: 'your goal' };
+      return { availableBalance: 0, goalProgress: 0, goalName: 'your goal', primaryGoal: null };
     }
 
     const income = userData.monthlyIncome || 0;
@@ -63,8 +67,43 @@ export function OverviewCard() {
       availableBalance,
       goalProgress,
       goalName: primaryGoal?.name || 'your goal',
+      primaryGoal
     };
   }, [userData, loading]);
+
+  const handleMoveToSavings = () => {
+    if (!primaryGoal || availableBalance <= 0) {
+      toast({
+        variant: "destructive",
+        title: "Unable to move funds",
+        description: availableBalance <= 0 ? "No available balance to move." : "No primary savings goal set."
+      });
+      return;
+    };
+
+    const newCurrentAmount = primaryGoal.currentAmount + availableBalance;
+    updateGoal({ ...primaryGoal, currentAmount: newCurrentAmount });
+
+    addTransaction({
+      name: `Contribution to ${primaryGoal.name}`,
+      amount: -availableBalance,
+      type: 'expense',
+      category: 'Savings'
+    });
+    
+    addTransaction({
+      name: `Balance transfer from Checking`,
+      amount: availableBalance,
+      type: 'income',
+      category: 'Savings'
+    });
+
+
+    toast({
+      title: "Balance moved to savings!",
+      description: `${formatCurrency(availableBalance)} has been added to your "${primaryGoal.name}" goal.`,
+    });
+  }
 
 
   return (
@@ -84,7 +123,12 @@ export function OverviewCard() {
           ) : (
             <>
               <p className="text-2xl font-bold">{formatCurrency(availableBalance)}</p>
-              <p className="text-xs text-muted-foreground">Per month after bills</p>
+              <div className="flex justify-between items-center">
+                <p className="text-xs text-muted-foreground">Per month after bills</p>
+                <Button variant="ghost" size="sm" onClick={handleMoveToSavings} disabled={availableBalance <= 0}>
+                    <PiggyBank className="h-4 w-4 mr-2" /> Move to Savings
+                </Button>
+              </div>
             </>
           )}
         </CardContent>
