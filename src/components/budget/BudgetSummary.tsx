@@ -10,27 +10,40 @@ import { RecurringExpense } from '@/lib/setup-schema';
 export function BudgetSummary() {
   const { userData, loading, formatCurrency } = useUserData();
 
-  const getMonthlyAmount = (expense: RecurringExpense): number => {
-    const amount = Number(expense.amount) || 0;
-    switch (expense.frequency) {
-      case 'Yearly': return amount / 12;
-      case 'Quarterly': return amount / 3;
-      default: return amount;
-    }
-  };
-
-  const { income, expenses, remaining, progress, spent } = useMemo(() => {
+  const { income, remaining, progress, spent } = useMemo(() => {
     if (!userData || loading) {
-      return { income: 0, expenses: 0, remaining: 0, progress: 0, spent: 0 };
+      return { income: 0, remaining: 0, progress: 0, spent: 0 };
     }
     const income = userData.monthlyIncome || 0;
-    const totalRecurring = userData.recurringExpenses.reduce((sum, exp) => sum + getMonthlyAmount(exp), 0);
-    // Let's add some dummy spent amount for now, e.g. 40% of recurring expenses
-    const spent = totalRecurring * 0.4;
+
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    // Calculate total spending from one-off expense transactions for the current month
+    const oneOffSpending = userData.transactions
+      ?.filter(t => {
+        const tDate = new Date(t.date);
+        return t.type === 'expense' && tDate.getMonth() === currentMonth && tDate.getFullYear() === currentYear;
+      })
+      .reduce((sum, t) => sum + Math.abs(t.amount), 0) || 0;
+
+    // In this simplified model, we'll consider monthly recurring expenses as "spent"
+    const getMonthlyAmount = (expense: RecurringExpense): number => {
+        const amount = Number(expense.amount) || 0;
+        switch (expense.frequency) {
+        case 'Yearly': return amount / 12;
+        case 'Quarterly': return amount / 3;
+        default: return amount;
+        }
+    };
+    const recurringSpending = userData.recurringExpenses.reduce((sum, exp) => sum + getMonthlyAmount(exp), 0);
+
+    const spent = oneOffSpending + recurringSpending;
     const remaining = income - spent;
     const progress = income > 0 ? (spent / income) * 100 : 0;
     
-    return { income, expenses: totalRecurring, remaining, progress, spent };
+    return { income, remaining, progress, spent };
   }, [userData, loading]);
 
   if (loading) {
