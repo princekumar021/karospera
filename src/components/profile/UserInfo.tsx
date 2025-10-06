@@ -23,8 +23,8 @@ export function UserInfo() {
         </div>
       ) : (
         <div className="text-center">
-          <h2 className="text-2xl font-bold">{userName}</h2>
-          <p className="text-muted-foreground">Saving for {userData?.goal} 🚗</p>
+          <h2 className="text-2xl font-bold truncate">{userName}</h2>
+          <p className="text-muted-foreground truncate">Saving for {userData?.goal || 'your future'}</p>
         </div>
       )}
        <Button variant="outline" size="sm">Change Avatar</Button>

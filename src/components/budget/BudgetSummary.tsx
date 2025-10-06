@@ -19,18 +19,18 @@ export function BudgetSummary() {
     }
   };
 
-  const { income, expenses, remaining, progress } = useMemo(() => {
+  const { income, expenses, remaining, progress, spent } = useMemo(() => {
     if (!userData || loading) {
-      return { income: 0, expenses: 0, remaining: 0, progress: 0 };
+      return { income: 0, expenses: 0, remaining: 0, progress: 0, spent: 0 };
     }
     const income = userData.monthlyIncome || 0;
-    const expenses = userData.recurringExpenses.reduce((sum, exp) => sum + getMonthlyAmount(exp), 0);
+    const totalRecurring = userData.recurringExpenses.reduce((sum, exp) => sum + getMonthlyAmount(exp), 0);
     // Let's add some dummy spent amount for now, e.g. 40% of recurring expenses
-    const spent = expenses * 0.4;
+    const spent = totalRecurring * 0.4;
     const remaining = income - spent;
     const progress = income > 0 ? (spent / income) * 100 : 0;
     
-    return { income, expenses: spent, remaining, progress };
+    return { income, expenses: totalRecurring, remaining, progress, spent };
   }, [userData, loading]);
 
   if (loading) {
@@ -59,17 +59,17 @@ export function BudgetSummary() {
             <p className="font-bold">{formatCurrency(income)}</p>
           </div>
           <div>
-            <p className="text-sm text-red-500">Expenses</p>
-            <p className="font-bold">{formatCurrency(expenses)}</p>
+            <p className="text-sm text-red-500">Spent</p>
+            <p className="font-bold">{formatCurrency(spent)}</p>
           </div>
           <div>
-            <p className="text-sm text-blue-500">Balance</p>
+            <p className="text-sm text-blue-500">Remaining</p>
             <p className="font-bold">{formatCurrency(remaining)}</p>
           </div>
         </div>
         <Progress value={progress} className="h-2" />
         <p className="text-xs text-muted-foreground mt-2">
-            You've spent {formatCurrency(expenses)} of {formatCurrency(income)}
+            You've spent {formatCurrency(spent)} of {formatCurrency(income)}
         </p>
       </CardContent>
     </Card>

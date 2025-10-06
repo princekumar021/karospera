@@ -4,16 +4,48 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
+import { useMemo } from 'react';
 
 export function GoalsInsights() {
   const { userData, loading, formatCurrency } = useUserData();
 
-  // Dummy data for now
-  const totalSaved = 40000;
-  const totalTarget = 150000;
-  const totalProgress = totalTarget > 0 ? (totalSaved / totalTarget) * 100 : 0;
-  const estimatedCompletion = "2 years";
+  const { totalSaved, totalTarget, totalProgress, estimatedCompletion } = useMemo(() => {
+    if (!userData) {
+        return { totalSaved: 0, totalTarget: 0, totalProgress: 0, estimatedCompletion: '...' };
+    }
 
+    // Using dummy data for now
+    const totalSaved = 40000;
+    const totalTarget = 150000;
+    const totalProgress = totalTarget > 0 ? (totalSaved / totalTarget) * 100 : 0;
+
+    const monthlyIncome = userData.monthlyIncome || 0;
+    const totalExpenses = userData.recurringExpenses.reduce((acc, exp) => {
+        const amount = Number(exp.amount) || 0;
+        let monthlyAmount = amount;
+        if (exp.frequency === 'Yearly') monthlyAmount = amount / 12;
+        if (exp.frequency === 'Quarterly') monthlyAmount = amount / 3;
+        return acc + monthlyAmount;
+    }, 0);
+    const availableForSaving = monthlyIncome - totalExpenses;
+    const monthlySavingRate = availableForSaving > 0 ? availableForSaving * 0.2 : 0; // Assuming 20% of available is saved
+    
+    if (monthlySavingRate <= 0 || totalTarget <= totalSaved) {
+         return { totalSaved, totalTarget, totalProgress, estimatedCompletion: '...' };
+    }
+
+    const monthsRemaining = (totalTarget - totalSaved) / monthlySavingRate;
+    const years = Math.floor(monthsRemaining / 12);
+    const months = Math.ceil(monthsRemaining % 12);
+
+    let completionString = '';
+    if (years > 0) completionString += `${years} year${years > 1 ? 's' : ''} `;
+    if (months > 0) completionString += `${months} month${months > 1 ? 's' : ''}`;
+    
+    return { totalSaved, totalTarget, totalProgress, estimatedCompletion: completionString.trim() };
+
+  }, [userData]);
+  
   if (loading) {
     return (
         <Card className="bg-card">

@@ -25,9 +25,9 @@ export function SummaryCards() {
     }
     const income = userData.monthlyIncome || 0;
     const totalExpenses = userData.recurringExpenses.reduce((sum, exp) => sum + getMonthlyAmount(exp), 0);
-    // Dummy savings for now
+    // Dummy savings for now - 10% of income
     const savings = income * 0.1;
-    const balance = income - totalExpenses - savings;
+    const balance = income - totalExpenses;
 
     return { income, expenses: totalExpenses, savings, balance };
   }, [userData, loading]);
@@ -81,7 +81,7 @@ export function SummaryCards() {
       </Card>
        <Card className="bg-card">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Balance</CardTitle>
+          <CardTitle className="text-sm font-medium">Net Balance</CardTitle>
           <TrendingUp className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>

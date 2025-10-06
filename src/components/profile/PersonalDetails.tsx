@@ -10,12 +10,12 @@ import { Button } from '../ui/button';
 export function PersonalDetails() {
   const { userData, loading, formatCurrency } = useUserData();
 
-  const details = [
-    { label: "Monthly Income", value: formatCurrency(userData?.monthlyIncome || 0) },
-    { label: "Currency", value: userData?.currency || "INR" },
-    { label: "Primary Goal", value: userData?.goal || "Not set" },
-    { label: "Budgeting Method", value: userData?.budgetMethod || "Balanced" }
-  ]
+  const details = userData ? [
+    { label: "Monthly Income", value: formatCurrency(userData.monthlyIncome || 0) },
+    { label: "Currency", value: userData.currency || "INR" },
+    { label: "Primary Goal", value: userData.goal || "Not set" },
+    { label: "Budgeting Method", value: (userData.budgetMethod || "balanced").replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }
+  ] : [];
 
   if (loading) {
     return (
@@ -46,7 +46,7 @@ export function PersonalDetails() {
             <li key={index} className="flex justify-between items-center">
               <span className="text-muted-foreground">{item.label}</span>
               <div className="flex items-center gap-2">
-                <span className="font-semibold">{item.value}</span>
+                <span className="font-semibold truncate">{item.value}</span>
                 <Button variant="ghost" size="icon" className="h-6 w-6">
                     <Edit2 className="h-4 w-4 text-muted-foreground" />
                 </Button>

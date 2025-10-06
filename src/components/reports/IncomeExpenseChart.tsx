@@ -5,6 +5,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } fro
 import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
 import { useMemo } from 'react';
+import { subMonths, format } from 'date-fns';
 
 export function IncomeExpenseChart() {
   const { userData, loading, formatCurrency } = useUserData();
@@ -20,12 +21,19 @@ export function IncomeExpenseChart() {
         return acc + monthlyAmount;
     }, 0);
     
-    // Dummy data for previous months
-    const data = [
-        { name: 'May', income: userData.monthlyIncome, expenses: totalExpenses * 0.8 },
-        { name: 'June', income: userData.monthlyIncome, expenses: totalExpenses * 1.1 },
-        { name: 'July', income: userData.monthlyIncome, expenses: totalExpenses },
-    ];
+    // Generate data for the last 3 months
+    const data = Array.from({ length: 3 }).map((_, i) => {
+        const date = subMonths(new Date(), 2 - i);
+        // Using dummy expense data for previous months
+        const randomFactor = 1 + (Math.random() - 0.5) * 0.4; // between 0.8 and 1.2
+        const expenses = i === 2 ? totalExpenses : totalExpenses * randomFactor;
+        
+        return {
+            name: format(date, 'MMM'),
+            income: userData.monthlyIncome,
+            expenses: expenses,
+        };
+    });
     return data;
 
   }, [userData]);
@@ -36,6 +44,7 @@ export function IncomeExpenseChart() {
         <Card className="bg-card">
             <CardHeader>
                 <Skeleton className="h-6 w-3/5" />
+                 <Skeleton className="h-4 w-2/5" />
             </CardHeader>
             <CardContent>
                 <Skeleton className="h-48 w-full" />
@@ -56,7 +65,9 @@ export function IncomeExpenseChart() {
             <BarChart data={chartData}>
               <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} />
               <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickFormatter={(value) => formatCurrency(value as number)}/>
-              <Tooltip formatter={(value:number) => [formatCurrency(value), "Amount"]} />
+              <Tooltip 
+                contentStyle={{ backgroundColor: 'hsl(var(--background))', border: '1px solid hsl(var(--border))' }}
+                formatter={(value:number, name: string) => [formatCurrency(value), name.charAt(0).toUpperCase() + name.slice(1)]} />
               <Legend />
               <Bar dataKey="income" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
               <Bar dataKey="expenses" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />

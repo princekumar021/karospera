@@ -38,9 +38,11 @@ export function TipsBanner() {
     
     if (userData.goal && userData.goalTargetAmount) {
        const suggestedSaving = Math.max(0, availableBalance * 0.2); // Suggest saving 20%
-       return {
-         tip: `You have ${formatCurrency(availableBalance)} left this month. Try saving ${formatCurrency(suggestedSaving)} for your "${userData.goal}" goal.`,
-         cta: "Adjust Savings"
+       if (suggestedSaving > 0) {
+        return {
+          tip: `You have ${formatCurrency(availableBalance)} left this month. Try saving ${formatCurrency(suggestedSaving)} for your "${userData.goal}" goal.`,
+          cta: "Adjust Savings"
+        }
        }
     }
 

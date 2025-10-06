@@ -14,22 +14,21 @@ export function ActiveGoals() {
     target: userData.goalTargetAmount || 0,
   } : null;
   
+  // Placeholder for other goals to show more than one
   const otherGoals = [
     {
       name: 'Emergency Fund',
       current: 25000,
       target: 50000,
-      emoji: '🛡️',
     },
     {
       name: 'Dream Vacation',
       current: 15000,
       target: 100000,
-      emoji: '🌴',
     },
   ];
 
-  const goals = primaryGoal ? [primaryGoal, ...otherGoals.filter(g => g.name !== primaryGoal.name)] : otherGoals;
+  const goals = primaryGoal && primaryGoal.name ? [primaryGoal, ...otherGoals.filter(g => g.name !== primaryGoal.name)] : otherGoals;
 
   if (loading) {
     return (
@@ -53,11 +52,12 @@ export function ActiveGoals() {
   return (
     <div className="space-y-4">
       {goals.map((goal, index) => {
+        if (!goal.name) return null;
         const progress = goal.target > 0 ? (goal.current / goal.target) * 100 : 0;
         return (
           <Card key={index} className="bg-card">
             <CardHeader>
-              <CardTitle className="font-headline">{goal.name}</CardTitle>
+              <CardTitle className="font-headline truncate">{goal.name}</CardTitle>
               <CardDescription>Target: {formatCurrency(goal.target)}</CardDescription>
             </CardHeader>
             <CardContent>

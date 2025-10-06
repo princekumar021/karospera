@@ -50,6 +50,7 @@ export function GoalsSection() {
         ) : (
         <ul className="space-y-4">
           {goals.slice(0, 2).map((goal, index) => {
+            if (!goal.name) return null;
             const progress = goal.target > 0 ? (goal.current / goal.target) * 100 : 0;
             return (
             <li key={index}>

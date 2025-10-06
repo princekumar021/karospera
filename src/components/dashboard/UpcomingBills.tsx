@@ -63,7 +63,7 @@ export function UpcomingBills() {
                     Due: {getDueDate(bill.dueDay!)}
                   </p>
                 </div>
-                <p className="font-bold">{formatCurrency(bill.amount)}</p>
+                <p className="font-bold">{formatCurrency(bill.amount as number)}</p>
               </li>
             ))}
           </ul>
