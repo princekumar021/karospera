@@ -67,3 +67,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .floating-label-input {
+    @apply relative;
+  }
+
+  .floating-label-input .peer ~ label,
+  .floating-label-input input:not(:placeholder-shown) ~ label {
+    @apply -top-2 scale-75 text-primary;
+  }
+  
+  .floating-label-input input:focus ~ label {
+     @apply -top-2 scale-75 text-primary;
+  }
+}
