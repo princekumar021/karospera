@@ -20,26 +20,26 @@ function NameInput() {
   
   return (
     <div className={cn("rounded-lg bg-card text-card-foreground border", error && "animate-shake border-destructive")}>
-        <div className={cn("floating-label-input relative")}>
-            <FormField
-            control={control}
-            name="fullName"
-            render={({ field }) => (
-                <FormItem>
-                    <FormControl>
-                        <Input placeholder=" " {...field} className="h-14 border-0 bg-transparent text-lg" />
-                    </FormControl>
-                    <Label>Name</Label>
-                </FormItem>
-            )}
-            />
-        </div>
+      <div className={cn("floating-label-input relative")}>
         <FormField
-            control={control}
-            name="fullName"
-            render={() => <FormMessage className="px-3 pb-2"/>}
+          control={control}
+          name="fullName"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder=" " {...field} className="h-14 border-0 bg-transparent text-lg text-center" />
+              </FormControl>
+              <Label>Name</Label>
+            </FormItem>
+          )}
         />
       </div>
+      <FormField
+        control={control}
+        name="fullName"
+        render={() => <FormMessage className="px-3 pb-2"/>}
+      />
+    </div>
   )
 }
 

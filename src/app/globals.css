@@ -47,7 +47,7 @@
     --muted-foreground: 215 14% 65%;
     --accent: 43 100% 67%;
     --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 100% 67%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
     --border: 220 29% 15%;
     --input: 220 29% 15%;
@@ -75,7 +75,7 @@
   }
 
   .floating-label-input .peer ~ label {
-    @apply absolute left-3 top-1/2 -translate-y-1/2 scale-100 text-muted-foreground transition-all duration-300 ease-in-out pointer-events-none origin-top-left;
+    @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-100 text-muted-foreground transition-all duration-300 ease-in-out pointer-events-none origin-top-left;
   }
 
   .floating-label-input .peer:focus ~ label,
