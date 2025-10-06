@@ -19,12 +19,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar, ChevronRight } from "lucide-react";
+import { Calendar as CalendarIcon, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { Label } from '../ui/label';
+import { Calendar } from '../ui/calendar';
+
 
 const formSchema = goalSchema.omit({ id: true, currentAmount: true });
 type GoalFormValues = Zod.infer<typeof formSchema>;
@@ -186,7 +188,6 @@ export function AddGoalDialog({ trigger, goalToEdit, open, onOpenChange }: { tri
                           form.setValue('targetDate', date);
                           setDatePopoverOpen(false);
                       }}
-                      initialFocus
                     />
                   </PopoverContent>
                 </Popover>
