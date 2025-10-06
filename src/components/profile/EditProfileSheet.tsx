@@ -23,6 +23,7 @@ import { Label } from '../ui/label';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Separator } from '../ui/separator';
+import { ScrollArea } from "../ui/scroll-area";
 
 const currencyOptions = ["INR", "USD", "EUR", "GBP", "JPY"];
 
@@ -74,106 +75,108 @@ export function EditProfileSheet({ children, open, onOpenChange }: { children?: 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
       {children && <SheetTrigger asChild>{children}</SheetTrigger>}
-      <SheetContent side="bottom" className="rounded-t-2xl px-4 pb-6" hideClose>
+      <SheetContent side="bottom" className="rounded-t-2xl px-4 pb-6 flex flex-col max-h-[90dvh]" hideClose>
         <SheetHeader>
           <SheetTitle>Edit Profile</SheetTitle>
         </SheetHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-4">
-            <div className="rounded-lg border bg-background">
-                <FormField
-                    control={form.control}
-                    name="fullName"
-                    render={({ field }) => (
-                        <FormItem className="flex items-center p-3">
-                            <Label className="w-1/3">Name</Label>
-                            <FormControl>
-                                <Input className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0" {...field} />
-                            </FormControl>
-                        </FormItem>
-                    )}
-                />
-                <Separator />
-                 <FormField
-                    control={form.control}
-                    name="monthlyIncome"
-                    render={({ field }) => (
-                        <FormItem className="flex items-center p-3">
-                            <Label className="w-1/3">Monthly Income</Label>
-                            <FormControl>
-                                <Input type="number" className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0" {...field} />
-                            </FormControl>
-                        </FormItem>
-                    )}
-                />
-                <Separator />
-                <FormField
-                    control={form.control}
-                    name="currency"
-                    render={({ field }) => (
-                        <FormItem className="flex items-center p-3">
-                          <Label className="w-1/3">Currency</Label>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="border-0 justify-end focus-visible:ring-0 focus-visible:ring-offset-0">
-                                <SelectValue placeholder="Select currency" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {currencyOptions.map((option) => (
-                                <SelectItem key={option} value={option}>
-                                  {option}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormItem>
-                    )}
-                />
-            </div>
+        <ScrollArea className="flex-1 -mx-4 px-4">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-4">
+              <div className="rounded-lg border bg-background">
+                  <FormField
+                      control={form.control}
+                      name="fullName"
+                      render={({ field }) => (
+                          <FormItem className="flex items-center p-3">
+                              <Label className="w-1/3">Name</Label>
+                              <FormControl>
+                                  <Input className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0" {...field} />
+                              </FormControl>
+                          </FormItem>
+                      )}
+                  />
+                  <Separator />
+                  <FormField
+                      control={form.control}
+                      name="monthlyIncome"
+                      render={({ field }) => (
+                          <FormItem className="flex items-center p-3">
+                              <Label className="w-1/3">Monthly Income</Label>
+                              <FormControl>
+                                  <Input type="number" className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0" {...field} />
+                              </FormControl>
+                          </FormItem>
+                      )}
+                  />
+                  <Separator />
+                  <FormField
+                      control={form.control}
+                      name="currency"
+                      render={({ field }) => (
+                          <FormItem className="flex items-center p-3">
+                            <Label className="w-1/3">Currency</Label>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger className="border-0 justify-end focus-visible:ring-0 focus-visible:ring-offset-0">
+                                  <SelectValue placeholder="Select currency" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {currencyOptions.map((option) => (
+                                  <SelectItem key={option} value={option}>
+                                    {option}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormItem>
+                      )}
+                  />
+              </div>
 
-            <div className="rounded-lg border bg-background p-4">
-                <FormField
-                    control={form.control}
-                    name="budgetMethod"
-                    render={({ field }) => (
-                    <FormItem className="space-y-3">
-                        <Label>Budgeting method</Label>
-                        <FormControl>
-                        <RadioGroup
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                            className="space-y-0"
-                        >
-                            {budgetMethods.map((method, index) => (
-                              <React.Fragment key={method.key}>
-                                <FormItem className="flex items-center space-x-3 py-3">
-                                    <FormControl>
-                                      <RadioGroupItem value={method.key} id={`r-${method.key}`} />
-                                    </FormControl>
-                                    <Label htmlFor={`r-${method.key}`} className="font-normal flex-1">
-                                      {method.label}
-                                    </Label>
-                                </FormItem>
-                                {index < budgetMethods.length - 1 && <Separator />}
-                              </React.Fragment>
-                            ))}
-                        </RadioGroup>
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                    )}
-                />
-            </div>
-            
-            <SheetFooter className="mt-6 flex-col gap-2">
-                <Button type="submit" size="lg">Save Changes</Button>
-                <SheetClose asChild>
-                    <Button variant="ghost" className="w-full">Cancel</Button>
-                </SheetClose>
-            </SheetFooter>
-          </form>
-        </Form>
+              <div className="rounded-lg border bg-background p-4">
+                  <FormField
+                      control={form.control}
+                      name="budgetMethod"
+                      render={({ field }) => (
+                      <FormItem className="space-y-3">
+                          <Label>Budgeting method</Label>
+                          <FormControl>
+                          <RadioGroup
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                              className="space-y-0"
+                          >
+                              {budgetMethods.map((method, index) => (
+                                <React.Fragment key={method.key}>
+                                  <FormItem className="flex items-center space-x-3 py-3">
+                                      <FormControl>
+                                        <RadioGroupItem value={method.key} id={`r-${method.key}`} />
+                                      </FormControl>
+                                      <Label htmlFor={`r-${method.key}`} className="font-normal flex-1">
+                                        {method.label}
+                                      </Label>
+                                  </FormItem>
+                                  {index < budgetMethods.length - 1 && <Separator />}
+                                </React.Fragment>
+                              ))}
+                          </RadioGroup>
+                          </FormControl>
+                          <FormMessage />
+                      </FormItem>
+                      )}
+                  />
+              </div>
+              
+              <SheetFooter className="mt-6 flex-col gap-2 sticky bottom-0 bg-background pt-4">
+                  <Button type="submit" size="lg">Save Changes</Button>
+                  <SheetClose asChild>
+                      <Button variant="ghost" className="w-full">Cancel</Button>
+                  </SheetClose>
+              </SheetFooter>
+            </form>
+          </Form>
+        </ScrollArea>
       </SheetContent>
     </Sheet>
   );
