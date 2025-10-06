@@ -53,9 +53,9 @@ function GoalForm() {
                 render={({ field }) => (
                     <FormItem>
                         <FormControl>
-                            <Input placeholder=" " {...field} className="h-10 border-0 bg-transparent p-0 text-base" />
+                            <Input placeholder=" " {...field} className="h-10 border-0 bg-transparent p-0 text-base peer" />
                         </FormControl>
-                        <Label>Goal</Label>
+                        <Label className="mt-1">Goal</Label>
                     </FormItem>
                 )}
               />
