@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 const navItems = [
   { href: '/dashboard', icon: <Home />, label: 'Dashboard' },
   { href: '/budget', icon: <Wallet />, label: 'Budgets' },
-  { href: '#', icon: <Target />, label: 'Goals' },
+  { href: '/goals', icon: <Target />, label: 'Goals' },
   { href: '#', icon: <ChartBar />, label: 'Reports' },
   { href: '#', icon: <User />, label: 'Profile' },
 ];
@@ -50,7 +50,7 @@ export function BottomNavigation() {
             href={item.href}
             icon={item.icon}
             label={item.label}
-            active={pathname.startsWith(item.href)}
+            active={pathname === item.href}
           />
         ))}
       </div>
