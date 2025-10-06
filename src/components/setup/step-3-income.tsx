@@ -32,12 +32,12 @@ export default function Step3Income({ nextStep, prevStep }: Step3Props) {
         </div>
       }
     >
-      <div className="rounded-lg border bg-card p-3 space-y-3">
+      <div className="rounded-lg border bg-card">
         <FormField
           control={control}
           name="currency"
           render={({ field }) => (
-            <FormItem className="flex items-center">
+            <FormItem className="flex items-center p-3">
               <FormLabel className="w-1/3">Currency</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
@@ -62,7 +62,7 @@ export default function Step3Income({ nextStep, prevStep }: Step3Props) {
           control={control}
           name="monthlyIncome"
           render={({ field }) => (
-            <FormItem className="flex items-center">
+            <FormItem className="flex items-center p-3">
               <FormLabel className="w-1/3">Monthly Income</FormLabel>
               <FormControl>
                 <Input type="number" placeholder="e.g., 45000" {...field} value={field.value ?? ''}
@@ -82,7 +82,7 @@ export default function Step3Income({ nextStep, prevStep }: Step3Props) {
           control={control}
           name="payCycle"
           render={({ field }) => (
-            <FormItem className="flex items-center">
+            <FormItem className="flex items-center p-3">
               <FormLabel className="w-1/3">Pay Cycle</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>

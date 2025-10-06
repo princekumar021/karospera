@@ -83,10 +83,10 @@ export default function Step6Preview({ goToStep }: Step6Props) {
       }
     >
       <div className="space-y-4">
-        <Card className="bg-card">
+        <Card className="bg-card shadow-lg">
           <CardHeader className="flex flex-row items-center gap-3">
-            <div className="p-2 bg-secondary rounded-full">
-              <User className="w-5 h-5 text-secondary-foreground" />
+            <div className="p-2 bg-primary/10 text-primary rounded-full">
+              <User className="w-5 h-5" />
             </div>
             <div>
               <CardTitle className="text-base font-semibold truncate">Hello, {fullName || 'User'}!</CardTitle>
@@ -94,8 +94,8 @@ export default function Step6Preview({ goToStep }: Step6Props) {
             </div>
           </CardHeader>
           <CardContent>
-             <p className="text-2xl font-bold truncate">{formatCurrencyLocal(remainingThisMonth)}</p>
-             <p className="text-xs text-muted-foreground">Remaining this month</p>
+             <p className="text-3xl font-bold tracking-tight truncate">{formatCurrencyLocal(remainingThisMonth)}</p>
+             <p className="text-xs text-muted-foreground">Available to spend this month</p>
           </CardContent>
         </Card>
 
@@ -106,7 +106,7 @@ export default function Step6Preview({ goToStep }: Step6Props) {
             </CardHeader>
             <CardContent>
               <div className="flex justify-between text-sm mb-1">
-                <span className="truncate">{formatCurrencyLocal(savingsForGoal > 0 ? savingsForGoal : 0)}</span>
+                <span className="truncate font-medium">{formatCurrencyLocal(savingsForGoal > 0 ? savingsForGoal : 0)}</span>
                 <span className="text-muted-foreground truncate">{formatCurrencyLocal(primaryGoal?.targetAmount || 0)}</span>
               </div>
               <Progress value={goalProgress} />
@@ -118,7 +118,7 @@ export default function Step6Preview({ goToStep }: Step6Props) {
         <div className="grid grid-cols-2 gap-4">
           <Card className="bg-card">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Monthly Spend</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Monthly Bills</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold truncate">{formatCurrencyLocal(totalMonthlyRecurring)}</div>
@@ -126,7 +126,7 @@ export default function Step6Preview({ goToStep }: Step6Props) {
           </Card>
           <Card className="bg-card">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Next Bill</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Next Bill Due</CardTitle>
             </CardHeader>
             <CardContent>
                <div className="text-2xl font-bold truncate">{nextBill ? `${formatCurrencyLocal(nextBill.amount)}` : 'N/A'}</div>

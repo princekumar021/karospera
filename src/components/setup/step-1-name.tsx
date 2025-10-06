@@ -24,7 +24,7 @@ export default function Step1Name({ nextStep }: Step1Props) {
         </Button>
       }
     >
-      <div className="rounded-lg border bg-card">
+      <div className="rounded-lg border bg-card text-card-foreground">
         <FormField
           control={control}
           name="fullName"
@@ -34,16 +34,16 @@ export default function Step1Name({ nextStep }: Step1Props) {
               <FormControl>
                 <Input placeholder="e.g., Priya" {...field} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0"/>
               </FormControl>
+              <FormMessage className="pl-2" />
             </FormItem>
           )}
         />
-        <FormMessage className="px-3 pb-2" />
       </div>
 
-      <Alert className="bg-card border-border/70 text-card-foreground">
-        <Info className="h-4 w-4 !text-card-foreground" />
-        <AlertTitle className="font-semibold">Private & Secure</AlertTitle>
-        <AlertDescription className="text-xs">
+      <Alert className="bg-transparent border-0 text-card-foreground p-0">
+        <Info className="h-4 w-4 !text-muted-foreground" />
+        <AlertTitle className="font-semibold text-muted-foreground">Private & Secure</AlertTitle>
+        <AlertDescription className="text-xs text-muted-foreground">
           Your financial data is stored securely on your device.
         </AlertDescription>
       </Alert>

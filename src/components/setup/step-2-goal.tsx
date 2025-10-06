@@ -51,13 +51,13 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
         </div>
       }
     >
-      <div className="rounded-lg border bg-card p-3">
+      <div className="rounded-lg border bg-card">
         {isCustom ? (
-          <FormField
+           <FormField
             control={control}
             name="goals.0.name"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="p-3">
                 <FormLabel>Custom Goal</FormLabel>
                 <FormControl>
                   <Input placeholder="Type your own goal" {...field} />
@@ -71,7 +71,7 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
             control={control}
             name="goals.0.name"
             render={({ field }) => (
-              <FormItem className="flex items-center">
+              <FormItem className="flex items-center p-3">
                 <FormLabel className="w-1/3">Goal</FormLabel>
                 <Select onValueChange={handleGoalChange} defaultValue={field.value}>
                   <FormControl>
@@ -93,12 +93,12 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
             )}
           />
         )}
-        <Separator className="my-3" />
+        <Separator />
         <FormField
           control={control}
           name="goals.0.targetAmount"
           render={({ field }) => (
-            <FormItem className="flex items-center">
+            <FormItem className="flex items-center p-3">
               <FormLabel className="w-1/3">Target</FormLabel>
               <FormControl>
                 <Input
@@ -117,12 +117,12 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
             </FormItem>
           )}
         />
-        <Separator className="my-3" />
+        <Separator />
          <FormField
           control={control}
           name="goals.0.targetDate"
           render={({ field }) => (
-            <FormItem className="flex items-center">
+            <FormItem className="flex items-center p-3">
               <FormLabel className="w-1/3">Deadline</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
