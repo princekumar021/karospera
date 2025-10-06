@@ -7,7 +7,7 @@ import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
 import { useMemo } from 'react';
 import { subMonths, format, getMonth, getYear } from 'date-fns';
-import { RecurringExpense } from '@/lib/setup-schema';
+import { RecurringExpense, Transaction } from '@/lib/setup-schema';
 
 export function IncomeExpenseChart() {
   const { userData, loading, formatCurrency } = useUserData();
@@ -24,19 +24,21 @@ export function IncomeExpenseChart() {
       }
     };
     const totalMonthlyRecurringExpenses = userData.recurringExpenses.reduce((sum, exp) => sum + getMonthlyRecurringAmount(exp), 0);
-    const hasTransactions = userData.transactions && userData.transactions.length > 0;
+    const monthlyBaseIncome = userData.monthlyIncome || 0;
 
-    // Generate data for the last 6 months
-    const data = Array.from({ length: 6 }).map((_, i) => {
-      const date = subMonths(new Date(), 5 - i);
+    const monthsData = [];
+    const now = new Date();
+
+    for (let i = 5; i >= 0; i--) {
+      const date = subMonths(now, i);
       const month = getMonth(date);
       const year = getYear(date);
-
-      const monthlyTransactions = userData.transactions?.filter(t => {
+      
+      const monthlyTransactions: Transaction[] = userData.transactions?.filter(t => {
         const tDate = new Date(t.date);
         return getMonth(tDate) === month && getYear(tDate) === year;
       }) || [];
-      
+
       const oneOffExpenses = monthlyTransactions
         .filter(t => t.type === 'expense')
         .reduce((sum, t) => sum + Math.abs(t.amount), 0);
@@ -44,23 +46,21 @@ export function IncomeExpenseChart() {
       const oneOffIncome = monthlyTransactions
         .filter(t => t.type === 'income')
         .reduce((sum, t) => sum + Math.abs(t.amount), 0);
-        
-      const totalIncome = (userData.monthlyIncome || 0) + oneOffIncome;
+      
+      const totalIncome = monthlyBaseIncome + oneOffIncome;
       const totalExpenses = totalMonthlyRecurringExpenses + oneOffExpenses;
 
-      // Only include month if there was some activity
-      if (hasTransactions && monthlyTransactions.length === 0 && totalMonthlyRecurringExpenses === 0 && !userData.monthlyIncome) {
-        return null;
+      // Only add month to chart if there's any financial activity
+      if (totalIncome > 0 || totalExpenses > 0) {
+        monthsData.push({
+          name: format(date, 'MMM'),
+          income: totalIncome,
+          expenses: totalExpenses,
+        });
       }
+    }
 
-      return {
-        name: format(date, 'MMM'),
-        income: totalIncome,
-        expenses: totalExpenses,
-      };
-    }).filter(Boolean); // remove null entries
-    
-    return data as {name: string, income: number, expenses: number}[];
+    return monthsData;
 
   }, [userData]);
 
