@@ -14,6 +14,7 @@ import Step3Income from "@/components/setup/step-3-income";
 import Step4Expenses from "@/components/setup/step-4-expenses";
 import Step5Preferences from "@/components/setup/step-5-preferences";
 import Step6Preview from "@/components/setup/step-6-preview";
+import { Progress } from "@/components/ui/progress";
 
 const totalSteps = 6;
 
@@ -114,9 +115,9 @@ export default function SetupPage() {
     <FormProvider {...methods}>
       <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 md:p-8">
         <div className="w-full max-w-md">
-          <div className="mb-8 flex flex-col items-center gap-4">
+          <div className="mb-4 flex flex-col items-center gap-4">
             <PocketPlanLogo className="h-10 w-10" />
-            <Stepper currentStep={currentStep} totalSteps={totalSteps} />
+            <Progress value={(currentStep / totalSteps) * 100} className="h-2 w-full" />
           </div>
 
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">

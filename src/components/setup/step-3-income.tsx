@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import StepWrapper from "./step-wrapper";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "../ui/separator";
 
 interface Step3Props {
   nextStep: () => void;
@@ -22,81 +23,86 @@ export default function Step3Income({ nextStep, prevStep }: Step3Props) {
       description="So we can suggest budgets that actually work."
       footer={
         <div className="flex w-full gap-4">
-          <Button onClick={prevStep} variant="secondary" className="w-1/3 font-semibold">
+          <Button onClick={prevStep} variant="secondary" className="w-1/3 font-semibold" size="lg">
             Back
           </Button>
-          <Button onClick={nextStep} className="w-2/3 font-semibold">
+          <Button onClick={nextStep} className="w-2/3 font-semibold" size="lg">
             Next
           </Button>
         </div>
       }
     >
-      <FormField
-        control={control}
-        name="currency"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Currency</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
+      <div className="rounded-lg border bg-card p-3 space-y-3">
+        <FormField
+          control={control}
+          name="currency"
+          render={({ field }) => (
+            <FormItem className="flex items-center">
+              <FormLabel className="w-1/3">Currency</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3">
+                    <SelectValue placeholder="Select currency" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {currencyOptions.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Separator />
+        <FormField
+          control={control}
+          name="monthlyIncome"
+          render={({ field }) => (
+            <FormItem className="flex items-center">
+              <FormLabel className="w-1/3">Monthly Income</FormLabel>
               <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select currency" />
-                </SelectTrigger>
+                <Input type="number" placeholder="e.g., 45000" {...field} value={field.value ?? ''}
+                  className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0"
+                  onChange={e => {
+                    const value = e.target.value;
+                    field.onChange(value === '' ? undefined : parseFloat(value));
+                  }}
+                />
               </FormControl>
-              <SelectContent>
-                {currencyOptions.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={control}
-        name="monthlyIncome"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Monthly take-home income</FormLabel>
-            <FormControl>
-              <Input type="number" placeholder="e.g., 45000" {...field} value={field.value ?? ''}
-                onChange={e => {
-                  const value = e.target.value;
-                  field.onChange(value === '' ? undefined : parseFloat(value));
-                }}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={control}
-        name="payCycle"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Pay cycle</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select pay cycle" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {payCycleOptions.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+         <Separator />
+        <FormField
+          control={control}
+          name="payCycle"
+          render={({ field }) => (
+            <FormItem className="flex items-center">
+              <FormLabel className="w-1/3">Pay Cycle</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3">
+                    <SelectValue placeholder="Select pay cycle" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {payCycleOptions.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
     </StepWrapper>
   );
 }

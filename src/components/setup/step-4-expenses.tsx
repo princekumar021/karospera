@@ -6,6 +6,7 @@ import StepWrapper from "./step-wrapper";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "../ui/separator";
 
 interface Step4Props {
   nextStep: () => void;
@@ -24,80 +25,77 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
   return (
     <StepWrapper
       title="Recurring expenses"
-      description="Add bills or subscriptions you pay every month."
+      description="Add bills or subscriptions you pay regularly."
       footer={
         <div className="flex w-full gap-4">
-          <Button onClick={prevStep} variant="secondary" className="w-1/3 font-semibold">
+          <Button onClick={prevStep} variant="secondary" className="w-1/3 font-semibold" size="lg">
             Back
           </Button>
-          <Button onClick={nextStep} className="w-2/3 font-semibold">
+          <Button onClick={nextStep} className="w-2/3 font-semibold" size="lg">
             Next
           </Button>
         </div>
       }
     >
-      <p className="text-sm text-muted-foreground">Start with top 3: rent, utilities, phone/subscriptions</p>
-      <ScrollArea className="h-[240px] pr-4">
-        <div className="space-y-4">
+      <p className="text-sm text-muted-foreground px-1">Start with top 3: rent, utilities, phone/subscriptions</p>
+      <ScrollArea className="h-[240px] -mx-4 px-4">
+        <div className="space-y-4 pr-1">
         {fields.map((item, index) => (
-          <div key={item.id} className="grid grid-cols-12 gap-2 items-start rounded-lg border p-3 bg-card">
-            <div className="col-span-12">
-              <FormField
-                control={control}
-                name={`recurringExpenses.${index}.name`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="sr-only">Name</FormLabel>
+          <div key={item.id} className="rounded-lg border p-3 bg-card space-y-3">
+            <FormField
+              control={control}
+              name={`recurringExpenses.${index}.name`}
+              render={({ field }) => (
+                <FormItem className="flex items-center">
+                  <FormLabel className="w-1/3">Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., Rent" {...field} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0"/>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Separator />
+            <FormField
+              control={control}
+              name={`recurringExpenses.${index}.amount`}
+              render={({ field }) => (
+                <FormItem className="flex items-center">
+                  <FormLabel className="w-1/3">Amount</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="e.g., 12000" {...field} value={field.value ?? ''} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0"/>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Separator />
+            <FormField
+              control={control}
+              name={`recurringExpenses.${index}.frequency`}
+              render={({ field }) => (
+                <FormItem className="flex items-center">
+                    <FormLabel className="w-1/3">Frequency</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <Input placeholder="e.g., Rent" {...field} />
+                      <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3">
+                        <SelectValue placeholder="Frequency" />
+                      </SelectTrigger>
                     </FormControl>
+                    <SelectContent>
+                      {frequencyOptions.map(option => <SelectItem key={option} value={option}>{option}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
                     <FormMessage />
-                  </FormItem>
-                )}
-              />
+                </FormItem>
+              )}
+            />
+            <Separator />
+            <div className="flex justify-end -mb-2 -mr-2">
+              <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => remove(index)}>
+                <Trash2 className="h-4 w-4" />
+              </Button>
             </div>
-            <div className="col-span-6">
-              <FormField
-                control={control}
-                name={`recurringExpenses.${index}.amount`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="sr-only">Amount</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="e.g., 12000" {...field} value={field.value ?? ''} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="col-span-6">
-              <FormField
-                control={control}
-                name={`recurringExpenses.${index}.frequency`}
-                render={({ field }) => (
-                  <FormItem>
-                     <FormLabel className="sr-only">Frequency</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Frequency" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {frequencyOptions.map(option => <SelectItem key={option} value={option}>{option}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                     <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-             <div className="col-span-12 flex justify-end">
-                <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => remove(index)}>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
           </div>
         ))}
         </div>

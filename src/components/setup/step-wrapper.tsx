@@ -10,17 +10,17 @@ interface StepWrapperProps {
 
 export default function StepWrapper({ title, description, children, footer }: StepWrapperProps) {
   return (
-    <Card className="border-border/50 bg-card/50">
-      <CardHeader>
-        <CardTitle className="font-headline text-2xl">{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className="bg-transparent">
+      <div className="text-center mb-6">
+        <h1 className="font-headline text-2xl font-bold">{title}</h1>
+        <p className="text-muted-foreground">{description}</p>
+      </div>
+      <div className="space-y-4">
         {children}
-      </CardContent>
-      <CardFooter>
+      </div>
+      <div className="mt-6">
         {footer}
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 }
