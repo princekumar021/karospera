@@ -24,8 +24,12 @@ const frequencyOptions = ["Monthly", "Quarterly", "Yearly"];
 
 
 function ExpenseItem({ index, remove }: { index: number, remove: (index: number) => void }) {
-  const { control } = useFormContext();
-  const { userData } = useUserData();
+  const { control, getValues } = useFormContext();
+  
+  const currency = getValues("currency");
+  const currencySymbols: { [key: string]: string } = { "INR": "₹", "USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥" };
+  const symbol = currencySymbols[currency] || '$';
+
   const { error: nameError } = useFormField({ name: `recurringExpenses.${index}.name`});
   const { error: amountError } = useFormField({ name: `recurringExpenses.${index}.amount`});
   const { error: frequencyError } = useFormField({ name: `recurringExpenses.${index}.frequency`});
@@ -63,7 +67,7 @@ function ExpenseItem({ index, remove }: { index: number, remove: (index: number)
                 <Label className="text-xs text-muted-foreground">Amount</Label>
                 <FormControl>
                     <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">{userData?.currency === 'INR' ? '₹' : '$'}</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">{symbol}</span>
                         <Input type="number" placeholder="0" {...field} value={field.value ?? ''} className="pl-7 bg-secondary border-secondary focus-visible:ring-primary"/>
                     </div>
                 </FormControl>
