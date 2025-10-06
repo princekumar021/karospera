@@ -30,8 +30,8 @@ export default function Step1Name({ nextStep }: Step1Props) {
           control={control}
           name="fullName"
           render={({ field }) => (
-            <FormItem className="flex items-center p-3">
-              <FormLabel className="w-1/4">Name</FormLabel>
+            <FormItem className="flex items-center px-3">
+              <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input placeholder="Your name" {...field} className="border-0 text-right bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"/>
               </FormControl>
@@ -41,7 +41,7 @@ export default function Step1Name({ nextStep }: Step1Props) {
         />
       </div>
 
-      <Alert className="bg-card border-border text-card-foreground">
+      <Alert className="bg-card border-border text-card-foreground rounded-lg">
         <Info className="h-4 w-4 !text-muted-foreground" />
         <AlertTitle className="font-semibold text-foreground">Private & Secure</AlertTitle>
         <AlertDescription className="text-xs text-muted-foreground">
