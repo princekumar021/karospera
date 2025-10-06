@@ -5,6 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { Utensils, Car, Home, Film, PiggyBank, Briefcase } from 'lucide-react';
 import { useUserData } from '@/hooks/use-user-data';
 import { useMemo } from 'react';
+import { Skeleton } from '../ui/skeleton';
 
 const iconMap: { [key: string]: React.ReactNode } = {
   food: <Utensils className="h-6 w-6 text-yellow-500" />,
