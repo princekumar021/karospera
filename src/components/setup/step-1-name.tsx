@@ -1,4 +1,6 @@
 
+"use client";
+
 import { useFormContext } from "react-hook-form";
 import { FormControl, FormField, FormItem, FormMessage, useFormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -17,22 +19,26 @@ function NameInput() {
   const { error } = useFormField();
   
   return (
-    <div className={cn("bg-card text-card-foreground", error && "animate-shake")}>
-        <div className={cn("floating-label-input relative border-b", error ? "border-destructive" : "border-input")}>
+    <div className={cn("rounded-lg border bg-card text-card-foreground", error && "animate-shake border-destructive")}>
+        <div className={cn("floating-label-input relative p-3")}>
             <FormField
             control={control}
             name="fullName"
             render={({ field }) => (
                 <FormItem>
                     <FormControl>
-                        <Input placeholder=" " {...field} className="h-12 border-0 bg-transparent p-0 text-lg" />
+                        <Input placeholder=" " {...field} className="h-10 border-0 bg-transparent p-0 text-lg" />
                     </FormControl>
                     <Label>Name</Label>
-                    <FormMessage className="px-0 pb-0" />
                 </FormItem>
             )}
             />
         </div>
+        <FormField
+            control={control}
+            name="fullName"
+            render={() => <FormMessage className="px-3 pb-2"/>}
+        />
       </div>
   )
 }

@@ -23,7 +23,7 @@ interface Step2Props {
 const goalOptions = ["Emergency fund", "Buy a phone", "Vacation", "Pay off debt", "Save for college"];
 
 function GoalForm() {
-  const { control, setValue, getValues, watch } = useFormContext();
+  const { control, setValue, getValues, watch, trigger } = useFormContext();
   const [isCustom, setIsCustom] = useState(getValues("goals.0.name") && !goalOptions.includes(getValues("goals.0.name")));
   
   const currentGoalName = watch("goals.0.name");
@@ -43,10 +43,10 @@ function GoalForm() {
   };
 
   return (
-    <div className={cn("bg-card text-card-foreground", (amountError || dateError) && "animate-shake")}>
+    <div className={cn("rounded-lg border bg-card text-card-foreground", (amountError || dateError) && "animate-shake border-destructive")}>
         {isCustom ? (
            <div className={cn("bg-card text-card-foreground", nameError && "animate-shake")}>
-             <div className={cn("floating-label-input relative border-b", nameError ? "border-destructive" : "border-input")}>
+             <div className={cn("floating-label-input relative p-3 border-b", nameError ? "border-destructive" : "border-input")}>
               <FormField
                 control={control}
                 name="goals.0.name"
@@ -63,7 +63,7 @@ function GoalForm() {
               <FormField
                 control={control}
                 name="goals.0.name"
-                render={() => <FormMessage className="px-0 pt-1 pb-2"/>}
+                render={() => <FormMessage className="px-3 pt-1 pb-2"/>}
               />
           </div>
         ) : (
@@ -100,25 +100,27 @@ function GoalForm() {
           control={control}
           name="goals.0.targetAmount"
           render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center p-3">
-                <FormLabel className="w-1/3">Target</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="Optional Amount"
-                    {...field}
-                    className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
-                    value={field.value ?? ""}
-                    onChange={e => {
-                      const value = e.target.value;
-                      field.onChange(value === '' ? undefined : parseFloat(value));
-                    }}
-                  />
-                </FormControl>
-              </div>
-              <FormMessage className="px-3" />
-            </FormItem>
+            <>
+              <FormItem>
+                <div className="flex items-center p-3">
+                  <FormLabel className="w-1/3">Target</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Optional Amount"
+                      {...field}
+                      className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
+                      value={field.value ?? ""}
+                      onChange={e => {
+                        const value = e.target.value;
+                        field.onChange(value === '' ? undefined : parseFloat(value));
+                      }}
+                    />
+                  </FormControl>
+                </div>
+              </FormItem>
+              <FormMessage className="px-3 pb-2" />
+            </>
           )}
         />
         <Separator />
@@ -126,41 +128,43 @@ function GoalForm() {
           control={control}
           name="goals.0.targetDate"
           render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center p-3">
-                <FormLabel className="w-1/3">Deadline</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"ghost"}
-                        className={cn(
-                          "w-2/3 justify-end text-right font-normal p-0 h-auto hover:bg-transparent",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          format(new Date(field.value), "PPP")
-                        ) : (
-                          <span>Optional Date</span>
-                        )}
-                        <ChevronRight className="ml-2 h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="end">
-                    <Calendar
-                      mode="single"
-                      selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={field.onChange}
-                      disabled={(date) => date < new Date()}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <FormMessage className="px-3" />
-            </FormItem>
+            <>
+              <FormItem>
+                <div className="flex items-center p-3">
+                  <FormLabel className="w-1/3">Deadline</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"ghost"}
+                          className={cn(
+                            "w-2/3 justify-end text-right font-normal p-0 h-auto hover:bg-transparent",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(new Date(field.value), "PPP")
+                          ) : (
+                            <span>Optional Date</span>
+                          )}
+                          <ChevronRight className="ml-2 h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="end">
+                      <Calendar
+                        mode="single"
+                        selected={field.value ? new Date(field.value) : undefined}
+                        onSelect={field.onChange}
+                        disabled={(date) => date < new Date()}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </FormItem>
+              <FormMessage className="px-3 pb-2" />
+            </>
           )}
         />
       </div>
