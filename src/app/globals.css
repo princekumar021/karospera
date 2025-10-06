@@ -75,11 +75,11 @@
   }
 
   .floating-label-input .peer ~ label {
-    @apply absolute left-3 top-1/2 -translate-y-1/2 scale-100 text-muted-foreground transition-all duration-300 ease-in-out pointer-events-none origin-top-left;
+    @apply absolute left-3 scale-100 text-muted-foreground transition-all duration-300 ease-in-out pointer-events-none origin-top-left;
   }
 
   .floating-label-input .peer:focus ~ label,
   .floating-label-input .peer:not(:placeholder-shown) ~ label {
-     @apply top-3 left-3 -translate-y-4 -translate-x-0 scale-75 text-primary;
+     @apply top-3 -translate-y-4 -translate-x-0 scale-75 text-primary;
   }
 }

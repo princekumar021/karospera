@@ -25,7 +25,7 @@ function NameInput() {
           control={control}
           name="fullName"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex items-center">
               <FormControl>
                 <Input placeholder=" " {...field} className="h-12 border-0 bg-transparent text-lg px-3" />
               </FormControl>
