@@ -5,6 +5,7 @@ import { type SetupFormData, type RecurringExpense } from "@/lib/setup-schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Banknote, CalendarClock, Edit } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
 interface Step6Props {
   goToStep: (step: number) => void;
@@ -12,6 +13,7 @@ interface Step6Props {
 
 export default function Step6Preview({ goToStep }: Step6Props) {
   const { getValues, handleSubmit } = useFormContext<SetupFormData>();
+  const router = useRouter();
   const values = getValues();
   const { fullName, monthlyIncome, goal, goalTargetAmount, goalTargetDate, recurringExpenses, currency } = values;
 
@@ -56,6 +58,7 @@ export default function Step6Preview({ goToStep }: Step6Props) {
 
   const onFinish = (data: SetupFormData) => {
     console.log("Setup complete:", data);
+    router.push('/dashboard');
   }
 
   const formatCurrency = (amount: number) => {
