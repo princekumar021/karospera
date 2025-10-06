@@ -116,7 +116,7 @@ export default function SetupPage() {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 md:p-8">
+      <div className="flex min-h-dvh flex-col items-center bg-background p-4 md:p-8 pt-12 md:pt-24">
         <div className="w-full max-w-md">
           <div className="mb-4 flex flex-col items-center gap-4">
             <AppLogo className="h-10 w-10" />
