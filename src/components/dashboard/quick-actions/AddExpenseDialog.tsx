@@ -20,7 +20,6 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ReceiptScanner } from './ReceiptScanner';
 
 
 const expenseFormSchema = z.object({
@@ -45,7 +44,6 @@ const categories = [
 export function AddExpenseDialog({ trigger }: { trigger: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
-  const [showScanner, setShowScanner] = useState(false);
   const { userData, addTransaction, formatCurrency } = useUserData();
   const { toast } = useToast();
 
@@ -81,19 +79,8 @@ export function AddExpenseDialog({ trigger }: { trigger: React.ReactNode }) {
     setOpen(isOpen);
     if (!isOpen) {
       form.reset({ category: "Shopping", amount: '' as any, note: "" });
-      setShowScanner(false);
     }
   }
-
-  const handleScanSuccess = (scannedData: { amount?: number, note?: string }) => {
-    if (scannedData.amount) {
-      form.setValue('amount', scannedData.amount, { shouldValidate: true });
-    }
-    if (scannedData.note) {
-      form.setValue('note', scannedData.note, { shouldValidate: true });
-    }
-    setShowScanner(false);
-  };
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
@@ -103,9 +90,6 @@ export function AddExpenseDialog({ trigger }: { trigger: React.ReactNode }) {
           <SheetTitle className="sr-only">Add Expense</SheetTitle>
         </SheetHeader>
         
-        {showScanner ? (
-          <ReceiptScanner onScanSuccess={handleScanSuccess} />
-        ) : (
           <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="flex items-center gap-2">
@@ -182,7 +166,6 @@ export function AddExpenseDialog({ trigger }: { trigger: React.ReactNode }) {
               </SheetFooter>
           </form>
           </Form>
-        )}
       </SheetContent>
     </Sheet>
   );
