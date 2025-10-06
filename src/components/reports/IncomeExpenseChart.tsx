@@ -6,14 +6,14 @@ import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
 import { useMemo } from 'react';
 import { subMonths, format, getMonth, getYear } from 'date-fns';
-import { RecurringExpense, Transaction } from '@/lib/setup-schema';
+import { RecurringExpense } from '@/lib/setup-schema';
 
 export function IncomeExpenseChart() {
   const { userData, loading, formatCurrency } = useUserData();
 
   const chartData = useMemo(() => {
     if (!userData) return [];
-
+    
     const getMonthlyRecurringAmount = (expense: RecurringExpense): number => {
       const amount = Number(expense.amount) || 0;
       switch (expense.frequency) {
@@ -24,7 +24,8 @@ export function IncomeExpenseChart() {
     };
     
     const totalMonthlyRecurringExpenses = userData.recurringExpenses.reduce((sum, exp) => sum + getMonthlyRecurringAmount(exp), 0);
-    
+    const monthlyIncome = userData.monthlyIncome || 0;
+
     const monthsData = [];
     const now = new Date();
 
@@ -45,9 +46,14 @@ export function IncomeExpenseChart() {
       
       const isCurrentMonth = getMonth(now) === month && getYear(now) === year;
       
-      const totalIncome = (isCurrentMonth ? (userData.monthlyIncome || 0) : 0) + oneOffIncome;
-      const totalExpenses = (isCurrentMonth ? totalMonthlyRecurringExpenses : 0) + oneOffExpenses;
+      let totalExpenses = oneOffExpenses;
+      let totalIncome = oneOffIncome;
 
+      if(isCurrentMonth){
+        totalExpenses += totalMonthlyRecurringExpenses;
+        totalIncome += monthlyIncome;
+      }
+      
       if (totalIncome > 0 || totalExpenses > 0) {
         monthsData.push({
           name: format(date, 'MMM'),
@@ -96,8 +102,8 @@ export function IncomeExpenseChart() {
                   cursor={{fill: 'hsl(var(--muted))', opacity: 0.5}}
                   />
                 <Legend wrapperStyle={{ color: 'hsl(var(--foreground))' }}/>
-                <Bar dataKey="income" fill="#16C47F" radius={[4, 4, 0, 0]} maxBarSize={30} />
-                <Bar dataKey="expenses" fill="#F93827" radius={[4, 4, 0, 0]} maxBarSize={30} />
+                <Bar dataKey="income" fill="#16C47F" radius={[4, 4, 0, 0]} maxBarSize={20} />
+                <Bar dataKey="expenses" fill="#F93827" radius={[4, 4, 0, 0]} maxBarSize={20} />
               </BarChart>
             </ResponsiveContainer>
           </div>
