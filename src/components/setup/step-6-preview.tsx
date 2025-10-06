@@ -1,7 +1,7 @@
 import { useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import StepWrapper from "./step-wrapper";
-import { type SetupFormData } from "@/lib/setup-schema";
+import { type SetupFormData, type RecurringExpense } from "@/lib/setup-schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Banknote, CalendarClock, Edit } from "lucide-react";
@@ -13,15 +13,34 @@ interface Step6Props {
 export default function Step6Preview({ goToStep }: Step6Props) {
   const { getValues, handleSubmit } = useFormContext<SetupFormData>();
   const values = getValues();
-  const { fullName, monthlyIncome, goal, goalTargetAmount, recurringExpenses, currency } = values;
+  const { fullName, monthlyIncome, goal, goalTargetAmount, goalTargetDate, recurringExpenses, currency } = values;
 
-  const totalRecurring = recurringExpenses.reduce((sum, exp) => sum + (exp.amount || 0), 0);
-  const remainingThisMonth = (monthlyIncome || 0) - totalRecurring;
+  const getMonthlyAmount = (expense: RecurringExpense): number => {
+    const amount = expense.amount || 0;
+    switch (expense.frequency) {
+      case 'Yearly':
+        return amount / 12;
+      case 'Quarterly':
+        return amount / 3;
+      case 'Monthly':
+      default:
+        return amount;
+    }
+  };
+
+  const totalMonthlyRecurring = recurringExpenses.reduce((sum, exp) => sum + getMonthlyAmount(exp), 0);
+  const remainingThisMonth = (monthlyIncome || 0) - totalMonthlyRecurring;
   
-  // Assuming 'monthlyIncome' is what's available to save towards the goal.
-  // A more complex calculation might be needed depending on the app's logic,
-  // but for a preview, available income is a reasonable proxy for savings potential.
-  const savingsForGoal = remainingThisMonth > 0 ? remainingThisMonth : 0;
+  const getMonthsToGoal = () => {
+    if (!goalTargetDate) return null;
+    const now = new Date();
+    const months = (goalTargetDate.getFullYear() - now.getFullYear()) * 12 + (goalTargetDate.getMonth() - now.getMonth());
+    return months <= 0 ? 1 : months;
+  };
+
+  const monthsToGoal = getMonthsToGoal();
+  const monthlySavingsNeeded = monthsToGoal && goalTargetAmount ? goalTargetAmount / monthsToGoal : 0;
+  const savingsForGoal = remainingThisMonth > monthlySavingsNeeded ? monthlySavingsNeeded : (remainingThisMonth > 0 ? remainingThisMonth : 0);
   const goalProgress = goalTargetAmount ? (savingsForGoal / goalTargetAmount) * 100 : 0;
 
   const nextBill = recurringExpenses.length > 0 ? recurringExpenses[0] : null;
@@ -54,7 +73,7 @@ export default function Step6Preview({ goToStep }: Step6Props) {
       <div className="space-y-4">
         <Card className="bg-card">
           <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">Hello, {fullName || 'User'}!</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground truncate">Hello, {fullName || 'User'}!</CardTitle>
           </CardHeader>
           <CardContent>
              <p className="text-2xl font-bold">{formatCurrency(remainingThisMonth)}</p>
@@ -64,7 +83,7 @@ export default function Step6Preview({ goToStep }: Step6Props) {
 
         <Card className="bg-card">
           <CardHeader>
-             <CardTitle className="text-base font-semibold">{goal || 'Your Goal'}</CardTitle>
+             <CardTitle className="text-base font-semibold truncate">{goal || 'Your Goal'}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between text-sm mb-1">
@@ -82,7 +101,7 @@ export default function Step6Preview({ goToStep }: Step6Props) {
               <Banknote className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(totalRecurring)}</div>
+              <div className="text-2xl font-bold">{formatCurrency(totalMonthlyRecurring)}</div>
                <p className="text-xs text-muted-foreground">from recurring expenses</p>
             </CardContent>
           </Card>
@@ -92,7 +111,7 @@ export default function Step6Preview({ goToStep }: Step6Props) {
               <CalendarClock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-               <div className="text-2xl font-bold">{nextBill ? `${formatCurrency(nextBill.amount)}` : 'N/A'}</div>
+               <div className="text-2xl font-bold truncate">{nextBill ? `${formatCurrency(nextBill.amount)}` : 'N/A'}</div>
               <p className="text-xs text-muted-foreground truncate">{nextBill ? nextBill.name : 'No bills added'}</p>
             </CardContent>
           </Card>
