@@ -6,16 +6,24 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useUserData } from '@/hooks/use-user-data';
 import { Moon, Sun } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export function AppearanceSettings() {
-  const { userData, updateUserData } = useUserData();
-  const isDarkMode = userData?.theme === 'dark';
+  const { userData, updateUserData, loading } = useUserData();
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
+  useEffect(() => {
+    if (!loading && userData) {
+        setIsDarkMode(userData.theme === 'dark');
+    }
+  }, [userData, loading]);
+  
   const handleThemeChange = (checked: boolean) => {
     const newTheme = checked ? 'dark' : 'light';
+    setIsDarkMode(checked);
     updateUserData({ theme: newTheme });
-    // This part requires logic in the RootLayout to actually change the theme class on the html element
-    document.documentElement.classList.toggle('dark', checked);
+    document.documentElement.classList.remove('light', 'dark');
+    document.documentElement.classList.add(newTheme);
   };
 
   return (
@@ -33,6 +41,7 @@ export function AppearanceSettings() {
             id="dark-mode-switch"
             checked={isDarkMode}
             onCheckedChange={handleThemeChange}
+            disabled={loading}
           />
         </div>
         {/* Accent color picker can be added here */}
