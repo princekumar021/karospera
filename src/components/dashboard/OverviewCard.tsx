@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -28,8 +29,30 @@ export function OverviewCard() {
       return { availableBalance: 0, goalProgress: 0, goalName: 'your goal' };
     }
 
+    const income = userData.monthlyIncome || 0;
+    
+    // Calculate one-off transactions for the current month
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    const oneOffSpending = userData.transactions
+      ?.filter(t => {
+        const tDate = new Date(t.date);
+        return t.type === 'expense' && tDate.getMonth() === currentMonth && tDate.getFullYear() === currentYear;
+      })
+      .reduce((sum, t) => sum + Math.abs(t.amount), 0) || 0;
+    
+    const oneOffIncome = userData.transactions
+      ?.filter(t => {
+          const tDate = new Date(t.date);
+          return t.type === 'income' && tDate.getMonth() === currentMonth && tDate.getFullYear() === currentYear;
+      })
+      .reduce((sum, t) => sum + Math.abs(t.amount), 0) || 0;
+
+
     const totalMonthlyRecurring = userData.recurringExpenses.reduce((sum, exp) => sum + getMonthlyAmount(exp), 0);
-    const availableBalance = (userData.monthlyIncome || 0) - totalMonthlyRecurring;
+    const availableBalance = (income + oneOffIncome) - (totalMonthlyRecurring + oneOffSpending);
 
     let goalProgress = 0;
     if (userData.goalTargetAmount && userData.goalTargetAmount > 0) {
