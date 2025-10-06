@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -99,8 +98,8 @@ export function IncomeExpenseChart() {
                   cursor={{fill: 'hsl(var(--muted))', opacity: 0.5}}
                   />
                 <Legend wrapperStyle={{ color: 'hsl(var(--foreground))' }}/>
-                <Bar dataKey="income" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="expenses" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="income" fill="#16C47F" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="expenses" fill="#F93827" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
