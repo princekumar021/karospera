@@ -36,7 +36,7 @@ function ExpenseItem({ index }: { index: number }) {
           control={control}
           name={`recurringExpenses.${index}.name`}
           render={({ field }) => (
-            <FormItem className="flex items-center p-3 h-11">
+            <FormItem className="flex items-center px-3 h-10">
               <Label className="flex-1">Name</Label>
               <FormControl>
                 <Input placeholder="e.g., Rent, Netflix..." {...field} className="border-0 text-right h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
@@ -49,7 +49,7 @@ function ExpenseItem({ index }: { index: number }) {
           control={control}
           name={`recurringExpenses.${index}.amount`}
           render={({ field }) => (
-            <FormItem className="flex items-center p-3 h-11">
+            <FormItem className="flex items-center px-3 h-10">
               <Label className="flex-1">Amount</Label>
               <FormControl>
                 <div className="relative flex items-center">
@@ -65,7 +65,7 @@ function ExpenseItem({ index }: { index: number }) {
           control={control}
           name={`recurringExpenses.${index}.frequency`}
           render={({ field }) => (
-            <FormItem className="flex items-center p-3 h-11">
+            <FormItem className="flex items-center px-3 h-10">
               <Label className="flex-1">Frequency</Label>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
@@ -86,7 +86,7 @@ function ExpenseItem({ index }: { index: number }) {
 }
 
 export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
-  const { control, getValues } = useFormContext();
+  const { control, getValues, trigger, formState: { errors } } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "recurringExpenses",
@@ -108,7 +108,7 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
     if (fields.length > 2) {
       // Use a timeout to ensure the DOM is updated before scrolling
       setTimeout(() => {
-        const viewport = document.getElementById('expense-scroll-area');
+        const viewport = document.getElementById('expense-scroll-area-viewport');
         if (viewport) {
           viewport.scrollTop = viewport.scrollHeight;
         }
@@ -132,8 +132,8 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
       }
     >
       <p className="text-sm text-muted-foreground px-1">Start with top 3: rent, utilities, phone/subscriptions</p>
-      <ScrollArea className="h-[240px] -mx-4 px-4" id="expense-scroll-area">
-        <div className="space-y-4 pr-1">
+      <ScrollArea className="h-[240px] -mx-4 px-4">
+         <div id="expense-scroll-area-viewport" className="space-y-4 pr-1">
           {fields.map((item, index) => (
             <ExpenseItem key={item.id} index={index} />
           ))}
