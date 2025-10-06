@@ -1,4 +1,6 @@
 
+"use client";
+
 import { useFormContext, useFieldArray } from "react-hook-form";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage, useFormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -9,6 +11,7 @@ import { PlusCircle, Trash2 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "../ui/separator";
 import { cn } from "@/lib/utils";
+import { useRef, useEffect } from "react";
 
 interface Step4Props {
   nextStep: () => void;
@@ -95,6 +98,17 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
     control,
     name: "recurringExpenses",
   });
+  
+  const scrollViewportRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (fields.length > 2) { // or some other condition to avoid scrolling on initial render
+      const viewport = scrollViewportRef.current;
+      if (viewport) {
+        viewport.scrollTo({ top: viewport.scrollHeight, behavior: 'smooth' });
+      }
+    }
+  }, [fields.length]);
 
   return (
     <StepWrapper
@@ -113,7 +127,7 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
     >
       <p className="text-sm text-muted-foreground px-1">Start with top 3: rent, utilities, phone/subscriptions</p>
       <ScrollArea className="h-[240px] -mx-4 px-4">
-        <div className="space-y-4 pr-1">
+        <div className="space-y-4 pr-1" ref={scrollViewportRef}>
         {fields.map((item, index) => (
           <ExpenseItem key={item.id} index={index} remove={remove} />
         ))}
