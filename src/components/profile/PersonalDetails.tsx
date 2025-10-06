@@ -6,9 +6,12 @@ import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
 import { Edit2 } from 'lucide-react';
 import { Button } from '../ui/button';
+import { EditProfileSheet } from './EditProfileSheet';
+import { useState } from 'react';
 
 export function PersonalDetails() {
   const { userData, loading, formatCurrency } = useUserData();
+  const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
   const primaryGoal = userData?.goals && userData.goals.length > 0 ? userData.goals[0] : null;
 
   const details = userData ? [
@@ -37,25 +40,27 @@ export function PersonalDetails() {
   }
 
   return (
+    <>
     <Card className="bg-card">
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Personal Details</CardTitle>
+        <EditProfileSheet open={isEditSheetOpen} onOpenChange={setIsEditSheetOpen}>
+          <Button variant="ghost" size="icon" onClick={() => setIsEditSheetOpen(true)}>
+            <Edit2 className="h-5 w-5 text-muted-foreground" />
+          </Button>
+        </EditProfileSheet>
       </CardHeader>
       <CardContent>
         <ul className="space-y-4">
           {details.map((item, index) => (
             <li key={index} className="flex justify-between items-center">
               <span className="text-muted-foreground">{item.label}</span>
-              <div className="flex items-center gap-2">
-                <span className="font-semibold truncate">{item.value}</span>
-                <Button variant="ghost" size="icon" className="h-6 w-6">
-                    <Edit2 className="h-4 w-4 text-muted-foreground" />
-                </Button>
-              </div>
+              <span className="font-semibold truncate">{item.value}</span>
             </li>
           ))}
         </ul>
       </CardContent>
     </Card>
+    </>
   );
 }
