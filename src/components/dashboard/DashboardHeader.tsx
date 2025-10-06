@@ -14,10 +14,12 @@ export function DashboardHeader() {
 
   return (
     <header className="sticky top-0 z-10 flex items-center justify-between bg-background px-4 py-3">
-      <Link href="/profile">
-        <Avatar>
-          {loading ? <Skeleton className="h-10 w-10 rounded-full" /> : <AvatarFallback>{userInitial}</AvatarFallback>}
-        </Avatar>
+      <Link href="/profile" passHref>
+        <Button variant="ghost" size="icon" className="rounded-full">
+          <Avatar>
+            {loading ? <Skeleton className="h-10 w-10 rounded-full" /> : <AvatarFallback>{userInitial}</AvatarFallback>}
+          </Avatar>
+        </Button>
       </Link>
       {loading ? (
          <Skeleton className="h-6 w-32" />
