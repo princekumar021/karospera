@@ -159,4 +159,3 @@ export function AddGoalDialog({ trigger, goalToEdit }: { trigger?: React.ReactNo
     </Dialog>
   );
 }
-```
