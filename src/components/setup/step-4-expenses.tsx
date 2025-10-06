@@ -1,6 +1,6 @@
 
 import { useFormContext, useFieldArray } from "react-hook-form";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage, useFormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import StepWrapper from "./step-wrapper";
@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { PlusCircle, Trash2 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "../ui/separator";
+import { cn } from "@/lib/utils";
 
 interface Step4Props {
   nextStep: () => void;
@@ -15,6 +16,78 @@ interface Step4Props {
 }
 
 const frequencyOptions = ["Monthly", "Quarterly", "Yearly"];
+
+
+function ExpenseItem({ index, remove }: { index: number, remove: (index: number) => void }) {
+  const { control } = useFormContext();
+  const { error: nameError } = useFormField({ name: `recurringExpenses.${index}.name`});
+  const { error: amountError } = useFormField({ name: `recurringExpenses.${index}.amount`});
+  const { error: frequencyError } = useFormField({ name: `recurringExpenses.${index}.frequency`});
+
+  return (
+    <div className={cn("rounded-lg border p-3 bg-card space-y-2", (nameError || amountError || frequencyError) && "animate-shake border-destructive")}>
+      <FormField
+        control={control}
+        name={`recurringExpenses.${index}.name`}
+        render={({ field }) => (
+          <FormItem>
+            <div className="flex items-center">
+              <FormLabel className="w-1/3">Name</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g., Rent" {...field} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
+              </FormControl>
+            </div>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <Separator />
+      <FormField
+        control={control}
+        name={`recurringExpenses.${index}.amount`}
+        render={({ field }) => (
+          <FormItem>
+            <div className="flex items-center">
+              <FormLabel className="w-1/3">Amount</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="e.g., 12000" {...field} value={field.value ?? ''} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
+              </FormControl>
+            </div>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <Separator />
+      <FormField
+        control={control}
+        name={`recurringExpenses.${index}.frequency`}
+        render={({ field }) => (
+          <FormItem>
+              <div className="flex items-center">
+                <FormLabel className="w-1/3">Frequency</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent">
+                      <SelectValue placeholder="Frequency" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {frequencyOptions.map(option => <SelectItem key={option} value={option}>{option}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <FormMessage />
+          </FormItem>
+        )}
+      />
+      <div className="flex justify-end -mb-4 -mr-2">
+        <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => remove(index)}>
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  )
+}
 
 export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
   const { control, formState: { errors } } = useFormContext();
@@ -42,67 +115,7 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
       <ScrollArea className="h-[240px] -mx-4 px-4">
         <div className="space-y-4 pr-1">
         {fields.map((item, index) => (
-          <div key={item.id} className="rounded-lg border p-3 bg-card space-y-2">
-            <FormField
-              control={control}
-              name={`recurringExpenses.${index}.name`}
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex items-center">
-                    <FormLabel className="w-1/3">Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Rent" {...field} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Separator />
-            <FormField
-              control={control}
-              name={`recurringExpenses.${index}.amount`}
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex items-center">
-                    <FormLabel className="w-1/3">Amount</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="e.g., 12000" {...field} value={field.value ?? ''} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Separator />
-            <FormField
-              control={control}
-              name={`recurringExpenses.${index}.frequency`}
-              render={({ field }) => (
-                <FormItem>
-                    <div className="flex items-center">
-                      <FormLabel className="w-1/3">Frequency</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent">
-                            <SelectValue placeholder="Frequency" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {frequencyOptions.map(option => <SelectItem key={option} value={option}>{option}</SelectItem>)}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex justify-end -mb-4 -mr-2">
-              <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => remove(index)}>
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+          <ExpenseItem key={item.id} index={index} remove={remove} />
         ))}
         </div>
       </ScrollArea>

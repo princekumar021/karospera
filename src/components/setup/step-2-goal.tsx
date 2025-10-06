@@ -2,7 +2,7 @@
 "use client"
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage, useFormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import StepWrapper from "./step-wrapper";
@@ -21,11 +21,15 @@ interface Step2Props {
 
 const goalOptions = ["Emergency fund", "Buy a phone", "Vacation", "Pay off debt", "Save for college"];
 
-export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
+function GoalForm() {
   const { control, setValue, getValues, watch } = useFormContext();
   const [isCustom, setIsCustom] = useState(getValues("goals.0.name") && !goalOptions.includes(getValues("goals.0.name")));
   
   const currentGoalName = watch("goals.0.name");
+
+  const { error: nameError } = useFormField({ name: 'goals.0.name' });
+  const { error: amountError } = useFormField({ name: 'goals.0.targetAmount' });
+  const { error: dateError } = useFormField({ name: 'goals.0.targetDate' });
 
   const handleGoalChange = (value: string) => {
     if (value === "Custom...") {
@@ -38,21 +42,7 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
   };
 
   return (
-    <StepWrapper
-      title="Your main goal"
-      description="Pick or write a financial goal to focus on."
-      footer={
-        <div className="flex w-full gap-4">
-          <Button onClick={prevStep} variant="secondary" className="w-1/3 font-semibold" size="lg">
-            Back
-          </Button>
-          <Button onClick={nextStep} className="w-2/3 font-semibold" size="lg">
-            Next
-          </Button>
-        </div>
-      }
-    >
-      <div className="rounded-lg border bg-card">
+    <div className={cn("rounded-lg border bg-card", (nameError || amountError || dateError) && "animate-shake border-destructive")}>
         {isCustom ? (
            <FormField
             control={control}
@@ -165,6 +155,27 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
           )}
         />
       </div>
+  )
+}
+
+export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
+  
+  return (
+    <StepWrapper
+      title="Your main goal"
+      description="Pick or write a financial goal to focus on."
+      footer={
+        <div className="flex w-full gap-4">
+          <Button onClick={prevStep} variant="secondary" className="w-1/3 font-semibold" size="lg">
+            Back
+          </Button>
+          <Button onClick={nextStep} className="w-2/3 font-semibold" size="lg">
+            Next
+          </Button>
+        </div>
+      }
+    >
+      <GoalForm />
     </StepWrapper>
   );
 }

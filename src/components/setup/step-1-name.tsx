@@ -1,13 +1,39 @@
 
 import { useFormContext } from "react-hook-form";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage, useFormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import StepWrapper from "./step-wrapper";
 import { Info } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Step1Props {
   nextStep: () => void;
+}
+
+function NameInput() {
+  const { control } = useFormContext();
+  const { error } = useFormField();
+  
+  return (
+    <div className={cn("rounded-lg border bg-card text-card-foreground", error && "animate-shake border-destructive")}>
+        <FormField
+          control={control}
+          name="fullName"
+          render={({ field }) => (
+            <FormItem>
+              <div className="floating-label-input px-4 py-1">
+                <FormControl>
+                  <Input placeholder=" " {...field} className="h-10 border-0 bg-transparent p-0 text-lg" />
+                </FormControl>
+                <FormLabel>Name</FormLabel>
+              </div>
+              <FormMessage className="px-4 pb-2" />
+            </FormItem>
+          )}
+        />
+      </div>
+  )
 }
 
 export default function Step1Name({ nextStep }: Step1Props) {
@@ -23,23 +49,11 @@ export default function Step1Name({ nextStep }: Step1Props) {
         </Button>
       }
     >
-      <div className="rounded-lg border bg-card text-card-foreground">
-        <FormField
-          control={control}
-          name="fullName"
-          render={({ field }) => (
-            <FormItem>
-              <div className="floating-label-input px-4 py-1">
-                <FormControl>
-                  <Input placeholder=" " {...field} className="h-10 border-0 bg-transparent p-0 text-lg focus-visible:ring-0 focus-visible:ring-offset-0" />
-                </FormControl>
-                <FormLabel>Name</FormLabel>
-              </div>
-              <FormMessage className="px-4 pb-2" />
-            </FormItem>
-          )}
-        />
-      </div>
+      <FormField
+        control={control}
+        name="fullName"
+        render={() => <NameInput />}
+      />
 
        <div className="flex items-start gap-3 p-1">
         <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />

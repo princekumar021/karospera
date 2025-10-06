@@ -1,11 +1,12 @@
 
 import { useFormContext } from "react-hook-form";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage, useFormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import StepWrapper from "./step-wrapper";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "../ui/separator";
+import { cn } from "@/lib/utils";
 
 interface Step3Props {
   nextStep: () => void;
@@ -15,25 +16,14 @@ interface Step3Props {
 const currencyOptions = ["INR", "USD", "EUR", "GBP", "JPY"];
 const payCycleOptions = ["Monthly", "Bi-weekly", "Weekly", "Custom"];
 
-export default function Step3Income({ nextStep, prevStep }: Step3Props) {
-  const { control } = useFormContext();
+function IncomeForm() {
+    const { control } = useFormContext();
+    const { error: currencyError } = useFormField({ name: 'currency' });
+    const { error: incomeError } = useFormField({ name: 'monthlyIncome' });
+    const { error: payCycleError } = useFormField({ name: 'payCycle' });
 
-  return (
-    <StepWrapper
-      title="Income & currency"
-      description="So we can suggest budgets that actually work."
-      footer={
-        <div className="flex w-full gap-4">
-          <Button onClick={prevStep} variant="secondary" className="w-1/3 font-semibold" size="lg">
-            Back
-          </Button>
-          <Button onClick={nextStep} className="w-2/3 font-semibold" size="lg">
-            Next
-          </Button>
-        </div>
-      }
-    >
-      <div className="rounded-lg border bg-card">
+    return (
+        <div className={cn("rounded-lg border bg-card", (currencyError || incomeError || payCycleError) && "animate-shake border-destructive")}>
         <FormField
           control={control}
           name="currency"
@@ -110,6 +100,26 @@ export default function Step3Income({ nextStep, prevStep }: Step3Props) {
           )}
         />
       </div>
+    )
+}
+
+export default function Step3Income({ nextStep, prevStep }: Step3Props) {
+  return (
+    <StepWrapper
+      title="Income & currency"
+      description="So we can suggest budgets that actually work."
+      footer={
+        <div className="flex w-full gap-4">
+          <Button onClick={prevStep} variant="secondary" className="w-1/3 font-semibold" size="lg">
+            Back
+          </Button>
+          <Button onClick={nextStep} className="w-2/3 font-semibold" size="lg">
+            Next
+          </Button>
+        </div>
+      }
+    >
+        <IncomeForm />
     </StepWrapper>
   );
 }
