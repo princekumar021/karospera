@@ -34,17 +34,8 @@ function ExpenseItem({ index, remove }: { index: number, remove: (index: number)
   const { errors } = useFormState({ control });
   const fieldErrors = errors.recurringExpenses?.[index];
 
-  const handleBlur = () => {
-    const nameValue = getValues(`recurringExpenses.${index}.name`);
-    const amountValue = getValues(`recurringExpenses.${index}.amount`);
-    if (!nameValue && !amountValue) {
-      remove(index);
-    }
-  };
-
   return (
     <div 
-      onBlur={handleBlur} 
       className={cn(
         "relative rounded-lg border bg-card text-card-foreground", 
         (fieldErrors?.name || fieldErrors?.amount) && "animate-shake border-destructive"
@@ -105,13 +96,27 @@ function ExpenseItem({ index, remove }: { index: number, remove: (index: number)
 }
 
 export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
-  const { control } = useFormContext();
+  const { control, getValues } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "recurringExpenses",
   });
   
   const scrollViewportRef = useRef<HTMLDivElement>(null);
+
+  const handleAddExpense = () => {
+    // Check if the last item is empty before adding a new one
+    const lastIndex = fields.length - 1;
+    if (lastIndex >= 0) {
+      const lastName = getValues(`recurringExpenses.${lastIndex}.name`);
+      const lastAmount = getValues(`recurringExpenses.${lastIndex}.amount`);
+      if (!lastName && !lastAmount) {
+        // Don't add a new one, maybe provide a toast or a subtle shake
+        return; 
+      }
+    }
+    append({ name: '', amount: undefined, frequency: 'Monthly' });
+  };
 
   useEffect(() => {
     if (fields.length > 2) { 
@@ -149,7 +154,7 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
           type="button"
           variant="outline"
           className="w-full font-semibold"
-          onClick={() => append({ name: '', amount: undefined, frequency: 'Monthly' })}
+          onClick={handleAddExpense}
         >
           <PlusCircle className="mr-2 h-4 w-4" />
           Add Expense
