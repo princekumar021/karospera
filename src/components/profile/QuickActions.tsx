@@ -12,10 +12,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+import { useUserData } from '@/hooks/use-user-data';
+import { useRouter } from 'next/navigation';
 
 
 export function QuickActions() {
+    const { resetUserData } = useUserData();
+    const router = useRouter();
+
+    const handleLogout = () => {
+        resetUserData();
+        router.push('/setup');
+    }
+
   return (
     <div className="space-y-2">
         <Button variant="outline" className="w-full">Edit Profile</Button>
@@ -34,10 +44,11 @@ export function QuickActions() {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction>Continue</AlertDialogAction>
+                <AlertDialogAction onClick={resetUserData}>Continue</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
+        <Button variant="outline" className="w-full" onClick={handleLogout}>Logout</Button>
     </div>
   );
 }
