@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import {
   Dialog,
   DialogContent,
@@ -18,16 +18,27 @@ import { PlusCircle } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useUserData } from '@/hooks/use-user-data';
 import { useToast } from '@/hooks/use-toast';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
-type ExpenseForm = {
-  name: string;
-  amount: number;
-  category: string;
-}
+const expenseFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  amount: z.coerce.number().min(0.01, "Amount must be positive"),
+  category: z.string({ required_error: "Category is required" }),
+});
+
+type ExpenseForm = z.infer<typeof expenseFormSchema>;
 
 export function AddExpenseDialog() {
   const [open, setOpen] = useState(false);
-  const { control, register, handleSubmit, reset, formState: { errors } } = useForm<ExpenseForm>();
+  const form = useForm<ExpenseForm>({
+    resolver: zodResolver(expenseFormSchema),
+    defaultValues: {
+      name: "",
+      amount: undefined,
+    }
+  });
   const { addTransaction, formatCurrency } = useUserData();
   const { toast } = useToast();
 
@@ -42,12 +53,15 @@ export function AddExpenseDialog() {
       title: "Expense Added",
       description: `${data.name} for ${formatCurrency(data.amount)} has been recorded.`,
     });
-    reset();
+    form.reset();
     setOpen(false);
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={(isOpen) => {
+      setOpen(isOpen);
+      if (!isOpen) form.reset();
+    }}>
       <DialogTrigger asChild>
         <div className="flex flex-col items-center space-y-1 cursor-pointer">
             <Button variant="outline" size="icon" className="h-14 w-14 rounded-full">
@@ -57,64 +71,73 @@ export function AddExpenseDialog() {
         </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogHeader>
-            <DialogTitle>Add Expense</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="expense-name" className="text-right">
-                Name
-              </Label>
-              <div className="col-span-3">
-                <Input id="expense-name" placeholder="e.g., Coffee" {...register("name", { required: "Name is required" })} />
-                {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
-              </div>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="expense-amount" className="text-right">
-                Amount
-              </Label>
-               <div className="col-span-3">
-                <Input id="expense-amount" type="number" placeholder="e.g., 250" {...register("amount", { required: "Amount is required", valueAsNumber: true })} />
-                {errors.amount && <p className="text-xs text-red-500 mt-1">{errors.amount.message}</p>}
-              </div>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="category" className="text-right">
-                Category
-              </Label>
-               <div className="col-span-3">
-                <Controller
-                    control={control}
-                    name="category"
-                    rules={{ required: "Category is required" }}
-                    render={({ field }) => (
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Food">Food</SelectItem>
-                          <SelectItem value="Transport">Transport</SelectItem>
-                          <SelectItem value="Entertainment">Entertainment</SelectItem>
-                          <SelectItem value="Bills">Bills</SelectItem>
-                          <SelectItem value="Other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    )}
-                />
-                {errors.category && <p className="text-xs text-red-500 mt-1">{errors.category.message}</p>}
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="secondary">Cancel</Button>
-              </DialogClose>
-            <Button type="submit">Add Expense</Button>
-          </DialogFooter>
-        </form>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <DialogHeader>
+              <DialogTitle>Add Expense</DialogTitle>
+            </DialogHeader>
+            
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., Coffee" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Amount</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="e.g., 250" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Food">Food</SelectItem>
+                      <SelectItem value="Transport">Transport</SelectItem>
+                      <SelectItem value="Entertainment">Entertainment</SelectItem>
+                      <SelectItem value="Bills">Bills</SelectItem>
+                      <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="secondary">Cancel</Button>
+                </DialogClose>
+              <Button type="submit">Add Expense</Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
