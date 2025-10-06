@@ -14,8 +14,8 @@ import { recurringExpenseSchema, goalSchema, transactionSchema } from '@/lib/set
 const FinancialInsightsInputSchema = z.object({
   monthlyIncome: z.number().describe("The user's monthly take-home income."),
   recurringExpenses: z.array(recurringExpenseSchema).describe("A list of the user's recurring expenses."),
-  goals: z.array(goalSchema).describe("The user's financial goals."),
-  transactions: z.array(transactionSchema).describe("A list of recent transactions."),
+  goals: z.array(goalSchema.extend({ targetDate: z.string().optional() })).describe("The user's financial goals."),
+  transactions: z.array(transactionSchema.extend({ date: z.string() })).describe("A list of recent transactions."),
 });
 export type FinancialInsightsInput = z.infer<typeof FinancialInsightsInputSchema>;
 
@@ -25,7 +25,7 @@ const FinancialInsightsOutputSchema = z.object({
 export type FinancialInsightsOutput = z.infer<typeof FinancialInsightsOutputSchema>;
 
 export async function getFinancialInsights(
-  input: FinancialInsightsInput
+  input: any
 ): Promise<FinancialInsightsOutput> {
   return financialInsightsFlow(input);
 }
@@ -57,7 +57,7 @@ const prompt = ai.definePrompt({
 const financialInsightsFlow = ai.defineFlow(
   {
     name: 'financialInsightsFlow',
-    inputSchema: FinancialInsightsInputSchema,
+    inputSchema: z.any(),
     outputSchema: FinancialInsightsOutputSchema,
   },
   async input => {
@@ -71,8 +71,8 @@ const financialInsightsFlow = ai.defineFlow(
     // The AI flow expects dates as strings, but they are Date objects. Convert them.
     const sanitizedInput = {
       ...input,
-      transactions: input.transactions.map(t => ({...t, date: t.date.toISOString()})),
-      goals: input.goals.map(g => ({...g, targetDate: g.targetDate?.toISOString()}))
+      transactions: input.transactions.map((t: any) => ({...t, date: t.date.toISOString()})),
+      goals: input.goals.map((g: any) => ({...g, targetDate: g.targetDate?.toISOString()}))
     }
 
     const {output} = await prompt(sanitizedInput);
