@@ -51,6 +51,7 @@ export const setupSchema = z.object({
   bankSyncOptIn: z.boolean().default(false),
   theme: z.enum(['light', 'dark']).default('dark'),
   accentColor: z.string().default('blue'),
+  avatar: z.string().optional(),
   
   // App Data
   transactions: z.array(transactionSchema).default([]),

@@ -11,6 +11,7 @@ interface UserDataContextType {
   loading: boolean;
   formatCurrency: (amount: number) => string;
   updateUserData: (data: Partial<SetupFormData>) => void;
+  updateAvatar: (file: File) => void;
   resetUserData: () => void;
   addTransaction: (transaction: Omit<Transaction, 'id'>) => void;
   addGoal: (goal: Omit<Goal, 'id' | 'currentAmount'>) => void;
@@ -165,6 +166,16 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
     saveData(updatedData);
   }, [userData, saveData]);
 
+  const updateAvatar = useCallback((file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const avatarDataUrl = e.target?.result as string;
+      updateUserData({ avatar: avatarDataUrl });
+      toast({ title: 'Avatar updated!'});
+    };
+    reader.readAsDataURL(file);
+  }, [updateUserData, toast]);
+
   const addTransaction = useCallback((transaction: Omit<Transaction, 'id'>) => {
     setUserData(prevData => {
       if (!prevData) return null;
@@ -228,7 +239,7 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
   }, [saveData]);
 
   return (
-    <UserDataContext.Provider value={{ userData, loading, formatCurrency, updateUserData, resetUserData, addTransaction, addGoal, updateGoal, deleteGoal }}>
+    <UserDataContext.Provider value={{ userData, loading, formatCurrency, updateUserData, updateAvatar, resetUserData, addTransaction, addGoal, updateGoal, deleteGoal }}>
       {children}
     </UserDataContext.Provider>
   );
