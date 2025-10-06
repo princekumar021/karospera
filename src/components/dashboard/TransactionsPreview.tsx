@@ -15,6 +15,7 @@ const categoryIcons: { [key: string]: React.ReactNode } = {
   Transport: <Car className="h-6 w-6 text-purple-500" />,
   Entertainment: <Film className="h-6 w-6 text-pink-500" />,
   Bills: <Briefcase className="h-6 w-6 text-orange-500" />,
+  Savings: <Wallet className="h-6 w-6 text-blue-500" />,
   Other: <Briefcase className="h-6 w-6 text-gray-500" />,
 };
 
@@ -48,19 +49,19 @@ export function TransactionsPreview() {
         ) : transactions.length > 0 ? (
           <ul className="space-y-4">
             {transactions.slice(0, 4).map((transaction) => (
-              <li key={transaction.id} className="flex items-center space-x-4">
-                <div className="rounded-full bg-secondary p-2">
+              <li key={transaction.id} className="flex items-center gap-4">
+                <div className="rounded-full bg-secondary p-2 flex-shrink-0">
                   {getIcon(transaction.category)}
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <p className="font-semibold truncate">{transaction.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    {format(transaction.date, 'MMMM d, yyyy')}
+                    {format(new Date(transaction.date), 'MMMM d, yyyy')}
                   </p>
                 </div>
-                <div className="text-right">
+                <div className="text-right flex-shrink-0">
                   <p
-                    className={`font-bold ${
+                    className={`font-bold whitespace-nowrap ${
                       transaction.type === 'income'
                         ? 'text-green-500'
                         : ''
@@ -69,7 +70,7 @@ export function TransactionsPreview() {
                     {formatCurrency(transaction.amount)}
                   </p>
                 </div>
-                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                <ChevronRight className="h-5 w-5 text-muted-foreground flex-shrink-0" />
               </li>
             ))}
           </ul>

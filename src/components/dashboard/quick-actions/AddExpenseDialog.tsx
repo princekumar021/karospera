@@ -123,6 +123,7 @@ export function AddExpenseDialog() {
                       <SelectItem value="Transport">Transport</SelectItem>
                       <SelectItem value="Entertainment">Entertainment</SelectItem>
                       <SelectItem value="Bills">Bills</SelectItem>
+                      <SelectItem value="Savings">Savings</SelectItem>
                       <SelectItem value="Other">Other</SelectItem>
                     </SelectContent>
                   </Select>
