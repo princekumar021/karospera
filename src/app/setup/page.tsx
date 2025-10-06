@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -47,6 +48,8 @@ export default function SetupPage() {
   });
 
   const nextStep = async () => {
+    // Clear previous errors before validating the new step
+    methods.clearErrors();
     const fieldsToValidate = stepFields[currentStep - 1];
     const isValid = await methods.trigger(fieldsToValidate as any);
 
