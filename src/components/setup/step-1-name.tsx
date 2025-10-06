@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import StepWrapper from "./step-wrapper";
 import { Info } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 interface Step1Props {
   nextStep: () => void;
@@ -29,12 +28,12 @@ export default function Step1Name({ nextStep }: Step1Props) {
           control={control}
           name="fullName"
           render={({ field }) => (
-            <FormItem className="relative">
+            <FormItem>
               <div className="floating-label-input px-4 py-3">
                 <FormControl>
-                  <Input placeholder=" " {...field} className="h-10 border-0 bg-transparent p-0 text-base" />
+                  <Input placeholder=" " {...field} className="peer h-10 border-0 bg-transparent p-0 text-lg" />
                 </FormControl>
-                <FormLabel>Your name</FormLabel>
+                <FormLabel>Name</FormLabel>
               </div>
               <FormMessage className="px-4 pb-2" />
             </FormItem>
