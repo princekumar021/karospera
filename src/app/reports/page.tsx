@@ -1,6 +1,6 @@
 
 import { BottomNavigation } from '@/components/dashboard';
-import { ReportsHeader, SummaryCards, SpendingPieChart, IncomeExpenseChart, SavingsTrendChart, SmartInsights } from '@/components/reports';
+import { ReportsHeader, SummaryCards, SpendingPieChart, IncomeExpenseChart, SmartInsights } from '@/components/reports';
 
 export default function ReportsPage() {
   return (
@@ -10,7 +10,6 @@ export default function ReportsPage() {
         <SummaryCards />
         <SpendingPieChart />
         <IncomeExpenseChart />
-        <SavingsTrendChart />
         <SmartInsights />
       </main>
       <BottomNavigation />
