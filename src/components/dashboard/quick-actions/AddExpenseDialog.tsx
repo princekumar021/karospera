@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { PlusCircle } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useUserData } from '@/hooks/use-user-data';
@@ -36,7 +35,7 @@ export function AddExpenseDialog() {
     resolver: zodResolver(expenseFormSchema),
     defaultValues: {
       name: "",
-      amount: undefined,
+      amount: '' as any,
     }
   });
   const { addTransaction, formatCurrency } = useUserData();
@@ -60,7 +59,9 @@ export function AddExpenseDialog() {
   return (
     <Dialog open={open} onOpenChange={(isOpen) => {
       setOpen(isOpen);
-      if (!isOpen) form.reset();
+      if (!isOpen) {
+        form.reset({ name: "", amount: '' as any });
+      }
     }}>
       <DialogTrigger asChild>
         <div className="flex flex-col items-center space-y-1 cursor-pointer">
