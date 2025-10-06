@@ -27,7 +27,7 @@ function NameInput() {
             render={({ field }) => (
                 <FormItem>
                     <FormControl>
-                        <Input placeholder=" " {...field} className="h-14 border-0 bg-transparent text-lg text-center" />
+                        <Input placeholder=" " {...field} className="h-14 border-0 bg-transparent text-lg" />
                     </FormControl>
                     <Label>Name</Label>
                 </FormItem>
