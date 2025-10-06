@@ -25,23 +25,16 @@ export default function Step1Name({ nextStep }: Step1Props) {
       }
     >
       <div className="rounded-lg border bg-card text-card-foreground">
-         <FormField
+        <FormField
           control={control}
           name="fullName"
           render={({ field }) => (
-            <FormItem>
-              <div className="floating-label-input relative flex items-center px-4 py-3">
+            <FormItem className="relative">
+              <div className="floating-label-input px-4 py-3">
                 <FormControl>
-                  <Input placeholder=" " {...field} className="h-10 border-0 bg-transparent p-0 text-base focus-visible:ring-0 focus-visible:ring-offset-0"/>
+                  <Input placeholder=" " {...field} className="h-10 border-0 bg-transparent p-0 text-base" />
                 </FormControl>
-                 <FormLabel
-                  className={cn(
-                    "absolute left-4 top-1/2 -translate-y-1/2 origin-[0] transform transition-all duration-300 ease-in-out",
-                    "peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-5"
-                  )}
-                >
-                  Your name
-                </FormLabel>
+                <FormLabel>Your name</FormLabel>
               </div>
               <FormMessage className="px-4 pb-2" />
             </FormItem>
@@ -49,8 +42,8 @@ export default function Step1Name({ nextStep }: Step1Props) {
         />
       </div>
 
-       <div className="flex items-start gap-3 text-card-foreground p-1">
-        <Info className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+       <div className="flex items-start gap-3 p-1">
+        <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
         <div>
           <h3 className="font-semibold text-foreground">Private & Secure</h3>
           <p className="text-xs text-muted-foreground">
