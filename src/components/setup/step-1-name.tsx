@@ -19,16 +19,15 @@ function NameInput() {
   const { error } = useFormField();
   
   return (
-    <div className={cn("floating-label-input", error && "animate-shake")}>
+    <div className={cn("w-full", error && "animate-shake")}>
         <FormField
           control={control}
           name="fullName"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder=" " {...field} />
+                <Input placeholder="Name" {...field} className="w-full h-14 text-center text-lg rounded-xl border-border bg-background" />
               </FormControl>
-              <Label>Name</Label>
               <FormMessage />
             </FormItem>
           )}
