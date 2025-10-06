@@ -68,20 +68,20 @@ export function BudgetSummary() {
       <CardContent className="pt-6">
         <div className="grid grid-cols-3 gap-2 text-center mb-4">
           <div>
-            <p className="text-sm text-green-500">Income</p>
-            <p className="font-bold">{formatCurrency(income)}</p>
+            <p className="text-sm text-green-500 truncate">Income</p>
+            <p className="font-bold truncate">{formatCurrency(income)}</p>
           </div>
           <div>
-            <p className="text-sm text-red-500">Spent</p>
-            <p className="font-bold">{formatCurrency(spent)}</p>
+            <p className="text-sm text-red-500 truncate">Spent</p>
+            <p className="font-bold truncate">{formatCurrency(spent)}</p>
           </div>
           <div>
-            <p className="text-sm text-blue-500">Remaining</p>
-            <p className="font-bold">{formatCurrency(remaining)}</p>
+            <p className="text-sm text-blue-500 truncate">Remaining</p>
+            <p className="font-bold truncate">{formatCurrency(remaining)}</p>
           </div>
         </div>
         <Progress value={progress} className="h-2" />
-        <p className="text-xs text-muted-foreground mt-2">
+        <p className="text-xs text-muted-foreground mt-2 truncate">
             You've spent {formatCurrency(spent)} of {formatCurrency(income)}
         </p>
       </CardContent>
