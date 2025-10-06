@@ -20,24 +20,26 @@ export function IncomeExpenseChart() {
       const month = getMonth(date);
       const year = getYear(date);
       
-      const expenses = userData.transactions
+      const monthlyExpenses = userData.transactions
         .filter(t => {
           const tDate = new Date(t.date);
           return t.type === 'expense' && getMonth(tDate) === month && getYear(tDate) === year;
         })
         .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
-      const income = userData.transactions
+      const oneOffIncome = userData.transactions
         .filter(t => {
             const tDate = new Date(t.date);
             return t.type === 'income' && getMonth(tDate) === month && getYear(tDate) === year;
         })
-        .reduce((sum, t) => sum + Math.abs(t.amount), userData.monthlyIncome || 0);
+        .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+        
+      const totalIncome = (userData.monthlyIncome || 0) + oneOffIncome;
 
       return {
         name: format(date, 'MMM'),
-        income: income,
-        expenses: expenses,
+        income: totalIncome,
+        expenses: monthlyExpenses,
       };
     });
     return data;
@@ -69,12 +71,15 @@ export function IncomeExpenseChart() {
         <div className="h-60">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData}>
-              <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-              <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickFormatter={(value) => formatCurrency(value as number)}/>
+              <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} axisLine={false} tickLine={false} />
+              <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickFormatter={(value) => formatCurrency(value as number)} axisLine={false} tickLine={false} />
               <Tooltip 
-                contentStyle={{ backgroundColor: 'hsl(var(--background))', border: '1px solid hsl(var(--border))' }}
-                formatter={(value:number, name: string) => [formatCurrency(value), name.charAt(0).toUpperCase() + name.slice(1)]} />
-              <Legend />
+                contentStyle={{ backgroundColor: 'hsl(var(--background))', border: '1px solid hsl(var(--border))', borderRadius: 'var(--radius)' }}
+                formatter={(value:number, name: string) => [formatCurrency(value), name.charAt(0).toUpperCase() + name.slice(1)]}
+                labelStyle={{ color: 'hsl(var(--foreground))' }}
+                cursor={{fill: 'hsl(var(--muted))', opacity: 0.5}}
+                 />
+              <Legend wrapperStyle={{ color: 'hsl(var(--foreground))' }}/>
               <Bar dataKey="income" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
               <Bar dataKey="expenses" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
             </BarChart>
