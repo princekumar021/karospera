@@ -16,9 +16,6 @@ export default function Home() {
           <PocketPlanLogo className="h-8 w-8" />
           <span className="text-xl font-semibold font-headline">PocketPlan</span>
         </div>
-        <Button variant="ghost" asChild>
-          <Link href="/setup">Login</Link>
-        </Button>
       </header>
       
       <main className="flex-grow">
@@ -76,11 +73,7 @@ export default function Home() {
       </main>
       
       <footer className="container mx-auto px-4 py-8 text-center text-muted-foreground">
-        <div className="flex justify-center gap-6 text-sm">
-          <Link href="#" className="hover:text-foreground transition-colors">Privacy</Link>
-          <Link href="#" className="hover:text-foreground transition-colors">Terms</Link>
-          <Link href="#" className="hover:text-foreground transition-colors">About</Link>
-        </div>
+        <p className="text-sm">&copy; {new Date().getFullYear()} PocketPlan. All rights reserved.</p>
       </footer>
     </div>
   );
