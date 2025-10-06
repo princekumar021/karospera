@@ -6,6 +6,8 @@ import { Settings } from 'lucide-react';
 import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
+import { buttonVariants } from '../ui/button';
 
 export function DashboardHeader() {
   const { userData, loading } = useUserData();
@@ -26,11 +28,9 @@ export function DashboardHeader() {
           <h1 className="text-xl font-bold truncate">Hi, {userName.split(' ')[0]} 👋</h1>
         )}
       </div>
-      <Button variant="ghost" size="icon" asChild>
-        <Link href="/settings">
+      <Link href="/settings" className={cn(buttonVariants({ variant: "ghost", size: "icon" }))}>
           <Settings className="h-6 w-6" />
-        </Link>
-      </Button>
+      </Link>
     </header>
   );
 }
