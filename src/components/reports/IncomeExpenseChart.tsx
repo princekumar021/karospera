@@ -22,9 +22,10 @@ export function IncomeExpenseChart() {
         default: return amount;
       }
     };
+    
     const totalMonthlyRecurringExpenses = userData.recurringExpenses.reduce((sum, exp) => sum + getMonthlyRecurringAmount(exp), 0);
     const monthlyBaseIncome = userData.monthlyIncome || 0;
-
+    
     const monthsData = [];
     const now = new Date();
 
@@ -57,6 +58,15 @@ export function IncomeExpenseChart() {
           expenses: totalExpenses,
         });
       }
+    }
+    
+    // if there's no data, but there is monthly income or recurring expenses, show the current month
+    if (monthsData.length === 0 && (monthlyBaseIncome > 0 || totalMonthlyRecurringExpenses > 0)) {
+        monthsData.push({
+            name: format(now, 'MMM'),
+            income: monthlyBaseIncome,
+            expenses: totalMonthlyRecurringExpenses,
+        });
     }
 
     return monthsData;
