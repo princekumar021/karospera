@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { CameraOff, Loader2 } from 'lucide-react';
-import { Scanner } from 'react-zxing';
+import { BarcodeScanner } from 'react-zxing';
 
 interface ReceiptScannerProps {
     onScanSuccess: (scannedData: { amount?: number, note?: string }) => void;
@@ -68,11 +68,9 @@ export function ReceiptScanner({ onScanSuccess, onCancel }: ReceiptScannerProps)
         <div className="flex flex-col h-full items-center justify-between">
             <h3 className="text-lg font-semibold mb-2">Scan Receipt</h3>
             <div className="relative w-full aspect-square bg-muted rounded-lg overflow-hidden flex items-center justify-center">
-                 <Scanner
+                 <BarcodeScanner
                     onResult={handleScan}
                     onError={handleError}
-                    onDecode={handleScan} // react-zxing has multiple props for this
-                    onScan={handleScan} // to be safe
                  />
                  {isScanning && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/20 text-white">
