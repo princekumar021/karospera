@@ -73,12 +73,12 @@
     @apply relative;
   }
 
-  .floating-label-input .peer ~ label,
-  .floating-label-input input:not(:placeholder-shown) ~ label {
-    @apply -top-2 scale-75 text-primary;
+  .floating-label-input .peer:placeholder-shown ~ label {
+    @apply top-1/2 -translate-y-1/2 scale-100 text-muted-foreground;
   }
-  
-  .floating-label-input input:focus ~ label {
+
+  .floating-label-input input:focus ~ label,
+  .floating-label-input input:not(:placeholder-shown) ~ label {
      @apply -top-2 scale-75 text-primary;
   }
 }

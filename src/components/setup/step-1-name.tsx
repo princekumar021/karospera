@@ -37,7 +37,7 @@ export default function Step1Name({ nextStep }: Step1Props) {
                  <FormLabel
                   className={cn(
                     "absolute left-4 top-1/2 -translate-y-1/2 origin-[0] transform transition-all duration-300 ease-in-out",
-                    field.value ? "-top-2 scale-75 text-primary" : "text-muted-foreground"
+                    "peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-5"
                   )}
                 >
                   Your name
