@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useFormContext, useFieldArray } from "react-hook-form";
@@ -10,7 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { PlusCircle } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "../ui/separator";
-import { cn } from "@/lib/utils";
 import { Label } from "../ui/label";
 import { useUserData } from "@/hooks/use-user-data";
 import { useRef, useEffect } from "react";
@@ -55,7 +53,7 @@ function ExpenseItem({ index }: { index: number }) {
               <FormControl>
                 <div className="relative flex items-center">
                   <span className="absolute left-3 text-muted-foreground">{symbol}</span>
-                  <Input type="number" placeholder="0" {...field} value={field.value ?? ''} className="pl-7 bg-transparent border-0 text-right h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0"/>
+                  <Input type="number" placeholder="0" {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value === '' ? undefined : parseFloat(e.target.value))} className="pl-7 bg-transparent border-0 text-right h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0"/>
                 </div>
               </FormControl>
             </FormItem>
