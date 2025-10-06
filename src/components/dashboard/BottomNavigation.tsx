@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Home, Wallet, Target, ChartBar, User } from 'lucide-react';
+import { Home, Wallet, Target, BarChart2, User } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
@@ -9,7 +9,7 @@ const navItems = [
   { href: '/dashboard', icon: <Home />, label: 'Dashboard' },
   { href: '/budget', icon: <Wallet />, label: 'Budgets' },
   { href: '/goals', icon: <Target />, label: 'Goals' },
-  { href: '#', icon: <ChartBar />, label: 'Reports' },
+  { href: '/reports', icon: <BarChart2 />, label: 'Reports' },
   { href: '#', icon: <User />, label: 'Profile' },
 ];
 
