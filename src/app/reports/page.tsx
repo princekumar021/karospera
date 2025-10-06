@@ -6,7 +6,7 @@ export default function ReportsPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <ReportsHeader />
-      <main className="flex-1 space-y-6 overflow-y-auto p-4 pb-24">
+      <main className="flex-1 space-y-6 overflow-y-auto p-4 pb-32">
         <SummaryCards />
         <SpendingPieChart />
         <IncomeExpenseChart />

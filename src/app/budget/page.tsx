@@ -6,11 +6,11 @@ export default function BudgetPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <BudgetHeader />
-      <main className="flex-1 space-y-6 overflow-y-auto p-4 pb-24">
+      <main className="flex-1 space-y-6 overflow-y-auto p-4 pb-32">
         <BudgetSummary />
         <CategoryList />
       </main>
-      <div className="fixed bottom-20 right-4 z-20">
+      <div className="fixed bottom-24 right-4 z-20">
         <AddBudgetDialog />
       </div>
       <BottomNavigation />
