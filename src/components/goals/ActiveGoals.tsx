@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 
 function GoalCard({ goal }: { goal: Goal }) {
   const { formatCurrency, deleteGoal } = useUserData();
-  const [isEditDialogOpen, setEditDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const { toast } = useToast();
 
   const progress = goal.targetAmount > 0 ? (goal.currentAmount / goal.targetAmount) * 100 : 0;
@@ -26,50 +26,51 @@ function GoalCard({ goal }: { goal: Goal }) {
   }
 
   return (
+    <>
+    <AddGoalDialog 
+      open={isEditDialogOpen} 
+      onOpenChange={setIsEditDialogOpen} 
+      goalToEdit={goal} 
+    />
     <Card className="bg-card">
       <CardHeader className="flex flex-row items-start justify-between">
         <div>
           <CardTitle className="font-headline truncate">{goal.name}</CardTitle>
           <CardDescription>Target: {formatCurrency(goal.targetAmount)}</CardDescription>
         </div>
-        <AddGoalDialog
-          goalToEdit={goal}
-          trigger={
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setEditDialogOpen(true)}>
-                  <Edit className="mr-2 h-4 w-4" />
-                  Edit
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
+              <Edit className="mr-2 h-4 w-4" />
+              Edit
+            </DropdownMenuItem>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                  <Trash2 className="mr-2 h-4 w-4 text-destructive" />
+                  <span className="text-destructive">Delete</span>
                 </DropdownMenuItem>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                      <Trash2 className="mr-2 h-4 w-4 text-destructive" />
-                      <span className="text-destructive">Delete</span>
-                    </DropdownMenuItem>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Delete Goal?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This will permanently delete your goal "{goal.name}". This action cannot be undone.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          }
-        />
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete Goal?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will permanently delete your goal "{goal.name}". This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </CardHeader>
       <CardContent>
         <Progress value={progress} className="h-2 mb-2" />
@@ -79,6 +80,7 @@ function GoalCard({ goal }: { goal: Goal }) {
         </div>
       </CardContent>
     </Card>
+    </>
   );
 }
 

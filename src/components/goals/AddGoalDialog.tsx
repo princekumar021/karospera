@@ -28,8 +28,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 const formSchema = goalSchema.omit({ id: true, currentAmount: true });
 type GoalFormValues = Zod.infer<typeof formSchema>;
 
-export function AddGoalDialog({ trigger, goalToEdit }: { trigger?: React.ReactNode, goalToEdit?: Goal }) {
-  const [open, setOpen] = useState(false);
+export function AddGoalDialog({ trigger, goalToEdit, open, onOpenChange }: { trigger?: React.ReactNode, goalToEdit?: Goal, open?: boolean, onOpenChange?: (open: boolean) => void }) {
   const { addGoal, updateGoal } = useUserData();
   const { toast } = useToast();
 
@@ -48,14 +47,14 @@ export function AddGoalDialog({ trigger, goalToEdit }: { trigger?: React.ReactNo
   });
 
   useEffect(() => {
-    if (goalToEdit) {
+    if (open && goalToEdit) {
       form.reset({
         name: goalToEdit.name,
         targetAmount: goalToEdit.targetAmount,
-        targetDate: goalToEdit.targetDate,
+        targetDate: goalToEdit.targetDate ? new Date(goalToEdit.targetDate) : undefined,
         category: goalToEdit.category
       })
-    } else {
+    } else if (!open) {
       form.reset({
         name: '',
         targetAmount: undefined,
@@ -63,7 +62,7 @@ export function AddGoalDialog({ trigger, goalToEdit }: { trigger?: React.ReactNo
         category: 'savings',
       })
     }
-  }, [goalToEdit, form]);
+  }, [goalToEdit, form, open]);
 
   const onSubmit = (data: GoalFormValues) => {
     if (goalToEdit) {
@@ -73,19 +72,19 @@ export function AddGoalDialog({ trigger, goalToEdit }: { trigger?: React.ReactNo
       addGoal(data);
       toast({ title: 'Goal Added!', description: `New goal "${data.name}" created.` });
     }
-    setOpen(false);
+    onOpenChange?.(false);
     form.reset();
   };
+  
+  const handleOpenChange = (isOpen: boolean) => {
+    if (onOpenChange) {
+      onOpenChange(isOpen);
+    }
+  }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <Button variant="ghost" size="icon">
-              <Plus className="h-6 w-6" />
-          </Button>
-        )}
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
