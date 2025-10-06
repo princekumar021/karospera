@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Settings } from 'lucide-react';
 import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
+import Link from 'next/link';
 
 export function DashboardHeader() {
   const { userData, loading } = useUserData();
@@ -13,16 +14,20 @@ export function DashboardHeader() {
 
   return (
     <header className="sticky top-0 z-10 flex items-center justify-between bg-background px-4 py-3">
-      <Avatar>
-        {loading ? <Skeleton className="h-10 w-10 rounded-full" /> : <AvatarFallback>{userInitial}</AvatarFallback>}
-      </Avatar>
+      <Link href="/profile">
+        <Avatar>
+          {loading ? <Skeleton className="h-10 w-10 rounded-full" /> : <AvatarFallback>{userInitial}</AvatarFallback>}
+        </Avatar>
+      </Link>
       {loading ? (
          <Skeleton className="h-6 w-32" />
       ) : (
         <h1 className="text-lg font-bold truncate">Hi, {userName.split(' ')[0]} 👋</h1>
       )}
-      <Button variant="ghost" size="icon">
-        <Settings className="h-6 w-6" />
+      <Button variant="ghost" size="icon" asChild>
+        <Link href="/settings">
+          <Settings className="h-6 w-6" />
+        </Link>
       </Button>
     </header>
   );

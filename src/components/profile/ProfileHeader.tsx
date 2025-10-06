@@ -3,6 +3,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Settings } from 'lucide-react';
+import Link from 'next/link';
 
 export function ProfileHeader() {
   return (
@@ -11,8 +12,10 @@ export function ProfileHeader() {
         <h1 className="text-xl font-bold">Profile</h1>
         <p className="text-sm text-muted-foreground">Manage your details and preferences</p>
       </div>
-      <Button variant="ghost" size="icon">
-        <Settings className="h-5 w-5" />
+      <Button variant="ghost" size="icon" asChild>
+        <Link href="/settings">
+          <Settings className="h-5 w-5" />
+        </Link>
       </Button>
     </header>
   );

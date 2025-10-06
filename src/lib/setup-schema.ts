@@ -24,11 +24,16 @@ export const setupSchema = z.object({
   // Step 4
   recurringExpenses: z.array(recurringExpenseSchema).default([]),
   
-  // Step 5
+  // Step 5 & Settings
   budgetMethod: z.enum(["balanced", "50_30_20", "envelope", "zero_based"]).default("balanced"),
   notifications: z.boolean().default(true),
+  budgetAlerts: z.boolean().default(true),
+  goalReminders: z.boolean().default(true),
+  monthlySummary: z.boolean().default(false),
   biometrics: z.boolean().default(false),
   bankSyncOptIn: z.boolean().default(false),
+  theme: z.enum(['light', 'dark']).default('dark'),
+  accentColor: z.string().default('blue'),
 });
 
 export type SetupFormData = z.infer<typeof setupSchema>;
