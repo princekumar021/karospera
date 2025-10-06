@@ -7,6 +7,15 @@ export const recurringExpenseSchema = z.object({
   dueDay: z.coerce.number().min(1).max(31).optional(),
 });
 
+export const transactionSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  amount: z.number(),
+  type: z.enum(['income', 'expense']),
+  category: z.string(),
+  date: z.date(),
+});
+
 export const setupSchema = z.object({
   // Step 1
   fullName: z.string().min(2, "Please enter a name with at least 2 characters."),
@@ -34,7 +43,11 @@ export const setupSchema = z.object({
   bankSyncOptIn: z.boolean().default(false),
   theme: z.enum(['light', 'dark']).default('dark'),
   accentColor: z.string().default('blue'),
+  
+  // App Data
+  transactions: z.array(transactionSchema).default([]),
 });
 
 export type SetupFormData = z.infer<typeof setupSchema>;
 export type RecurringExpense = z.infer<typeof recurringExpenseSchema>;
+export type Transaction = z.infer<typeof transactionSchema>;

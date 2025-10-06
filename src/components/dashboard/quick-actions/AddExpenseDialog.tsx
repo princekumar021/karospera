@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
   Dialog,
   DialogContent,
@@ -8,15 +9,42 @@ import {
   DialogTitle,
   DialogFooter,
   DialogTrigger,
+  DialogClose,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { PlusCircle, Utensils } from 'lucide-react';
+import { PlusCircle } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useUserData } from '@/hooks/use-user-data';
+import { useToast } from '@/hooks/use-toast';
+
+type ExpenseForm = {
+  name: string;
+  amount: number;
+  category: string;
+}
 
 export function AddExpenseDialog() {
   const [open, setOpen] = useState(false);
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<ExpenseForm>();
+  const { addTransaction, formatCurrency } = useUserData();
+  const { toast } = useToast();
+
+  const onSubmit = (data: ExpenseForm) => {
+    addTransaction({
+      name: data.name,
+      amount: -Math.abs(data.amount),
+      type: 'expense',
+      category: data.category,
+    });
+    toast({
+      title: "Expense Added",
+      description: `${data.name} for ${formatCurrency(data.amount)} has been recorded.`,
+    });
+    reset();
+    setOpen(false);
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -29,44 +57,53 @@ export function AddExpenseDialog() {
         </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Add Expense</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="expense-name" className="text-right">
-              Name
-            </Label>
-            <Input id="expense-name" placeholder="e.g., Coffee" className="col-span-3" />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <DialogHeader>
+            <DialogTitle>Add Expense</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="expense-name" className="text-right">
+                Name
+              </Label>
+              <div className="col-span-3">
+                <Input id="expense-name" placeholder="e.g., Coffee" {...register("name", { required: "Name is required" })} />
+                {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
+              </div>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="expense-amount" className="text-right">
+                Amount
+              </Label>
+               <div className="col-span-3">
+                <Input id="expense-amount" type="number" placeholder="e.g., 250" {...register("amount", { required: "Amount is required", valueAsNumber: true })} />
+                {errors.amount && <p className="text-xs text-red-500 mt-1">{errors.amount.message}</p>}
+              </div>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="category" className="text-right">
+                Category
+              </Label>
+               <div className="col-span-3">
+                <select {...register("category", { required: "Category is required" })} className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                  <option value="">Select a category</option>
+                  <option value="Food">Food</option>
+                  <option value="Transport">Transport</option>
+                  <option value="Entertainment">Entertainment</option>
+                  <option value="Bills">Bills</option>
+                  <option value="Other">Other</option>
+                </select>
+                {errors.category && <p className="text-xs text-red-500 mt-1">{errors.category.message}</p>}
+              </div>
+            </div>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="expense-amount" className="text-right">
-              Amount
-            </Label>
-            <Input id="expense-amount" type="number" placeholder="e.g., 250" className="col-span-3" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="category" className="text-right">
-              Category
-            </Label>
-            <Select>
-                <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="food">Food</SelectItem>
-                    <SelectItem value="transport">Transport</SelectItem>
-                    <SelectItem value="entertainment">Entertainment</SelectItem>
-                    <SelectItem value="bills">Bills</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-            </Select>
-          </div>
-        </div>
-        <DialogFooter>
-            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button type="submit" onClick={() => setOpen(false)}>Add Expense</Button>
-        </DialogFooter>
+          <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="secondary">Cancel</Button>
+              </DialogClose>
+            <Button type="submit">Add Expense</Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

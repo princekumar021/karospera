@@ -1,76 +1,81 @@
+"use client";
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChevronRight, Wallet } from 'lucide-react';
+import { ChevronRight, Wallet, Utensils, Car, Home, Film, Briefcase } from 'lucide-react';
+import { useUserData } from '@/hooks/use-user-data';
+import { Skeleton } from '../ui/skeleton';
+import { format } from 'date-fns';
 
-const transactions = [
-  {
-    icon: <Wallet className="h-6 w-6 text-yellow-500" />,
-    category: 'Salary',
-    name: 'Monthly Paycheck',
-    date: 'July 1, 2024',
-    amount: '+ ₹50,000',
-    type: 'income',
-  },
-  {
-    icon: <Wallet className="h-6 w-6 text-red-500" />,
-    category: 'Rent',
-    name: 'Apartment Rent',
-    date: 'July 2, 2024',
-    amount: '- ₹15,000',
-    type: 'expense',
-  },
-  {
-    icon: <Wallet className="h-6 w-6 text-blue-500" />,
-    category: 'Groceries',
-    name: 'Supermarket Haul',
-    date: 'July 3, 2024',
-    amount: '- ₹4,500',
-    type: 'expense',
-  },
-  {
-    icon: <Wallet className="h-6 w-6 text-green-500" />,
-    category: 'Travel',
-    name: 'Weekend Getaway',
-    date: 'July 5, 2024',
-    amount: '- ₹8,000',
-    type: 'expense',
-  },
-];
+const categoryIcons: { [key: string]: React.ReactNode } = {
+  Income: <Wallet className="h-6 w-6 text-green-500" />,
+  Rent: <Home className="h-6 w-6 text-blue-500" />,
+  Groceries: <Utensils className="h-6 w-6 text-yellow-500" />,
+  Food: <Utensils className="h-6 w-6 text-yellow-500" />,
+  Transport: <Car className="h-6 w-6 text-purple-500" />,
+  Entertainment: <Film className="h-6 w-6 text-pink-500" />,
+  Bills: <Briefcase className="h-6 w-6 text-orange-500" />,
+  Other: <Briefcase className="h-6 w-6 text-gray-500" />,
+};
+
+const getIcon = (category: string) => {
+  return categoryIcons[category] || <Briefcase className="h-6 w-6 text-gray-500" />;
+}
 
 export function TransactionsPreview() {
+  const { userData, loading, formatCurrency } = useUserData();
+  const transactions = userData?.transactions || [];
+
   return (
     <Card className="bg-card">
       <CardHeader>
         <CardTitle>Recent Transactions</CardTitle>
       </CardHeader>
       <CardContent>
-        <ul className="space-y-4">
-          {transactions.map((transaction, index) => (
-            <li key={index} className="flex items-center space-x-4">
-              <div className="rounded-full bg-secondary p-2">
-                {transaction.icon}
-              </div>
-              <div className="flex-1">
-                <p className="font-semibold">{transaction.name}</p>
-                <p className="text-xs text-muted-foreground">
-                  {transaction.date}
-                </p>
-              </div>
-              <div className="text-right">
-                <p
-                  className={`font-bold ${
-                    transaction.type === 'income'
-                      ? 'text-green-500'
-                      : 'text-red-500'
-                  }`}
-                >
-                  {transaction.amount}
-                </p>
-              </div>
-              <ChevronRight className="h-5 w-5 text-muted-foreground" />
-            </li>
-          ))}
-        </ul>
+        {loading ? (
+          <div className="space-y-4">
+            {[...Array(3)].map((_, i) => (
+               <div key={i} className="flex items-center space-x-4">
+                  <Skeleton className="h-10 w-10 rounded-full" />
+                  <div className="flex-1 space-y-1">
+                    <Skeleton className="h-4 w-3/5" />
+                    <Skeleton className="h-3 w-2/5" />
+                  </div>
+                  <Skeleton className="h-5 w-16" />
+                </div>
+            ))}
+          </div>
+        ) : transactions.length > 0 ? (
+          <ul className="space-y-4">
+            {transactions.slice(0, 4).map((transaction) => (
+              <li key={transaction.id} className="flex items-center space-x-4">
+                <div className="rounded-full bg-secondary p-2">
+                  {getIcon(transaction.category)}
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold truncate">{transaction.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {format(transaction.date, 'MMMM d, yyyy')}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p
+                    className={`font-bold ${
+                      transaction.type === 'income'
+                        ? 'text-green-500'
+                        : ''
+                    }`}
+                  >
+                    {formatCurrency(transaction.amount)}
+                  </p>
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-center text-muted-foreground py-4">No transactions yet. Add one to get started!</p>
+        )}
         <Button variant="link" className="mt-4 w-full">
           View All
         </Button>
