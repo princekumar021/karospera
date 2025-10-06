@@ -5,7 +5,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } fro
 import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
 import { useMemo } from 'react';
-import { subMonths, format, getMonth, getYear } from 'date-fns';
+import { subMonths, format, getMonth, getYear, isSameMonth } from 'date-fns';
 import { RecurringExpense, Transaction } from '@/lib/setup-schema';
 
 export function IncomeExpenseChart() {
@@ -47,8 +47,10 @@ export function IncomeExpenseChart() {
         .filter(t => t.type === 'income')
         .reduce((sum, t) => sum + Math.abs(t.amount), 0);
       
-      const totalIncome = monthlyBaseIncome + oneOffIncome;
-      const totalExpenses = totalMonthlyRecurringExpenses + oneOffExpenses;
+      const isCurrentMonth = isSameMonth(now, date);
+      
+      const totalIncome = (isCurrentMonth ? monthlyBaseIncome : 0) + oneOffIncome;
+      const totalExpenses = (isCurrentMonth ? totalMonthlyRecurringExpenses : 0) + oneOffExpenses;
 
       // Only add month to chart if there's any financial activity
       if (totalIncome > 0 || totalExpenses > 0) {
@@ -60,7 +62,7 @@ export function IncomeExpenseChart() {
       }
     }
     
-    // if there's no data, but there is monthly income or recurring expenses, show the current month
+    // if there's no data from transactions, but there is recurring income/expense for the current month
     if (monthsData.length === 0 && (monthlyBaseIncome > 0 || totalMonthlyRecurringExpenses > 0)) {
         monthsData.push({
             name: format(now, 'MMM'),
