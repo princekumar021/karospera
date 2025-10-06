@@ -1,18 +1,72 @@
 "use client";
 
+import { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Lightbulb, TrendingUp, TrendingDown } from 'lucide-react';
+import { Lightbulb, TrendingUp, TrendingDown, Bot } from 'lucide-react';
 import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
+import { getFinancialInsights } from '@/ai/flows/get-financial-insights';
+import { Goal, RecurringExpense, Transaction } from '@/lib/setup-schema';
+
+const iconMap = {
+    "up": <TrendingUp className="h-5 w-5 text-green-500" />,
+    "down": <TrendingDown className="h-5 w-5 text-red-500" />,
+    "idea": <Lightbulb className="h-5 w-5 text-yellow-500" />,
+    "default": <Bot className="h-5 w-5 text-primary" />
+};
+
+const getInsightIcon = (insight: string): React.ReactNode => {
+    const lowerInsight = insight.toLowerCase();
+    if (lowerInsight.includes('less') || lowerInsight.includes('great job') || lowerInsight.includes('on track')) {
+        return iconMap.up;
+    }
+    if (lowerInsight.includes('higher') || lowerInsight.includes('more than')) {
+        return iconMap.down;
+    }
+    if (lowerInsight.includes('consider') || lowerInsight.includes('could you save')) {
+        return iconMap.idea;
+    }
+    return iconMap.default;
+};
+
 
 export function SmartInsights() {
-    const { loading } = useUserData();
+    const { userData, loading } = useUserData();
+    const [insights, setInsights] = useState<string[]>([]);
+    const [insightsLoading, setInsightsLoading] = useState(true);
 
-    const insights = [
-        { icon: <TrendingUp className="h-5 w-5 text-green-500" />, text: "You spent 15% less on food this month. Keep it up!" },
-        { icon: <TrendingDown className="h-5 w-5 text-red-500" />, text: "Your transport costs were higher than usual in July." },
-        { icon: <Lightbulb className="h-5 w-5 text-yellow-500" />, text: "You're on track to reach your Emergency Fund goal by December." },
-    ]
+    const financialData = useMemo(() => {
+        if (!userData) return null;
+        return {
+            monthlyIncome: userData.monthlyIncome || 0,
+            recurringExpenses: (userData.recurringExpenses as RecurringExpense[]) || [],
+            goals: (userData.goals as Goal[]) || [],
+            transactions: (userData.transactions as Transaction[]) || [],
+        };
+    }, [userData]);
+
+    useEffect(() => {
+        if (loading || !financialData) return;
+
+        setInsightsLoading(true);
+        getFinancialInsights(financialData)
+            .then(response => {
+                if (response.insights && response.insights.length > 0) {
+                    setInsights(response.insights);
+                } else {
+                    setInsights(["No insights available at the moment."]);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching AI insights:", error);
+                setInsights(["Could not load insights. Please try again later."]);
+            })
+            .finally(() => {
+                setInsightsLoading(false);
+            });
+
+    }, [loading, financialData]);
+
 
     if (loading) {
         return (
@@ -34,14 +88,21 @@ export function SmartInsights() {
         <CardTitle>Insights</CardTitle>
       </CardHeader>
       <CardContent>
-        <ul className="space-y-4">
-            {insights.map((insight, index) => (
-                 <li key={index} className="flex items-center gap-4 p-3 rounded-lg bg-secondary">
-                    {insight.icon}
-                    <p className="text-sm text-foreground">{insight.text}</p>
-                </li>
-            ))}
-        </ul>
+        {insightsLoading ? (
+             <div className="space-y-4">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+             </div>
+        ) : (
+            <ul className="space-y-4">
+                {insights.map((insight, index) => (
+                    <li key={index} className="flex items-center gap-4 p-3 rounded-lg bg-secondary">
+                        {getInsightIcon(insight)}
+                        <p className="text-sm text-foreground">{insight}</p>
+                    </li>
+                ))}
+            </ul>
+        )}
       </CardContent>
     </Card>
   );
