@@ -11,7 +11,7 @@ interface StepWrapperProps {
 export default function StepWrapper({ title, description, children, footer }: StepWrapperProps) {
   return (
     <div className="bg-transparent">
-      <div className="text-center mb-6">
+      <div className="text-center mb-4">
         <h1 className="font-headline text-2xl font-bold">{title}</h1>
         <p className="text-muted-foreground">{description}</p>
       </div>
