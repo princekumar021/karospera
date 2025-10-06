@@ -31,7 +31,7 @@ export default function Step1Name({ nextStep }: Step1Props) {
           name="fullName"
           render={({ field }) => (
             <FormItem className="flex items-center px-4 py-2">
-              <FormLabel>Name</FormLabel>
+              <FormLabel className="flex-1">Name</FormLabel>
               <FormControl>
                 <Input placeholder="Your name" {...field} className="border-0 text-right bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"/>
               </FormControl>
@@ -41,13 +41,15 @@ export default function Step1Name({ nextStep }: Step1Props) {
         />
       </div>
 
-      <Alert className="bg-transparent border-0 text-card-foreground p-0">
-        <Info className="h-4 w-4 !text-muted-foreground" />
-        <AlertTitle className="font-semibold text-foreground">Private & Secure</AlertTitle>
-        <AlertDescription className="text-xs text-muted-foreground">
-          Your financial data is stored securely on your device.
-        </AlertDescription>
-      </Alert>
+      <div className="flex items-start gap-3 text-card-foreground p-1">
+        <Info className="h-4 w-4 mt-0.5 text-muted-foreground flex-shrink-0" />
+        <div>
+          <h3 className="font-semibold text-foreground">Private & Secure</h3>
+          <p className="text-xs text-muted-foreground">
+            Your financial data is stored securely on your device.
+          </p>
+        </div>
+      </div>
     </StepWrapper>
   );
 }
