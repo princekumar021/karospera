@@ -17,7 +17,7 @@ const iconMap = {
 
 const getInsightIcon = (insight: string): React.ReactNode => {
     const lowerInsight = insight.toLowerCase();
-    if (lowerInsight.includes('less') || lowerInsight.includes('great job') || lowerInsight.includes('on track')) {
+    if (lowerInsight.includes('less') || lowerInsight.includes('great job') || lowerInsight.includes('on track') || lowerInsight.includes('fantastic')) {
         return iconMap.up;
     }
     if (lowerInsight.includes('higher') || lowerInsight.includes('more than')) {
@@ -94,10 +94,10 @@ export function SmartInsights() {
                 <Skeleton className="h-10 w-full" />
              </div>
         ) : (
-            <ul className="space-y-4">
+            <ul className="space-y-3">
                 {insights.map((insight, index) => (
-                    <li key={index} className="flex items-center gap-4 p-3 rounded-lg bg-secondary">
-                        {getInsightIcon(insight)}
+                    <li key={index} className="flex items-start gap-4 p-3 rounded-lg border border-border/50 bg-secondary/30">
+                        <div className="flex-shrink-0 mt-1">{getInsightIcon(insight)}</div>
                         <p className="text-sm text-foreground">{insight}</p>
                     </li>
                 ))}
