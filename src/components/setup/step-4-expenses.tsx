@@ -1,3 +1,4 @@
+
 import { useFormContext, useFieldArray } from "react-hook-form";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -46,11 +47,13 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
               control={control}
               name={`recurringExpenses.${index}.name`}
               render={({ field }) => (
-                <FormItem className="flex items-center py-1">
-                  <FormLabel className="w-1/3">Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., Rent" {...field} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
-                  </FormControl>
+                <FormItem>
+                  <div className="flex items-center py-1">
+                    <FormLabel className="w-1/3">Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., Rent" {...field} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
+                    </FormControl>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -60,11 +63,13 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
               control={control}
               name={`recurringExpenses.${index}.amount`}
               render={({ field }) => (
-                <FormItem className="flex items-center py-1">
-                  <FormLabel className="w-1/3">Amount</FormLabel>
-                  <FormControl>
-                    <Input type="number" placeholder="e.g., 12000" {...field} value={field.value ?? ''} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
-                  </FormControl>
+                <FormItem>
+                  <div className="flex items-center py-1">
+                    <FormLabel className="w-1/3">Amount</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="e.g., 12000" {...field} value={field.value ?? ''} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
+                    </FormControl>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -74,18 +79,20 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
               control={control}
               name={`recurringExpenses.${index}.frequency`}
               render={({ field }) => (
-                <FormItem className="flex items-center py-1">
-                    <FormLabel className="w-1/3">Frequency</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent">
-                        <SelectValue placeholder="Frequency" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {frequencyOptions.map(option => <SelectItem key={option} value={option}>{option}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
+                <FormItem>
+                    <div className="flex items-center py-1">
+                      <FormLabel className="w-1/3">Frequency</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent">
+                            <SelectValue placeholder="Frequency" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {frequencyOptions.map(option => <SelectItem key={option} value={option}>{option}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                    </div>
                     <FormMessage />
                 </FormItem>
               )}

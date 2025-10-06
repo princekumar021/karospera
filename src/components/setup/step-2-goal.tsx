@@ -1,3 +1,4 @@
+
 "use client"
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -71,24 +72,26 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
             control={control}
             name="goals.0.name"
             render={({ field }) => (
-              <FormItem className="flex items-center p-3">
-                <FormLabel className="w-1/3">Goal</FormLabel>
-                <Select onValueChange={handleGoalChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent">
-                      <SelectValue placeholder="Select a goal" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {goalOptions.map((option) => (
-                      <SelectItem key={option} value={option}>
-                        {option}
-                      </SelectItem>
-                    ))}
-                     <SelectItem value="Custom...">Custom...</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
+              <FormItem>
+                <div className="flex items-center p-3">
+                  <FormLabel className="w-1/3">Goal</FormLabel>
+                  <Select onValueChange={handleGoalChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent">
+                        <SelectValue placeholder="Select a goal" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {goalOptions.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                      <SelectItem value="Custom...">Custom...</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <FormMessage className="px-3" />
               </FormItem>
             )}
           />
@@ -98,22 +101,24 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
           control={control}
           name="goals.0.targetAmount"
           render={({ field }) => (
-            <FormItem className="flex items-center p-3">
-              <FormLabel className="w-1/3">Target</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  placeholder="Optional Amount"
-                  {...field}
-                  className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
-                  value={field.value ?? ""}
-                  onChange={e => {
-                    const value = e.target.value;
-                    field.onChange(value === '' ? undefined : parseFloat(value));
-                  }}
-                />
-              </FormControl>
-              <FormMessage />
+            <FormItem>
+              <div className="flex items-center p-3">
+                <FormLabel className="w-1/3">Target</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Optional Amount"
+                    {...field}
+                    className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
+                    value={field.value ?? ""}
+                    onChange={e => {
+                      const value = e.target.value;
+                      field.onChange(value === '' ? undefined : parseFloat(value));
+                    }}
+                  />
+                </FormControl>
+              </div>
+              <FormMessage className="px-3" />
             </FormItem>
           )}
         />
@@ -122,38 +127,40 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
           control={control}
           name="goals.0.targetDate"
           render={({ field }) => (
-            <FormItem className="flex items-center p-3">
-              <FormLabel className="w-1/3">Deadline</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"ghost"}
-                      className={cn(
-                        "w-2/3 justify-end text-right font-normal p-0 h-auto hover:bg-transparent",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(new Date(field.value), "PPP")
-                      ) : (
-                        <span>Optional Date</span>
-                      )}
-                      <ChevronRight className="ml-2 h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="end">
-                  <Calendar
-                    mode="single"
-                    selected={field.value ? new Date(field.value) : undefined}
-                    onSelect={field.onChange}
-                    disabled={(date) => date < new Date()}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
+            <FormItem>
+              <div className="flex items-center p-3">
+                <FormLabel className="w-1/3">Deadline</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"ghost"}
+                        className={cn(
+                          "w-2/3 justify-end text-right font-normal p-0 h-auto hover:bg-transparent",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(new Date(field.value), "PPP")
+                        ) : (
+                          <span>Optional Date</span>
+                        )}
+                        <ChevronRight className="ml-2 h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="end">
+                    <Calendar
+                      mode="single"
+                      selected={field.value ? new Date(field.value) : undefined}
+                      onSelect={field.onChange}
+                      disabled={(date) => date < new Date()}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <FormMessage className="px-3" />
             </FormItem>
           )}
         />
