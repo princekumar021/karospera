@@ -33,7 +33,7 @@ export default function Step1Name({ nextStep }: Step1Props) {
             <FormItem className="flex items-center p-3">
               <FormLabel className="w-1/4">Name</FormLabel>
               <FormControl>
-                <Input placeholder="Your name" {...field} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0"/>
+                <Input placeholder="Your name" {...field} className="border-0 text-right bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"/>
               </FormControl>
               <FormMessage className="pl-2" />
             </FormItem>

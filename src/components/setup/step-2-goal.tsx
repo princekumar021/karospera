@@ -60,7 +60,7 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
               <FormItem className="p-3">
                 <FormLabel>Custom Goal</FormLabel>
                 <FormControl>
-                  <Input placeholder="Type your own goal" {...field} />
+                  <Input placeholder="Type your own goal" {...field} className="bg-transparent"/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -75,7 +75,7 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
                 <FormLabel className="w-1/3">Goal</FormLabel>
                 <Select onValueChange={handleGoalChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3">
+                    <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent">
                       <SelectValue placeholder="Select a goal" />
                     </SelectTrigger>
                   </FormControl>
@@ -105,7 +105,7 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
                   type="number"
                   placeholder="Optional Amount"
                   {...field}
-                  className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
                   value={field.value ?? ""}
                   onChange={e => {
                     const value = e.target.value;

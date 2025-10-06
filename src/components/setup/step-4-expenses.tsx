@@ -49,7 +49,7 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
                 <FormItem className="flex items-center py-1">
                   <FormLabel className="w-1/3">Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Rent" {...field} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0"/>
+                    <Input placeholder="e.g., Rent" {...field} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -63,7 +63,7 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
                 <FormItem className="flex items-center py-1">
                   <FormLabel className="w-1/3">Amount</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="e.g., 12000" {...field} value={field.value ?? ''} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0"/>
+                    <Input type="number" placeholder="e.g., 12000" {...field} value={field.value ?? ''} className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -78,7 +78,7 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
                     <FormLabel className="w-1/3">Frequency</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3">
+                      <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent">
                         <SelectValue placeholder="Frequency" />
                       </SelectTrigger>
                     </FormControl>
