@@ -117,7 +117,7 @@ export function AddExpenseDialog({ trigger }: { trigger: React.ReactNode }) {
                               <div className="flex items-center gap-2 text-muted-foreground">
                                   {selectedCategory.icon}
                                   <span>{selectedCategory.label}</span>
-                                  <ChevronRight className="h-5 w-5" />
+                                  <ChevronRight className="h-5 w-5 ml-2" />
                               </div>
                           </div>
                       </CollapsibleTrigger>

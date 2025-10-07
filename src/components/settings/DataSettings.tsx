@@ -42,19 +42,19 @@ export function DataSettings() {
       <CardContent className="p-0">
         <button onClick={handleBackup} className="flex w-full items-center justify-between p-4 text-left hover:bg-secondary/50">
             <span>Backup Data</span>
-            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+            <ChevronRight className="h-5 w-5 text-muted-foreground ml-4" />
         </button>
         <Separator />
         <button className="flex w-full items-center justify-between p-4 text-left hover:bg-secondary/50" disabled>
             <span className="opacity-50">Restore Backup</span>
-            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+            <ChevronRight className="h-5 w-5 text-muted-foreground ml-4" />
         </button>
         <Separator />
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <button className="flex w-full items-center justify-between p-4 text-left text-destructive hover:bg-secondary/50">
                 <span>Reset All Data</span>
-                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                <ChevronRight className="h-5 w-5 text-muted-foreground ml-4" />
             </button>
           </AlertDialogTrigger>
           <AlertDialogContent>

@@ -25,12 +25,12 @@ export function AppInfo() {
         <Separator/>
         <Link href="#" className="flex items-center justify-between p-4 hover:bg-secondary/50">
             <span>Privacy Policy</span>
-            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+            <ChevronRight className="h-5 w-5 text-muted-foreground ml-4" />
         </Link>
         <Separator/>
         <Link href="#" className="flex items-center justify-between p-4 hover:bg-secondary/50">
             <span>Terms of Use</span>
-            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+            <ChevronRight className="h-5 w-5 text-muted-foreground ml-4" />
         </Link>
       </CardContent>
     </Card>

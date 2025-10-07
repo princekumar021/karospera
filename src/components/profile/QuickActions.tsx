@@ -38,19 +38,19 @@ export function QuickActions() {
               <ul className="space-y-0">
                   <li onClick={() => setIsEditSheetOpen(true)} className="flex justify-between items-center p-4 cursor-pointer hover:bg-secondary/50">
                       <span className="font-medium">Edit Profile</span>
-                      <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                      <ChevronRight className="h-5 w-5 text-muted-foreground ml-4" />
                   </li>
                   <Separator />
                   <li className="flex justify-between items-center p-4 cursor-pointer hover:bg-secondary/50">
                       <span className="font-medium">Adjust Financial Data</span>
-                      <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                      <ChevronRight className="h-5 w-5 text-muted-foreground ml-4" />
                   </li>
                   <Separator />
                   <AlertDialog>
                       <AlertDialogTrigger asChild>
                           <li className="flex justify-between items-center p-4 cursor-pointer hover:bg-secondary/50 w-full">
                               <span className="font-medium text-destructive">Reset All Data</span>
-                              <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                              <ChevronRight className="h-5 w-5 text-muted-foreground ml-4" />
                           </li>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
@@ -70,7 +70,7 @@ export function QuickActions() {
                   <Separator />
                    <li onClick={handleLogout} className="flex justify-between items-center p-4 cursor-pointer hover:bg-secondary/50">
                       <span className="font-medium text-destructive">Logout</span>
-                      <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                      <ChevronRight className="h-5 w-5 text-muted-foreground ml-4" />
                   </li>
               </ul>
           </CardContent>

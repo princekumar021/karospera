@@ -70,7 +70,7 @@ export function TransactionsPreview() {
                     {formatCurrency(transaction.amount)}
                   </p>
                 </div>
-                <ChevronRight className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                <ChevronRight className="h-5 w-5 text-muted-foreground flex-shrink-0 ml-2" />
               </li>
             ))}
           </ul>
