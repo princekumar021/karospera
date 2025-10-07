@@ -22,15 +22,30 @@ interface Step4Props {
 const frequencyOptions = ["Monthly", "Quarterly", "Yearly"];
 
 function ExpenseItem({ index, onRemove }: { index: number, onRemove: () => void }) {
-  const { control } = useFormContext();
+  const { control, getValues } = useFormContext();
   const { userData } = useUserData();
+  const itemRef = useRef<HTMLDivElement>(null);
   
   const currency = userData?.currency || "INR";
   const currencySymbols: { [key: string]: string } = { "INR": "₹", "USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥" };
   const symbol = currencySymbols[currency] || '$';
 
+  const handleBlur = () => {
+    // Use a timeout to allow the focus to shift before checking
+    setTimeout(() => {
+      if (itemRef.current && !itemRef.current.contains(document.activeElement)) {
+        const name = getValues(`recurringExpenses.${index}.name`);
+        const amount = getValues(`recurringExpenses.${index}.amount`);
+        if (!name && !amount) {
+          onRemove();
+        }
+      }
+    }, 0);
+  };
+
+
   return (
-    <div className="rounded-xl border bg-card text-card-foreground text-lg relative">
+    <div ref={itemRef} onBlur={handleBlur} className="rounded-xl border bg-card text-card-foreground text-lg relative">
       <div className="space-y-0">
         <FormField
           control={control}
@@ -81,15 +96,6 @@ function ExpenseItem({ index, onRemove }: { index: number, onRemove: () => void 
           )}
         />
       </div>
-      <Button 
-        type="button" 
-        variant="ghost" 
-        size="icon" 
-        className="absolute top-0 right-0 mt-3 mr-3 text-muted-foreground hover:text-destructive"
-        onClick={onRemove}
-      >
-        <Trash2 className="w-5 h-5"/>
-      </Button>
     </div>
   )
 }
