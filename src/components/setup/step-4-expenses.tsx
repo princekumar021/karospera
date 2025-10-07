@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import StepWrapper from "./step-wrapper";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Trash2 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "../ui/separator";
 import { Label } from "../ui/label";
@@ -21,7 +21,7 @@ interface Step4Props {
 
 const frequencyOptions = ["Monthly", "Quarterly", "Yearly"];
 
-function ExpenseItem({ index }: { index: number }) {
+function ExpenseItem({ index, onRemove }: { index: number, onRemove: () => void }) {
   const { control } = useFormContext();
   const { userData } = useUserData();
   
@@ -30,7 +30,7 @@ function ExpenseItem({ index }: { index: number }) {
   const symbol = currencySymbols[currency] || '$';
 
   return (
-    <div className="rounded-xl border bg-card text-card-foreground text-lg">
+    <div className="rounded-xl border bg-card text-card-foreground text-lg relative">
       <div className="space-y-0">
         <FormField
           control={control}
@@ -81,6 +81,15 @@ function ExpenseItem({ index }: { index: number }) {
           )}
         />
       </div>
+      <Button 
+        type="button" 
+        variant="ghost" 
+        size="icon" 
+        className="absolute top-0 right-0 mt-3 mr-3 text-muted-foreground hover:text-destructive"
+        onClick={onRemove}
+      >
+        <Trash2 className="w-5 h-5"/>
+      </Button>
     </div>
   )
 }
@@ -94,15 +103,18 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
   
   const handleAddExpense = () => {
     const lastIndex = fields.length - 1;
-    if (lastIndex >= 0) {
-      const lastName = getValues(`recurringExpenses.${lastIndex}.name`);
-      const lastAmount = getValues(`recurringExpenses.${lastIndex}.amount`);
-      if (!lastName && !lastAmount) {
-        remove(lastIndex);
-      }
+    // Only add if the last one has a name and amount, or if it's the first one
+    if (fields.length === 0 || (getValues(`recurringExpenses.${lastIndex}.name`) && getValues(`recurringExpenses.${lastIndex}.amount`))) {
+      append({ name: '', amount: undefined, frequency: 'Monthly' });
     }
-    append({ name: '', amount: undefined, frequency: 'Monthly' });
   };
+
+  useEffect(() => {
+    // Start with one expense field if there are none
+    if (fields.length === 0) {
+      append({ name: '', amount: undefined, frequency: 'Monthly' });
+    }
+  }, [fields.length, append]);
   
   useEffect(() => {
     if (fields.length > 2) {
@@ -135,7 +147,7 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
       <ScrollArea className="h-[280px] -mx-4 px-4">
          <div id="expense-scroll-area-viewport" className="space-y-4 pr-1">
           {fields.map((item, index) => (
-            <ExpenseItem key={item.id} index={index} />
+            <ExpenseItem key={item.id} index={index} onRemove={() => remove(index)} />
           ))}
         </div>
       </ScrollArea>
@@ -147,7 +159,7 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
           onClick={handleAddExpense}
         >
           <PlusCircle className="mr-2 h-4 w-4" />
-          Add Expense
+          Add Another Expense
         </Button>
     </StepWrapper>
   );
