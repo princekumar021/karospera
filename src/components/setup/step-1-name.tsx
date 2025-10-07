@@ -51,7 +51,7 @@ export default function Step1Name({ nextStep }: Step1Props) {
           <Button onClick={nextStep} className="w-full font-semibold" size="lg">
             Next
           </Button>
-          <div className="flex items-start justify-center gap-3 p-1 text-center">
+          <div className="flex items-start justify-center gap-3 p-1">
             <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
             <div>
               <h3 className="font-semibold text-foreground text-sm">Private & Secure</h3>
