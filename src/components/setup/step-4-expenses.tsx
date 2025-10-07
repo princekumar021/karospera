@@ -82,7 +82,7 @@ function ExpenseItem({ index, onRemove }: { index: number, onRemove: () => void 
               <Label className="flex-1">Frequency</Label>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger onBlur={handleBlur} className="w-auto bg-transparent border-0 focus:ring-0 focus:ring-offset-0 justify-end gap-1 h-auto p-0 text-lg">
+                  <SelectTrigger onBlur={handleBlur} className="w-auto bg-transparent border-0 focus:ring-0 focus:ring-offset-0 justify-end gap-2 h-auto p-0 text-lg">
                     <SelectValue placeholder="Frequency" />
                   </SelectTrigger>
                 </FormControl>
@@ -134,8 +134,8 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
 
   return (
     <StepWrapper
-      title="Add your regular bills"
-      description="e.g. rent, utilities, or subscriptions."
+      title="Regular bills"
+      description="e.g., rent, utilities, or subscriptions."
       footer={
         <div className="flex w-full gap-4">
           <Button onClick={prevStep} variant="secondary" className="w-1/3 font-semibold" size="lg">

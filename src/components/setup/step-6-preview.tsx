@@ -70,7 +70,7 @@ export default function Step6Preview({ goToStep }: Step6Props) {
   return (
     <StepWrapper
       title="You're all set!"
-      description="Here's a preview of your new dashboard."
+      description="Here's a preview of your dashboard."
       footer={
         <div className="flex w-full flex-col gap-2">
            <Button type="submit" className="w-full font-semibold" size="lg">

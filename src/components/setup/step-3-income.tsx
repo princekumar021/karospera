@@ -33,7 +33,7 @@ function IncomeForm() {
                 <FormLabel className="w-1/3">Currency</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent text-lg">
+                    <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent text-lg gap-2">
                       <SelectValue placeholder="Select currency" />
                     </SelectTrigger>
                   </FormControl>
@@ -82,7 +82,7 @@ function IncomeForm() {
                 <FormLabel className="w-1/3">Pay Cycle</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent text-lg">
+                    <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent text-lg gap-2">
                       <SelectValue placeholder="Select pay cycle" />
                     </SelectTrigger>
                   </FormControl>
@@ -106,8 +106,8 @@ function IncomeForm() {
 export default function Step3Income({ nextStep, prevStep }: Step3Props) {
   return (
     <StepWrapper
-      title="How much do you make?"
-      description="This helps us create a budget that works for you."
+      title="What's your income?"
+      description="This helps create a budget that works for you."
       footer={
         <div className="flex w-full gap-4">
           <Button onClick={prevStep} variant="secondary" className="w-1/3 font-semibold" size="lg">

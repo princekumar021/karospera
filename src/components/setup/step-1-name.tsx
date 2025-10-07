@@ -44,8 +44,8 @@ export default function Step1Name({ nextStep }: Step1Props) {
 
   return (
     <StepWrapper
-      title=" what is your name "
-      description="This will be used to personalize the app"
+      title="What's your name?"
+      description="Let's get to know you."
       footer={
         <div className="w-full space-y-4">
           <div className="flex items-start justify-start gap-3 p-1 text-left">

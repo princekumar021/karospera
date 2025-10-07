@@ -70,7 +70,7 @@ function GoalForm() {
                   <FormLabel className="w-1/3">Goal</FormLabel>
                   <Select onValueChange={handleGoalChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent text-lg">
+                      <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent text-lg gap-2">
                         <SelectValue placeholder="Select a goal" />
                       </SelectTrigger>
                     </FormControl>

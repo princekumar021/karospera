@@ -107,17 +107,17 @@ export default function SetupPage() {
 
   const microcopy = [
     "You can change this later in Settings.",
-    "Goal helps prioritize budgets and suggestions. You can have multiple goals later.",
+    "This helps prioritize budgets and suggestions.",
     "This is used only to suggest budgets — you can change it anytime.",
-    "You can import bank transactions later instead of manual entry.",
-    "Pick one — we'll use it to create starter budgets you can edit.",
-    "Everything is editable later in Settings → Profile & Goals.",
+    "You can import bank transactions later.",
+    "We'll use this to create starter budgets you can edit.",
+    "Everything is editable later in Settings.",
   ];
 
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col items-center bg-background p-4 md:p-8 pt-12 md:pt-24 min-h-dvh">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md pb-16">
           <div className="mb-8 flex flex-col items-center gap-4">
             <AppLogo className="h-10 w-10" />
             <Progress value={(currentStep / totalSteps) * 100} className="h-2 w-full" />
@@ -131,10 +131,10 @@ export default function SetupPage() {
               {renderStep()}
             </div>
           </form>
-          <p className="mt-4 h-6 text-center text-sm text-muted-foreground">
-            {microcopy[currentStep - 1]}
-          </p>
         </div>
+        <p className="fixed bottom-0 left-0 right-0 p-4 mb-4 text-center text-sm text-muted-foreground">
+            {microcopy[currentStep - 1]}
+        </p>
       </div>
     </FormProvider>
   );
