@@ -23,30 +23,30 @@ function IncomeForm() {
     const { error: payCycleError } = useFormField({ name: 'payCycle' });
 
     return (
-        <div className={cn("rounded-lg border bg-card", (currencyError || incomeError || payCycleError) && "animate-shake border-destructive")}>
+        <div className={cn("rounded-xl border bg-card text-lg", (currencyError || incomeError || payCycleError) && "animate-shake border-destructive")}>
         <FormField
           control={control}
           name="currency"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center p-3">
+              <div className="flex items-center p-4 h-16">
                 <FormLabel className="w-1/3">Currency</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent">
+                    <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent text-lg">
                       <SelectValue placeholder="Select currency" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     {currencyOptions.map((option) => (
-                      <SelectItem key={option} value={option}>
+                      <SelectItem key={option} value={option} className="text-lg">
                         {option}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-              <FormMessage className="px-3" />
+              <FormMessage className="px-4" />
             </FormItem>
           )}
         />
@@ -56,11 +56,11 @@ function IncomeForm() {
           name="monthlyIncome"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center p-3">
+              <div className="flex items-center p-4 h-16">
                 <FormLabel className="w-1/3">Monthly Income</FormLabel>
                 <FormControl>
                   <Input type="number" placeholder="e.g., 45000" {...field} value={field.value ?? ''}
-                    className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent pr-2"
+                    className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent pr-2 text-lg"
                     onChange={e => {
                       const value = e.target.value;
                       field.onChange(value === '' ? undefined : parseFloat(value));
@@ -68,7 +68,7 @@ function IncomeForm() {
                   />
                 </FormControl>
               </div>
-              <FormMessage className="px-3" />
+              <FormMessage className="px-4" />
             </FormItem>
           )}
         />
@@ -78,24 +78,24 @@ function IncomeForm() {
           name="payCycle"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center p-3">
+              <div className="flex items-center p-4 h-16">
                 <FormLabel className="w-1/3">Pay Cycle</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent">
+                    <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent text-lg">
                       <SelectValue placeholder="Select pay cycle" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     {payCycleOptions.map((option) => (
-                      <SelectItem key={option} value={option}>
+                      <SelectItem key={option} value={option} className="text-lg">
                         {option}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-              <FormMessage className="px-3" />
+              <FormMessage className="px-4" />
             </FormItem>
           )}
         />

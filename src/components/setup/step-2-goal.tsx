@@ -43,7 +43,7 @@ function GoalForm() {
   };
 
   return (
-    <div className={cn("rounded-lg border bg-card text-card-foreground", (nameError || amountError || dateError) && "animate-shake border-destructive")}>
+    <div className={cn("rounded-xl border bg-card text-card-foreground text-lg", (nameError || amountError || dateError) && "animate-shake border-destructive")}>
         {isCustom ? (
               <FormField
                 control={control}
@@ -52,11 +52,11 @@ function GoalForm() {
                   <FormItem>
                     <div className="floating-label-input border-b">
                       <FormControl>
-                        <Input placeholder=" " {...field} className="h-12 border-0 bg-transparent text-lg px-3 peer rounded-none" />
+                        <Input placeholder=" " {...field} className="h-16 border-0 bg-transparent text-xl px-4 peer rounded-none" />
                       </FormControl>
                       <Label>Goal</Label>
                     </div>
-                    <FormMessage className={cn("px-3 pb-2", !nameError && "hidden")}/>
+                    <FormMessage className={cn("px-4 pb-3", !nameError && "hidden")}/>
                   </FormItem>
                 )}
               />
@@ -66,25 +66,25 @@ function GoalForm() {
             name="goals.0.name"
             render={({ field }) => (
               <FormItem>
-                <div className="flex items-center p-3 border-b">
+                <div className="flex items-center p-4 border-b h-16">
                   <FormLabel className="w-1/3">Goal</FormLabel>
                   <Select onValueChange={handleGoalChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent">
+                      <SelectTrigger className="border-0 justify-end focus:ring-0 focus:ring-offset-0 w-2/3 bg-transparent text-lg">
                         <SelectValue placeholder="Select a goal" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {goalOptions.map((option) => (
-                        <SelectItem key={option} value={option}>
+                        <SelectItem key={option} value={option} className="text-lg">
                           {option}
                         </SelectItem>
                       ))}
-                      <SelectItem value="Custom...">Custom...</SelectItem>
+                      <SelectItem value="Custom..." className="text-lg">Custom...</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                 <FormMessage className="px-3" />
+                 <FormMessage className="px-4 pt-2" />
               </FormItem>
             )}
           />
@@ -96,14 +96,14 @@ function GoalForm() {
           render={({ field }) => (
             <>
               <FormItem>
-                <div className="flex items-center p-3">
+                <div className="flex items-center p-4 h-16">
                   <FormLabel className="w-1/3">Target</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       placeholder="Optional Amount"
                       {...field}
-                      className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent pr-2"
+                      className="border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent pr-2 text-lg"
                       value={field.value ?? ""}
                       onChange={e => {
                         const value = e.target.value;
@@ -113,7 +113,7 @@ function GoalForm() {
                   </FormControl>
                 </div>
               </FormItem>
-              <FormMessage className="px-3 pb-2" />
+              <FormMessage className="px-4 pb-3" />
             </>
           )}
         />
@@ -124,7 +124,7 @@ function GoalForm() {
           render={({ field }) => (
             <>
               <FormItem>
-                <div className="flex items-center p-3">
+                <div className="flex items-center p-4 h-16">
                   <FormLabel className="w-1/3">Deadline</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -132,7 +132,7 @@ function GoalForm() {
                         <Button
                           variant={"ghost"}
                           className={cn(
-                            "w-2/3 justify-end text-right font-normal p-0 h-auto hover:bg-transparent",
+                            "w-2/3 justify-end text-right font-normal p-0 h-auto hover:bg-transparent text-lg",
                             !field.value && "text-muted-foreground"
                           )}
                         >
@@ -157,7 +157,7 @@ function GoalForm() {
                   </Popover>
                 </div>
               </FormItem>
-              <FormMessage className="px-3 pb-2" />
+              <FormMessage className="px-4 pb-3" />
             </>
           )}
         />

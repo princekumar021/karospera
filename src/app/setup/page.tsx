@@ -116,9 +116,9 @@ export default function SetupPage() {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex min-h-dvh flex-col items-center bg-background p-4 md:p-8 pt-12 md:pt-24">
+      <div className="flex flex-col items-center bg-background p-4 md:p-8 pt-12 md:pt-24 min-h-dvh">
         <div className="w-full max-w-md">
-          <div className="mb-4 flex flex-col items-center gap-4">
+          <div className="mb-8 flex flex-col items-center gap-4">
             <AppLogo className="h-10 w-10" />
             <Progress value={(currentStep / totalSteps) * 100} className="h-2 w-full" />
           </div>
@@ -131,7 +131,7 @@ export default function SetupPage() {
               {renderStep()}
             </div>
           </form>
-          <p className="mt-4 h-6 text-center text-xs text-muted-foreground">
+          <p className="mt-4 h-6 text-center text-sm text-muted-foreground">
             {microcopy[currentStep - 1]}
           </p>
         </div>

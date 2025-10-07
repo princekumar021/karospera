@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
@@ -42,8 +43,8 @@ export default function Step5Preferences({ nextStep, prevStep }: Step5Props) {
         control={control}
         name="budgetMethod"
         render={({ field }) => (
-          <FormItem className="space-y-3 rounded-lg border bg-card p-4">
-            <FormLabel>Budgeting method</FormLabel>
+          <FormItem className="space-y-3 rounded-xl border bg-card p-4">
+            <FormLabel className="text-lg">Budgeting method</FormLabel>
             <FormControl>
               <RadioGroup
                 onValueChange={field.onChange}
@@ -52,11 +53,11 @@ export default function Step5Preferences({ nextStep, prevStep }: Step5Props) {
               >
                 {budgetMethods.map((method, index) => (
                    <React.Fragment key={method.key}>
-                      <FormItem className="flex items-center space-x-3 py-3">
+                      <FormItem className="flex items-center space-x-3 py-4">
                           <FormControl>
                             <RadioGroupItem value={method.key} id={`r-${method.key}`} />
                           </FormControl>
-                          <Label htmlFor={`r-${method.key}`} className="font-normal flex-1">
+                          <Label htmlFor={`r-${method.key}`} className="font-normal flex-1 text-base">
                             {method.label}
                           </Label>
                       </FormItem>
@@ -70,14 +71,14 @@ export default function Step5Preferences({ nextStep, prevStep }: Step5Props) {
         )}
       />
 
-      <div className="rounded-lg border bg-card">
+      <div className="rounded-xl border bg-card">
         <FormField
           control={control}
           name="notifications"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between p-4">
+            <FormItem className="flex flex-row items-center justify-between p-4 h-20">
               <div className="space-y-0.5">
-                <FormLabel>Reminders & notifications</FormLabel>
+                <FormLabel className="text-base">Reminders & notifications</FormLabel>
               </div>
               <FormControl>
                 <Switch
@@ -93,10 +94,10 @@ export default function Step5Preferences({ nextStep, prevStep }: Step5Props) {
           control={control}
           name="biometrics"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between p-4">
+            <FormItem className="flex flex-row items-center justify-between p-4 h-20">
               <div className="space-y-0.5">
-                <FormLabel>Enable biometric unlock</FormLabel>
-                 <FormDescription className="text-xs">
+                <FormLabel className="text-base">Enable biometric unlock</FormLabel>
+                 <FormDescription className="text-sm">
                   Optional
                 </FormDescription>
               </div>
@@ -114,10 +115,10 @@ export default function Step5Preferences({ nextStep, prevStep }: Step5Props) {
           control={control}
           name="bankSyncOptIn"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between p-4">
+            <FormItem className="flex flex-row items-center justify-between p-4 h-20">
               <div className="space-y-0.5">
-                <FormLabel>Enable bank sync</FormLabel>
-                 <FormDescription className="text-xs">
+                <FormLabel className="text-base">Enable bank sync</FormLabel>
+                 <FormDescription className="text-sm">
                   Optional & secure.
                 </FormDescription>
               </div>

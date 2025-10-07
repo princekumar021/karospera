@@ -30,16 +30,16 @@ function ExpenseItem({ index }: { index: number }) {
   const symbol = currencySymbols[currency] || '$';
 
   return (
-    <div className="rounded-lg border bg-card text-card-foreground">
+    <div className="rounded-xl border bg-card text-card-foreground text-lg">
       <div className="space-y-0">
         <FormField
           control={control}
           name={`recurringExpenses.${index}.name`}
           render={({ field }) => (
-            <FormItem className="flex items-center px-3 h-10">
+            <FormItem className="flex items-center px-4 h-16">
               <Label className="flex-1">Name</Label>
               <FormControl>
-                <Input placeholder="e.g., Rent, Netflix..." {...field} className="border-0 text-right h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"/>
+                <Input placeholder="e.g., Rent, Netflix..." {...field} className="border-0 text-right h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent text-lg"/>
               </FormControl>
             </FormItem>
           )}
@@ -49,12 +49,12 @@ function ExpenseItem({ index }: { index: number }) {
           control={control}
           name={`recurringExpenses.${index}.amount`}
           render={({ field }) => (
-            <FormItem className="flex items-center px-3 h-10">
+            <FormItem className="flex items-center px-4 h-16">
               <Label className="flex-1">Amount</Label>
               <FormControl>
                 <div className="relative flex items-center">
                   <span className="absolute left-3 text-muted-foreground">{symbol}</span>
-                  <Input type="number" placeholder="0" {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value === '' ? undefined : parseFloat(e.target.value))} className="pl-7 bg-transparent border-0 text-right h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0"/>
+                  <Input type="number" placeholder="0" {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value === '' ? undefined : parseFloat(e.target.value))} className="pl-8 bg-transparent border-0 text-right h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-lg"/>
                 </div>
               </FormControl>
             </FormItem>
@@ -65,16 +65,16 @@ function ExpenseItem({ index }: { index: number }) {
           control={control}
           name={`recurringExpenses.${index}.frequency`}
           render={({ field }) => (
-            <FormItem className="flex items-center px-3 h-10">
+            <FormItem className="flex items-center px-4 h-16">
               <Label className="flex-1">Frequency</Label>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger className="w-auto bg-transparent border-0 focus:ring-0 focus:ring-offset-0 justify-end gap-1 h-auto p-0">
+                  <SelectTrigger className="w-auto bg-transparent border-0 focus:ring-0 focus:ring-offset-0 justify-end gap-1 h-auto p-0 text-lg">
                     <SelectValue placeholder="Frequency" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {frequencyOptions.map(option => <SelectItem key={option} value={option}>{option}</SelectItem>)}
+                  {frequencyOptions.map(option => <SelectItem key={option} value={option} className="text-lg">{option}</SelectItem>)}
                 </SelectContent>
               </Select>
             </FormItem>
@@ -131,8 +131,8 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
         </div>
       }
     >
-      <p className="text-sm text-muted-foreground px-1">Start with top 3: rent, utilities, phone/subscriptions</p>
-      <ScrollArea className="h-[240px] -mx-4 px-4">
+      <p className="text-base text-muted-foreground px-1">Start with top 3: rent, utilities, phone/subscriptions</p>
+      <ScrollArea className="h-[280px] -mx-4 px-4">
          <div id="expense-scroll-area-viewport" className="space-y-4 pr-1">
           {fields.map((item, index) => (
             <ExpenseItem key={item.id} index={index} />
@@ -143,6 +143,7 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
           type="button"
           variant="outline"
           className="w-full font-semibold"
+          size="lg"
           onClick={handleAddExpense}
         >
           <PlusCircle className="mr-2 h-4 w-4" />

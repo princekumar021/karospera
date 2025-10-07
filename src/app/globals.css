@@ -87,7 +87,7 @@
   .floating-label-input > .peer ~ label {
     @apply absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground 
            transition-all duration-300 ease-in-out pointer-events-none 
-           origin-top-left;
+           origin-top-left text-lg;
   }
 
   .floating-label-input > .peer:focus ~ label,

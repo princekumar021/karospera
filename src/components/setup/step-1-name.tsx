@@ -27,11 +27,11 @@ function NameInput() {
           <FormItem>
             <div className="floating-label-input">
               <FormControl>
-                <Input placeholder=" " {...field} className="h-12 border-0 bg-transparent text-lg px-3 peer" />
+                <Input placeholder=" " {...field} className="h-16 border-0 bg-transparent text-xl px-4 peer" />
               </FormControl>
               <Label>Name</Label>
             </div>
-            <FormMessage className={cn("px-3 pb-2", !error && "hidden")}/>
+            <FormMessage className={cn("px-4 pb-3 text-sm", !error && "hidden")}/>
           </FormItem>
         )}
       />
@@ -62,7 +62,7 @@ export default function Step1Name({ nextStep }: Step1Props) {
         <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
         <div>
           <h3 className="font-semibold text-foreground">Private & Secure</h3>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Your financial data is stored securely on your device.
           </p>
         </div>
