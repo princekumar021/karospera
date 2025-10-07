@@ -44,14 +44,11 @@ export default function Step1Name({ nextStep }: Step1Props) {
 
   return (
     <StepWrapper
-      title="Your name"
-      description="What should we call you in the app?"
+      title="What should we call you?"
+      description="This will be used to personalize your experience."
       footer={
         <div className="w-full space-y-4">
-          <Button onClick={nextStep} className="w-full font-semibold" size="lg">
-            Next
-          </Button>
-          <div className="flex items-start justify-center gap-3 p-1">
+          <div className="flex items-start justify-start gap-3 p-1 text-left">
             <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
             <div>
               <h3 className="font-semibold text-foreground text-sm">Private & Secure</h3>
@@ -60,6 +57,9 @@ export default function Step1Name({ nextStep }: Step1Props) {
               </p>
             </div>
           </div>
+          <Button onClick={nextStep} className="w-full font-semibold" size="lg">
+            Next
+          </Button>
         </div>
       }
     >

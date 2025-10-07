@@ -106,8 +106,8 @@ function IncomeForm() {
 export default function Step3Income({ nextStep, prevStep }: Step3Props) {
   return (
     <StepWrapper
-      title="Income & currency"
-      description="So we can suggest budgets that actually work."
+      title="How much do you make?"
+      description="This helps us create a budget that works for you."
       footer={
         <div className="flex w-full gap-4">
           <Button onClick={prevStep} variant="secondary" className="w-1/3 font-semibold" size="lg">

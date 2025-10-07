@@ -169,8 +169,8 @@ export default function Step2Goal({ nextStep, prevStep }: Step2Props) {
   
   return (
     <StepWrapper
-      title="Your main goal"
-      description="Pick or write a financial goal to focus on."
+      title="What's your main goal?"
+      description="Pick one to start. You can add more later."
       footer={
         <div className="flex w-full gap-4">
           <Button onClick={prevStep} variant="secondary" className="w-1/3 font-semibold" size="lg">

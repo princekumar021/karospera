@@ -22,7 +22,7 @@ interface Step4Props {
 const frequencyOptions = ["Monthly", "Quarterly", "Yearly"];
 
 function ExpenseItem({ index, onRemove }: { index: number, onRemove: () => void }) {
-  const { control, getValues } = useFormContext();
+  const { control, getValues, trigger } = useFormContext();
   const { userData } = useUserData();
   const itemRef = useRef<HTMLDivElement>(null);
   
@@ -30,22 +30,20 @@ function ExpenseItem({ index, onRemove }: { index: number, onRemove: () => void 
   const currencySymbols: { [key: string]: string } = { "INR": "₹", "USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥" };
   const symbol = currencySymbols[currency] || '$';
 
-  const handleBlur = () => {
-    // Use a timeout to allow the focus to shift before checking
-    setTimeout(() => {
-      if (itemRef.current && !itemRef.current.contains(document.activeElement)) {
-        const name = getValues(`recurringExpenses.${index}.name`);
-        const amount = getValues(`recurringExpenses.${index}.amount`);
-        if (!name && !amount) {
-          onRemove();
-        }
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLButtonElement>) => {
+    // Check if the new focused element is outside the current item
+    if (itemRef.current && !itemRef.current.contains(e.relatedTarget)) {
+      const name = getValues(`recurringExpenses.${index}.name`);
+      const amount = getValues(`recurringExpenses.${index}.amount`);
+      if (!name && !amount) {
+        onRemove();
       }
-    }, 0);
+    }
   };
 
 
   return (
-    <div ref={itemRef} onBlur={handleBlur} className="rounded-xl border bg-card text-card-foreground text-lg relative">
+    <div ref={itemRef} className="rounded-xl border bg-card text-card-foreground text-lg relative">
       <div className="space-y-0">
         <FormField
           control={control}
@@ -54,7 +52,7 @@ function ExpenseItem({ index, onRemove }: { index: number, onRemove: () => void 
             <FormItem className="flex items-center px-4 h-16">
               <Label className="flex-1">Name</Label>
               <FormControl>
-                <Input placeholder="e.g., Rent, Netflix..." {...field} className="border-0 text-right h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent text-lg"/>
+                <Input placeholder="e.g., Rent, Netflix..." {...field} onBlur={handleBlur} className="border-0 text-right h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent text-lg"/>
               </FormControl>
             </FormItem>
           )}
@@ -69,7 +67,7 @@ function ExpenseItem({ index, onRemove }: { index: number, onRemove: () => void 
               <FormControl>
                 <div className="relative flex items-center">
                   <span className="absolute left-3 text-muted-foreground">{symbol}</span>
-                  <Input type="number" placeholder="0" {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value === '' ? undefined : parseFloat(e.target.value))} className="pl-8 bg-transparent border-0 text-right h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-lg"/>
+                  <Input type="number" placeholder="0" {...field} onBlur={handleBlur} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value === '' ? undefined : parseFloat(e.target.value))} className="pl-8 bg-transparent border-0 text-right h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-lg"/>
                 </div>
               </FormControl>
             </FormItem>
@@ -84,7 +82,7 @@ function ExpenseItem({ index, onRemove }: { index: number, onRemove: () => void 
               <Label className="flex-1">Frequency</Label>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger className="w-auto bg-transparent border-0 focus:ring-0 focus:ring-offset-0 justify-end gap-1 h-auto p-0 text-lg">
+                  <SelectTrigger onBlur={handleBlur} className="w-auto bg-transparent border-0 focus:ring-0 focus:ring-offset-0 justify-end gap-1 h-auto p-0 text-lg">
                     <SelectValue placeholder="Frequency" />
                   </SelectTrigger>
                 </FormControl>
@@ -136,8 +134,8 @@ export default function Step4Expenses({ nextStep, prevStep }: Step4Props) {
 
   return (
     <StepWrapper
-      title="Regular bills"
-      description="e.g., rent, utilities, or subscriptions."
+      title="Add your regular bills"
+      description="e.g. rent, utilities, or subscriptions."
       footer={
         <div className="flex w-full gap-4">
           <Button onClick={prevStep} variant="secondary" className="w-1/3 font-semibold" size="lg">

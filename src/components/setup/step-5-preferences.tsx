@@ -26,8 +26,8 @@ export default function Step5Preferences({ nextStep, prevStep }: Step5Props) {
 
   return (
     <StepWrapper
-      title="Budget style & preferences"
-      description="Choose how you'd like budgets suggested."
+      title="How do you like to budget?"
+      description="Choose a style and we'll tailor your dashboard."
       footer={
         <div className="flex w-full gap-4">
           <Button onClick={prevStep} variant="secondary" className="w-1/3 font-semibold" size="lg">

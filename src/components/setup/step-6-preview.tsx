@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useFormContext } from "react-hook-form";
@@ -68,8 +69,8 @@ export default function Step6Preview({ goToStep }: Step6Props) {
 
   return (
     <StepWrapper
-      title="Preview & finish"
-      description="Here's a sample of your dashboard."
+      title="You're all set!"
+      description="Here's a preview of your new dashboard."
       footer={
         <div className="flex w-full flex-col gap-2">
            <Button type="submit" className="w-full font-semibold" size="lg">
