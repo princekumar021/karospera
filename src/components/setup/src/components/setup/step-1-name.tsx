@@ -27,11 +27,11 @@ function NameInput() {
           <FormItem>
             <div className="floating-label-input">
               <FormControl>
-                <Input placeholder=" " {...field} className="h-16 border-0 bg-transparent text-xl px-4 peer" />
+                <Input placeholder=" " {...field} className="h-12 border-0 bg-transparent text-lg px-3 peer" />
               </FormControl>
               <Label>Name</Label>
             </div>
-            <FormMessage className={cn("px-4 pb-3 text-sm", !error && "hidden")}/>
+            <FormMessage className={cn("px-3 pb-2", !error && "hidden")}/>
           </FormItem>
         )}
       />
@@ -44,23 +44,12 @@ export default function Step1Name({ nextStep }: Step1Props) {
 
   return (
     <StepWrapper
-      title=" what is your name "
-      description="This will be used to personalize the app"
+      title="Your name"
+      description="What should we call you in the app?"
       footer={
-        <div className="w-full space-y-4">
-          <div className="flex items-start justify-start gap-3 p-1 text-left">
-            <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="font-semibold text-foreground text-sm">Private & Secure</h3>
-              <p className="text-xs text-muted-foreground">
-                Your financial data is stored securely on your device.
-              </p>
-            </div>
-          </div>
-          <Button onClick={nextStep} className="w-full font-semibold" size="lg">
-            Next
-          </Button>
-        </div>
+        <Button onClick={nextStep} className="w-full font-semibold" size="lg">
+          Next
+        </Button>
       }
     >
       <FormField
@@ -68,6 +57,16 @@ export default function Step1Name({ nextStep }: Step1Props) {
         name="fullName"
         render={() => <NameInput />}
       />
+
+       <div className="flex items-start gap-3 p-1">
+        <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+        <div>
+          <h3 className="font-semibold text-foreground">Private & Secure</h3>
+          <p className="text-xs text-muted-foreground">
+            Your financial data is stored securely on your device.
+          </p>
+        </div>
+      </div>
     </StepWrapper>
   );
 }

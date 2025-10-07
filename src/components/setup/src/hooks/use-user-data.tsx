@@ -1,4 +1,3 @@
-
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
@@ -90,23 +89,11 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
     const currentYear = now.getFullYear();
     const lastCheckKey = 'pocketplan-last-auto-transfer-check';
     const lastCheck = localStorage.getItem(lastCheckKey);
-
-    let shouldRun = false;
-    if (lastCheck) {
-        const lastCheckYear = parseInt(lastCheck.split('-')[0], 10);
-        const lastCheckMonth = parseInt(lastCheck.split('-')[1], 10);
-        
-        // Only run if we are in a new month
-        if (currentYear > lastCheckYear || (currentYear === lastCheckYear && currentMonth > lastCheckMonth)) {
-            shouldRun = true;
-        }
-    } else {
-        // If it's the very first time, don't run it, just set the initial check date.
-        localStorage.setItem(lastCheckKey, `${currentYear}-${currentMonth}`);
-        return;
-    }
-
-    if (shouldRun) {
+    const lastCheckMonth = lastCheck ? parseInt(lastCheck.split('-')[1], 10) : -1;
+    const lastCheckYear = lastCheck ? parseInt(lastCheck.split('-')[0], 10) : -1;
+    
+    // Only run if we are in a new month
+    if (currentYear > lastCheckYear || (currentYear === lastCheckYear && currentMonth > lastCheckMonth)) {
       const prevMonthDate = subMonths(now, 1);
       const prevMonth = getMonth(prevMonthDate);
       const prevMonthYear = getYear(prevMonthDate);
