@@ -117,7 +117,7 @@ export default function SetupPage() {
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col items-center bg-background p-4 md:p-8 min-h-dvh">
-        <div className="flex flex-col w-full max-w-md flex-1">
+        <div className="flex flex-col w-full max-w-md">
           <div className="mt-8 md:mt-20">
             <div className="mb-8 flex flex-col items-center gap-4">
               <AppLogo className="h-10 w-10" />
@@ -133,11 +133,10 @@ export default function SetupPage() {
               </div>
             </form>
           </div>
-          <div className="h-16 flex-shrink-0" />
+          <p className="mt-4 h-16 flex-shrink-0 pt-4 text-center text-sm text-muted-foreground">
+              {microcopy[currentStep - 1]}
+          </p>
         </div>
-         <p className="fixed bottom-0 left-0 right-0 p-4 mb-4 text-center text-sm text-muted-foreground">
-            {microcopy[currentStep - 1]}
-        </p>
       </div>
     </FormProvider>
   );
