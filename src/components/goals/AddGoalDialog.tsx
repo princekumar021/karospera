@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar as CalendarIcon, ChevronDown } from "lucide-react";
+import { Calendar as CalendarIcon, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form';
@@ -147,7 +147,7 @@ export function AddGoalDialog({ trigger, goalToEdit, open, onOpenChange }: { tri
                           <Label className="flex-1 text-left">Category</Label>
                           <div className="flex items-center gap-2 text-muted-foreground">
                               <span>{selectedCategoryLabel}</span>
-                              <ChevronDown className="h-5 w-5 ml-4 transition-transform data-[state=open]:rotate-180" />
+                              <ChevronRight className="h-5 w-5 ml-4 transition-transform data-[state=open]:rotate-90" />
                           </div>
                       </div>
                     </CollapsibleTrigger>
@@ -176,7 +176,7 @@ export function AddGoalDialog({ trigger, goalToEdit, open, onOpenChange }: { tri
                         <Label className="flex-1 text-left">Target Date</Label>
                         <div className="flex items-center gap-2 text-muted-foreground">
                             <span>{selectedDate ? format(selectedDate, "PPP") : "Optional"}</span>
-                            <ChevronDown className="h-5 w-5 ml-4" />
+                            <ChevronRight className="h-5 w-5 ml-4" />
                         </div>
                     </div>
                   </PopoverTrigger>

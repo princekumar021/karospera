@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -13,7 +14,7 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { PlusCircle, ChevronDown, ScanLine, Utensils, ShoppingCart, Car, Film, Receipt, PiggyBank, MoreHorizontal } from 'lucide-react';
+import { PlusCircle, ChevronRight, ScanLine, Utensils, ShoppingCart, Car, Film, Receipt, PiggyBank, MoreHorizontal } from 'lucide-react';
 import { useUserData } from '@/hooks/use-user-data';
 import { useToast } from '@/hooks/use-toast';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -117,7 +118,7 @@ export function AddExpenseDialog({ trigger }: { trigger: React.ReactNode }) {
                               <div className="flex items-center gap-2 text-muted-foreground">
                                   {selectedCategory.icon}
                                   <span>{selectedCategory.label}</span>
-                                  <ChevronDown className="h-5 w-5 ml-4 transition-transform data-[state=open]:rotate-180" />
+                                  <ChevronRight className="h-5 w-5 ml-4 transition-transform data-[state=open]:rotate-90" />
                               </div>
                           </div>
                       </CollapsibleTrigger>

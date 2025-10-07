@@ -1,3 +1,4 @@
+
 "use client"
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -7,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import StepWrapper from "./step-wrapper";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, ChevronDown } from "lucide-react";
+import { CalendarIcon, ChevronRight } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -140,7 +141,7 @@ function GoalForm() {
                           ) : (
                             <span>Optional Date</span>
                           )}
-                          <ChevronDown className="ml-4 h-4 w-4 opacity-50" />
+                          <ChevronRight className="ml-4 h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
