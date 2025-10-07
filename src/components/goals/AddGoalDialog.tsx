@@ -147,7 +147,7 @@ export function AddGoalDialog({ trigger, goalToEdit, open, onOpenChange }: { tri
                           <Label className="flex-1 text-left">Category</Label>
                           <div className="flex items-center gap-2 text-muted-foreground">
                               <span>{selectedCategoryLabel}</span>
-                              <ChevronDown className="h-5 w-5 ml-2 transition-transform data-[state=open]:rotate-180" />
+                              <ChevronDown className="h-5 w-5 ml-4 transition-transform data-[state=open]:rotate-180" />
                           </div>
                       </div>
                     </CollapsibleTrigger>
@@ -176,7 +176,7 @@ export function AddGoalDialog({ trigger, goalToEdit, open, onOpenChange }: { tri
                         <Label className="flex-1 text-left">Target Date</Label>
                         <div className="flex items-center gap-2 text-muted-foreground">
                             <span>{selectedDate ? format(selectedDate, "PPP") : "Optional"}</span>
-                            <ChevronDown className="h-5 w-5 ml-2" />
+                            <ChevronDown className="h-5 w-5 ml-4" />
                         </div>
                     </div>
                   </PopoverTrigger>

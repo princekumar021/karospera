@@ -140,7 +140,7 @@ function GoalForm() {
                           ) : (
                             <span>Optional Date</span>
                           )}
-                          <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
+                          <ChevronDown className="ml-4 h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
