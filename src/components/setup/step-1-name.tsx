@@ -47,9 +47,20 @@ export default function Step1Name({ nextStep }: Step1Props) {
       title="Your name"
       description="What should we call you in the app?"
       footer={
-        <Button onClick={nextStep} className="w-full font-semibold" size="lg">
-          Next
-        </Button>
+        <div className="w-full space-y-4">
+          <Button onClick={nextStep} className="w-full font-semibold" size="lg">
+            Next
+          </Button>
+          <div className="flex items-start justify-center gap-3 p-1 text-center">
+            <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+            <div>
+              <h3 className="font-semibold text-foreground text-sm">Private & Secure</h3>
+              <p className="text-xs text-muted-foreground">
+                Your financial data is stored securely on your device.
+              </p>
+            </div>
+          </div>
+        </div>
       }
     >
       <FormField
@@ -57,15 +68,6 @@ export default function Step1Name({ nextStep }: Step1Props) {
         name="fullName"
         render={() => <NameInput />}
       />
-       <div className="flex items-start justify-center gap-3 p-1 text-center">
-        <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
-        <div>
-          <h3 className="font-semibold text-foreground text-sm">Private & Secure</h3>
-          <p className="text-xs text-muted-foreground">
-            Your financial data is stored securely on your device.
-          </p>
-        </div>
-      </div>
     </StepWrapper>
   );
 }
