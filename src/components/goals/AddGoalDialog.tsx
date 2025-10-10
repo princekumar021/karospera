@@ -26,9 +26,12 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { Label } from '../ui/label';
 import { Calendar } from '../ui/calendar';
+import { Separator } from '../ui/separator';
 
 
-const formSchema = goalSchema.omit({ id: true, currentAmount: true });
+const formSchema = goalSchema.omit({ id: true, currentAmount: true }).extend({
+  newSavings: z.coerce.number().optional()
+});
 type GoalFormValues = Zod.infer<typeof formSchema>;
 
 export function AddGoalDialog({ trigger, goalToEdit, open, onOpenChange }: { trigger?: React.ReactNode, goalToEdit?: Goal, open?: boolean, onOpenChange?: (open: boolean) => void }) {
@@ -60,7 +63,8 @@ export function AddGoalDialog({ trigger, goalToEdit, open, onOpenChange }: { tri
         name: goalToEdit.name,
         targetAmount: goalToEdit.targetAmount,
         targetDate: goalToEdit.targetDate ? new Date(goalToEdit.targetDate) : undefined,
-        category: goalToEdit.category
+        category: goalToEdit.category,
+        newSavings: undefined,
       })
     } else if (!open) {
       form.reset({
@@ -68,13 +72,14 @@ export function AddGoalDialog({ trigger, goalToEdit, open, onOpenChange }: { tri
         targetAmount: undefined,
         targetDate: undefined,
         category: 'savings',
+        newSavings: undefined,
       })
     }
   }, [goalToEdit, form, open]);
 
   const onSubmit = (data: GoalFormValues) => {
     if (goalToEdit) {
-      updateGoal({ ...goalToEdit, ...data });
+      updateGoal({ ...goalToEdit, ...data }, data.newSavings);
       toast({ title: 'Goal Updated!', description: `Your goal "${data.name}" has been updated.` });
     } else {
       addGoal(data);
@@ -103,10 +108,10 @@ export function AddGoalDialog({ trigger, goalToEdit, open, onOpenChange }: { tri
       {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
       <SheetContent side="bottom" className="rounded-t-2xl px-4 pb-6" hideClose>
         <SheetHeader>
-          <SheetTitle className="sr-only">{goalToEdit ? 'Edit Goal' : 'Add New Goal'}</SheetTitle>
+          <SheetTitle className="text-center">{goalToEdit ? 'Edit Goal' : 'Add New Goal'}</SheetTitle>
         </SheetHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-4">
              <div className="flex items-center gap-2">
               <span className="text-4xl font-semibold text-muted-foreground">{userData?.currency === 'INR' ? '₹' : '$'}</span>
               <FormField
@@ -124,7 +129,7 @@ export function AddGoalDialog({ trigger, goalToEdit, open, onOpenChange }: { tri
               <Button type="submit" size="lg">{goalToEdit ? 'Save' : 'Add'}</Button>
             </div>
 
-            <div className="space-y-2 rounded-lg border bg-background">
+            <div className="rounded-lg border bg-background">
                 <FormField
                 control={form.control}
                 name="name"
@@ -140,6 +145,27 @@ export function AddGoalDialog({ trigger, goalToEdit, open, onOpenChange }: { tri
                     </FormItem>
                 )}
                 />
+                
+                {goalToEdit && (
+                  <>
+                  <Separator />
+                  <FormField
+                    control={form.control}
+                    name="newSavings"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormControl>
+                            <div className="flex items-center h-14 px-3 py-2 text-base rounded-none border-b">
+                                <Label className="flex-1">Add to Savings</Label>
+                                <Input type="number" placeholder="0" className="border-0 text-right w-1/2 p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0" {...field} />
+                            </div>
+                        </FormControl>
+                        <FormMessage className="mx-3" />
+                        </FormItem>
+                    )}
+                    />
+                  </>
+                )}
 
                 <Collapsible open={categoryOpen} onOpenChange={setCategoryOpen}>
                     <CollapsibleTrigger className="w-full border-b">

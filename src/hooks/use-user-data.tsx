@@ -16,8 +16,9 @@ interface UserDataContextType {
   resetUserData: () => void;
   addTransaction: (transaction: Omit<Transaction, 'id'>) => void;
   addGoal: (goal: Omit<Goal, 'id' | 'currentAmount'>) => void;
-  updateGoal: (goal: Goal) => void;
+  updateGoal: (goal: Goal, newSavings?: number) => void;
   deleteGoal: (goalId: string) => void;
+  addSavingsToGoal: (goalId: string, amount: number) => void;
 }
 
 const UserDataContext = createContext<UserDataContextType | undefined>(undefined);
@@ -231,11 +232,57 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
     });
   }, [saveData]);
 
-  const updateGoal = useCallback((goal: Goal) => {
+  const updateGoal = useCallback((goal: Goal, newSavings?: number) => {
     setUserData(prevData => {
         if (!prevData) return null;
-        const updatedGoals = prevData.goals.map(g => g.id === goal.id ? goal : g);
-        const updatedData = { ...prevData, goals: updatedGoals };
+
+        let updatedGoal = {...goal};
+        let transactions = prevData.transactions || [];
+
+        if(newSavings && newSavings > 0) {
+          updatedGoal.currentAmount += newSavings;
+
+          const savingsTransaction: Transaction = {
+            id: new Date().toISOString() + Math.random(),
+            name: `Savings for ${goal.name}`,
+            amount: -newSavings,
+            type: 'expense',
+            category: 'Savings',
+            date: new Date(),
+            note: 'Manual contribution to goal',
+          };
+          transactions = [savingsTransaction, ...transactions];
+        }
+
+        const updatedGoals = prevData.goals.map(g => g.id === goal.id ? updatedGoal : g);
+        const updatedData = { ...prevData, goals: updatedGoals, transactions };
+        saveData(updatedData);
+        return updatedData;
+    });
+  }, [saveData]);
+  
+  const addSavingsToGoal = useCallback((goalId: string, amount: number) => {
+    setUserData(prevData => {
+        if (!prevData) return null;
+
+        const goal = prevData.goals.find(g => g.id === goalId);
+        if(!goal) return prevData;
+
+        const updatedGoal = {...goal, currentAmount: goal.currentAmount + amount};
+        
+        const savingsTransaction: Transaction = {
+            id: new Date().toISOString() + Math.random(),
+            name: `Savings for ${goal.name}`,
+            amount: -amount,
+            type: 'expense',
+            category: 'Savings',
+            date: new Date(),
+        };
+
+        const updatedGoals = prevData.goals.map(g => g.id === goalId ? updatedGoal : g);
+        const updatedTransactions = [savingsTransaction, ...(prevData.transactions || [])];
+
+        const updatedData = { ...prevData, goals: updatedGoals, transactions: updatedTransactions };
         saveData(updatedData);
         return updatedData;
     });
@@ -252,7 +299,7 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
   }, [saveData]);
 
   return (
-    <UserDataContext.Provider value={{ userData, loading, formatCurrency, updateUserData, updateAvatar, resetUserData, addTransaction, addGoal, updateGoal, deleteGoal }}>
+    <UserDataContext.Provider value={{ userData, loading, formatCurrency, updateUserData, updateAvatar, resetUserData, addTransaction, addGoal, updateGoal, deleteGoal, addSavingsToGoal }}>
       {children}
     </UserDataContext.Provider>
   );

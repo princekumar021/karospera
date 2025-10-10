@@ -4,10 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { Button } from '../ui/button';
+import { Plus } from 'lucide-react';
+import { AddSavingsDialog } from './AddSavingsDialog';
 
 export function GoalsInsights() {
   const { userData, loading, formatCurrency } = useUserData();
+  const [isSavingsDialogOpen, setIsSavingsDialogOpen] = useState(false);
 
   const { totalSaved, totalTarget, totalProgress, estimatedCompletion } = useMemo(() => {
     if (!userData || !userData.goals || userData.goals.length === 0) {
@@ -65,8 +69,13 @@ export function GoalsInsights() {
 
   return (
     <Card className="bg-card">
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Total Progress</CardTitle>
+        <AddSavingsDialog open={isSavingsDialogOpen} onOpenChange={setIsSavingsDialogOpen}>
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setIsSavingsDialogOpen(true)}>
+            <Plus className="h-5 w-5" />
+          </Button>
+        </AddSavingsDialog>
       </CardHeader>
       <CardContent>
         <div className="flex justify-between items-center mb-2">
