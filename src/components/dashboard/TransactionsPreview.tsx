@@ -6,6 +6,7 @@ import { ChevronRight, Wallet, Utensils, Car, Home, Film, Briefcase } from 'luci
 import { useUserData } from '@/hooks/use-user-data';
 import { Skeleton } from '../ui/skeleton';
 import { format } from 'date-fns';
+import Link from 'next/link';
 
 const categoryIcons: { [key: string]: React.ReactNode } = {
   Income: <Wallet className="h-6 w-6 text-green-500" />,
@@ -49,36 +50,38 @@ export function TransactionsPreview() {
         ) : transactions.length > 0 ? (
           <ul className="space-y-4">
             {transactions.slice(0, 4).map((transaction) => (
-              <li key={transaction.id} className="flex items-center gap-4">
-                <div className="rounded-full bg-secondary p-2 flex-shrink-0">
-                  {getIcon(transaction.category)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold truncate">{transaction.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {format(new Date(transaction.date), 'MMMM d, yyyy')}
-                  </p>
-                </div>
-                <div className="text-right flex-shrink-0">
-                  <p
-                    className={`font-bold whitespace-nowrap ${
-                      transaction.type === 'income'
-                        ? 'text-green-500'
-                        : ''
-                    }`}
-                  >
-                    {formatCurrency(transaction.amount)}
-                  </p>
-                </div>
-                <ChevronRight className="h-5 w-5 text-muted-foreground flex-shrink-0 ml-2" />
+              <li key={transaction.id}>
+                <Link href="/transactions" className="flex items-center gap-4 group">
+                  <div className="rounded-full bg-secondary p-2 flex-shrink-0">
+                    {getIcon(transaction.category)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold truncate group-hover:text-primary">{transaction.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {format(new Date(transaction.date), 'MMMM d, yyyy')}
+                    </p>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <p
+                      className={`font-bold whitespace-nowrap ${
+                        transaction.type === 'income'
+                          ? 'text-green-500'
+                          : ''
+                      }`}
+                    >
+                      {formatCurrency(transaction.amount)}
+                    </p>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-muted-foreground flex-shrink-0 ml-2" />
+                </Link>
               </li>
             ))}
           </ul>
         ) : (
           <p className="text-center text-muted-foreground py-4">No transactions yet. Add one to get started!</p>
         )}
-        <Button variant="link" className="mt-4 w-full">
-          View All
+        <Button variant="link" className="mt-4 w-full" asChild>
+          <Link href="/transactions">View All</Link>
         </Button>
       </CardContent>
     </Card>
