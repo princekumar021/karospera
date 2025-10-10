@@ -4,7 +4,7 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { useUserData } from '@/hooks/use-user-data';
 import { useMemo } from 'react';
 import { Skeleton } from '../ui/skeleton';
-import { format } from 'date-fns';
+import { getMonth, getYear } from 'date-fns';
 
 const COLORS = ['#0F6EFF', '#FFC857', '#4CAF50', '#FF5E57', '#8B5CF6', '#FF8042'];
 
@@ -12,30 +12,45 @@ export function SpendingChart() {
   const { userData, loading, formatCurrency } = useUserData();
 
   const chartData = useMemo(() => {
-    if (!userData || !userData.transactions) {
+    if (!userData) {
       return [];
     }
 
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
+    const now = new Date();
+    const currentMonth = getMonth(now);
+    const currentYear = getYear(now);
 
-    const spendingByCategory = userData.transactions
-      .filter(t => {
-        const transactionDate = new Date(t.date);
-        return t.type === 'expense' &&
-               t.category !== 'Savings' &&
-               transactionDate.getMonth() === currentMonth &&
-               transactionDate.getFullYear() === currentYear;
-      })
-      .reduce((acc, transaction) => {
-        const category = transaction.category || 'Other';
-        const amount = Math.abs(transaction.amount);
-        if (!acc[category]) {
-          acc[category] = 0;
+    const spendingByCategory: { [key: string]: number } = {};
+
+    // Process one-off transactions
+    userData.transactions?.forEach(t => {
+      const transactionDate = new Date(t.date);
+      if (
+        t.type === 'expense' &&
+        t.category !== 'Savings' &&
+        getMonth(transactionDate) === currentMonth &&
+        getYear(transactionDate) === currentYear
+      ) {
+        const category = t.category || 'Other';
+        const amount = Math.abs(t.amount);
+        spendingByCategory[category] = (spendingByCategory[category] || 0) + amount;
+      }
+    });
+
+    // Process recurring expenses as if they happened this month
+    userData.recurringExpenses?.forEach(exp => {
+      const getMonthlyAmount = (amount: number, frequency: 'Monthly' | 'Quarterly' | 'Yearly') => {
+        switch (frequency) {
+          case 'Yearly': return amount / 12;
+          case 'Quarterly': return amount / 3;
+          default: return amount;
         }
-        acc[category] += amount;
-        return acc;
-      }, {} as { [key: string]: number });
+      };
+      const monthlyAmount = getMonthlyAmount(Number(exp.amount) || 0, exp.frequency);
+      const category = exp.name || 'Other';
+      spendingByCategory[category] = (spendingByCategory[category] || 0) + monthlyAmount;
+    });
+
 
     return Object.entries(spendingByCategory).map(([name, value]) => ({
       name,
