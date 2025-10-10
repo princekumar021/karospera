@@ -210,7 +210,7 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('pocketplan-last-auto-transfer-check');
     setUserData(null);
     if(typeof window !== 'undefined') {
-      window.location.href = '/setup';
+      window.location.href = '/welcome';
     }
   }, []);
 

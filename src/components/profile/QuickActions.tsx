@@ -28,7 +28,7 @@ export function QuickActions() {
 
     const handleLogout = () => {
         resetUserData();
-        router.push('/setup');
+        router.push('/welcome');
     }
 
   return (
